@@ -1,5 +1,6 @@
 package formats.mapbin;
 
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -10,9 +11,11 @@ import java.awt.event.ActionEvent;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused", "DuplicatedCode"})
 public class ExportMapBinDialog extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
+    @Getter
     private int returnValue = CANCEL_OPTION;
 
     public ExportMapBinDialog(Window owner, String title) {
@@ -35,10 +38,6 @@ public class ExportMapBinDialog extends JDialog {
         dispose();
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     public boolean exportAllMapsBin() {
         return jrbExportAllMapsBin.isSelected();
     }
@@ -47,6 +46,7 @@ public class ExportMapBinDialog extends JDialog {
         return jrbExportCurrentMapBin.isSelected();
     }
 
+    @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         panel2 = new JPanel();

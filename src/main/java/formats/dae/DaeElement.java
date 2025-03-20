@@ -6,6 +6,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class DaeElement {
 
     private String name;

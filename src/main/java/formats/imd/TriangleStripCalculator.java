@@ -6,27 +6,28 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "DuplicatedCode", "SpellCheckingInspection"})
 public class TriangleStripCalculator {
 
-    private float[] vCoords;
-    private float[] tCoords;
-    private float[] nCoords;
-    private float[] colors;
-    private static final int vPerVertex = 3;
+    private final float[] vCoords;
+    private final float[] tCoords;
+    private final        float[] nCoords;
+    private final        float[] colors;
+    private static final int     vPerVertex = 3;
     private static final int tPerVertex = 2;
     private static final int nPerVertex = 3;
     private static final int cPerVertex = 3;
     private static final int vertexPerFace = 3;
     private static final int edgesPerFace = 3;
-    private int numFaces;
-    private int numEdges;
+    private final int numFaces;
+    private final int numEdges;
 
     private ArrayList<Edge> edges;
     private ArrayList<ArrayList<Integer>> edgesConnected;
     private boolean[] usedFaces;
 
-    private boolean useUniformNormalOrientation;
-    private boolean useVertexColors;
+    private final boolean useUniformNormalOrientation;
+    private final boolean useVertexColors;
 
     public TriangleStripCalculator(PolygonData pData, boolean useUniformNormalOrientation, boolean useVertexColors) {
         this.vCoords = pData.vCoordsTri;
@@ -62,7 +63,7 @@ public class TriangleStripCalculator {
                 }
 
                 ArrayList<Integer> longestStrip;
-                if (stripCandidates.size() > 0) {
+                if (!stripCandidates.isEmpty()) {
                     longestStrip = getLongestStrip(stripCandidates);
                 } else {
                     longestStrip = new ArrayList<>();
@@ -81,7 +82,7 @@ public class TriangleStripCalculator {
         }
 
         ArrayList<PolygonData> pDataStrips = new ArrayList<>();
-        if (looseTris.size() > 0) {
+        if (!looseTris.isEmpty()) {
             PolygonData pDataTriangles = new PolygonData();
             pDataTriangles.initTrisVertices(looseTris.size());
             for (int i = 0; i < looseTris.size(); i++) {
@@ -96,15 +97,15 @@ public class TriangleStripCalculator {
         } else {
             pDataStrips.add(null);
         }
-        for (int i = 0; i < strips.size(); i++) {
+        for (ArrayList<Integer> strip : strips) {
             PolygonData pDataStrip = new PolygonData();
-            pDataStrip.initTrisVertices(strips.get(i).size());
-            for (int j = 0; j < strips.get(i).size(); j++) {
-                copyVertexData(vCoords, strips.get(i).get(j) * vPerVertex, pDataStrip.vCoordsTri, j * vPerVertex, vPerVertex);
-                copyVertexData(tCoords, strips.get(i).get(j) * tPerVertex, pDataStrip.tCoordsTri, j * tPerVertex, tPerVertex);
-                copyVertexData(nCoords, strips.get(i).get(j) * nPerVertex, pDataStrip.nCoordsTri, j * nPerVertex, nPerVertex);
+            pDataStrip.initTrisVertices(strip.size());
+            for (int j = 0; j < strip.size(); j++) {
+                copyVertexData(vCoords, strip.get(j) * vPerVertex, pDataStrip.vCoordsTri, j * vPerVertex, vPerVertex);
+                copyVertexData(tCoords, strip.get(j) * tPerVertex, pDataStrip.tCoordsTri, j * tPerVertex, tPerVertex);
+                copyVertexData(nCoords, strip.get(j) * nPerVertex, pDataStrip.nCoordsTri, j * nPerVertex, nPerVertex);
                 if (useVertexColors) {
-                    copyVertexData(colors, strips.get(i).get(j) * cPerVertex, pDataStrip.colorsTri, j * cPerVertex, cPerVertex);
+                    copyVertexData(colors, strip.get(j) * cPerVertex, pDataStrip.colorsTri, j * cPerVertex, cPerVertex);
                 }
             }
             pDataStrips.add(pDataStrip);
@@ -114,8 +115,8 @@ public class TriangleStripCalculator {
     }
 
     private boolean stripContainsFace(ArrayList<Integer> strip, int faceIndex) {
-        for (int i = 0; i < strip.size(); i++) {
-            if (strip.get(i) / edgesPerFace == faceIndex) {
+        for (Integer integer : strip) {
+            if (integer / edgesPerFace == faceIndex) {
                 return true;
             }
         }
@@ -123,9 +124,7 @@ public class TriangleStripCalculator {
     }
 
     private void copyVertexData(float[] src, int srcOffset, float[] dst, int dstOffset, int elePerVertex) {
-        for (int i = 0; i < elePerVertex; i++) {
-            dst[dstOffset + i] = src[srcOffset + i];
-        }
+        if (elePerVertex >= 0) System.arraycopy(src, srcOffset, dst, dstOffset, elePerVertex);
     }
 
     private ArrayList<Integer> getStripVertexIndices(int faceIndex, int edgeIndexInFace, boolean forward) {
@@ -138,7 +137,7 @@ public class TriangleStripCalculator {
 
         boolean firstEdge = forward;
         while (isEdgeConnectedToNewFace(edgeIndex, usedFacesInStrip)) {
-            int connectedEdgeIndex = edgesConnected.get(edgeIndex).get(0);
+            int connectedEdgeIndex = edgesConnected.get(edgeIndex).getFirst();
             previousEdgeIndex = connectedEdgeIndex;
             if (firstEdge) {
                 edgeIndex = getNextEdgeIndex(connectedEdgeIndex);
@@ -154,8 +153,6 @@ public class TriangleStripCalculator {
         //Get full strip starting from first vertex
         ArrayList<Integer> vertexIndices = new ArrayList<>();
         vertexIndices.add(firstVertexIndex);
-        //vertexIndices.add(getPrevEdgeIndex(vertexIndices.get(0)));
-        //vertexIndices.add(getPrevEdgeIndex(vertexIndices.get(1)));
         vertexIndices.add(getNextEdgeIndex(vertexIndices.get(0)));
         vertexIndices.add(getNextEdgeIndex(vertexIndices.get(1)));
 
@@ -163,7 +160,7 @@ public class TriangleStripCalculator {
         edgeIndex = getOppositeEdgeIndex(firstVertexIndex);
         firstEdge = false;
         while (isEdgeConnectedToNewFace(edgeIndex, usedFacesInStrip)) {
-            int connectedEdgeIndex = edgesConnected.get(edgeIndex).get(0);
+            int connectedEdgeIndex = edgesConnected.get(edgeIndex).getFirst();
             if (firstEdge) {
                 edgeIndex = getNextEdgeIndex(connectedEdgeIndex);
             } else {
@@ -192,19 +189,17 @@ public class TriangleStripCalculator {
     }
 
     private Edge getConnectedEdge(int edgeIndex) {
-        return edges.get(edgesConnected.get(edgeIndex).get(0));
+        return edges.get(edgesConnected.get(edgeIndex).getFirst());
     }
 
     private boolean isEdgeConnected(int edgeIndex) {
-        return edgesConnected.get(edgeIndex).size() > 0;
+        return !edgesConnected.get(edgeIndex).isEmpty();
     }
 
     private boolean isEdgeConnectedToNewFace(int edgeIndex, boolean[] localUsedFaces) {
-        if (edgesConnected.get(edgeIndex).size() > 0) {
-            int faceIndex = edgesConnected.get(edgeIndex).get(0) / edgesPerFace;
-            if (!usedFaces[faceIndex] && !localUsedFaces[faceIndex]) {
-                return true;
-            }
+        if (!edgesConnected.get(edgeIndex).isEmpty()) {
+            int faceIndex = edgesConnected.get(edgeIndex).getFirst() / edgesPerFace;
+            return !usedFaces[faceIndex] && !localUsedFaces[faceIndex];
         }
         return false;
     }
@@ -237,8 +232,8 @@ public class TriangleStripCalculator {
     }
 
     private void disableFacesUsedByStrip(ArrayList<Integer> strip) {
-        for (int i = 0; i < strip.size(); i++) {
-            usedFaces[strip.get(i) / edgesPerFace] = true;
+        for (Integer integer : strip) {
+            usedFaces[integer / edgesPerFace] = true;
         }
     }
 
@@ -306,53 +301,36 @@ public class TriangleStripCalculator {
 
         private boolean sameEdgeCoords(float[] coords, int coordsPerVertex,
                                        Edge other) {
-            /*if (sameVertexCoords(coords, coordsPerVertex, this.vertexIndex1, other.vertexIndex1)) {
-                if (sameVertexCoords(coords, coordsPerVertex, this.vertexIndex2, other.vertexIndex2)) {
-                    return true;
-                }
-            } else */
             if (sameVertexCoords(coords, coordsPerVertex, this.vertexIndex1, other.vertexIndex2)) {
-                if (sameVertexCoords(coords, coordsPerVertex, this.vertexIndex2, other.vertexIndex1)) {
-                    return true;
-                }
+                return sameVertexCoords(coords, coordsPerVertex, this.vertexIndex2, other.vertexIndex1);
             }
             return false;
         }
 
         @Override
         public boolean equals(Object obj) {
-            final Edge other = (Edge) obj;
+            if (!(obj instanceof Edge other)) return false;
             if (useUniformNormalOrientation) {
                 if (useVertexColors) {
-                    if (sameEdgeCoords(vCoords, vPerVertex, other)
+                    return sameEdgeCoords(vCoords, vPerVertex, other)
                             && sameEdgeCoords(tCoords, tPerVertex, other)
-                            && sameEdgeCoords(colors, cPerVertex, other)) {
-                        return true;
-                    }
+                            && sameEdgeCoords(colors, cPerVertex, other);
                 } else {
-                    if (sameEdgeCoords(vCoords, vPerVertex, other)
-                            && sameEdgeCoords(tCoords, tPerVertex, other)) {
-                        return true;
-                    }
+                    return sameEdgeCoords(vCoords, vPerVertex, other)
+                            && sameEdgeCoords(tCoords, tPerVertex, other);
                 }
             } else {
                 if (useVertexColors) {
-                    if (sameEdgeCoords(vCoords, vPerVertex, other)
+                    return sameEdgeCoords(vCoords, vPerVertex, other)
                             && sameEdgeCoords(tCoords, tPerVertex, other)
                             && sameEdgeCoords(nCoords, nPerVertex, other)
-                            && sameEdgeCoords(colors, cPerVertex, other)) {
-                        return true;
-                    }
+                            && sameEdgeCoords(colors, cPerVertex, other);
                 } else {
-                    if (sameEdgeCoords(vCoords, vPerVertex, other)
+                    return sameEdgeCoords(vCoords, vPerVertex, other)
                             && sameEdgeCoords(tCoords, tPerVertex, other)
-                            && sameEdgeCoords(nCoords, nPerVertex, other)) {
-                        return true;
-                    }
+                            && sameEdgeCoords(nCoords, nPerVertex, other);
                 }
             }
-
-            return false;
         }
 
     }

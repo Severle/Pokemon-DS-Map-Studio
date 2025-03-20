@@ -1,36 +1,30 @@
 package formats.imd;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-
 import editor.handler.MapEditorHandler;
+import tileset.NormalsNotFoundException;
+import tileset.TextureNotFoundException;
+import utils.Utils;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.font.TextAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import tileset.NormalsNotFoundException;
-import tileset.TextureNotFoundException;
-import utils.Utils;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode", "FieldCanBeLocal"})
 public class ImdOutputInfoDialog extends JDialog {
 
     private MapEditorHandler handler;
@@ -58,13 +52,11 @@ public class ImdOutputInfoDialog extends JDialog {
         public final String msg;
         public final Color color;
 
-        private ConvertStatus(String msg, Color color) {
+        ConvertStatus(String msg, Color color) {
             this.msg = msg;
             this.color = color;
         }
     }
-
-    ;
 
     public ImdOutputInfoDialog(Window owner) {
         super(owner);
@@ -86,12 +78,7 @@ public class ImdOutputInfoDialog extends JDialog {
 
     private void formWindowActivated(WindowEvent e) {
         if (convertingThread == null) {
-            convertingThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    saveAllImds();
-                }
-            });
+            convertingThread = new Thread(this::saveAllImds);
             convertingThread.start();
         }
     }
@@ -196,7 +183,7 @@ public class ImdOutputInfoDialog extends JDialog {
 
                 nFilesProcessed++;
 
-                jlFilesProcessed.setText(String.valueOf(nFilesProcessed) + "/" + String.valueOf(fileNames.size()));
+                jlFilesProcessed.setText(nFilesProcessed + "/" + fileNames.size());
                 jlFilesConverted.setText(String.valueOf(nFilesConverted));
                 jlFilesWithWarnings.setText(String.valueOf(nFilesConvertedWithWarnings));
                 jlFilesNotConverted.setText(String.valueOf(nFilesNotConverted));
@@ -222,13 +209,13 @@ public class ImdOutputInfoDialog extends JDialog {
             jlStatus.setText("Finished with errors");
 
             jlResult.setForeground(RED);
-            jlResult.setText(String.valueOf(nFilesNotConverted) + " OBJ file(s) could not be converted into IMD");
+            jlResult.setText(nFilesNotConverted + " OBJ file(s) could not be converted into IMD");
         } else if (nFilesConvertedWithWarnings > 0) {
             jlStatus.setForeground(ORANGE);
             jlStatus.setText("Finished with warnings");
 
             jlResult.setForeground(ORANGE);
-            jlResult.setText("All the OBJ files have been converted into IMD (" + String.valueOf(nFilesConvertedWithWarnings) + " file(s) might have too many polygons)");
+            jlResult.setText("All the OBJ files have been converted into IMD (" + nFilesConvertedWithWarnings + " file(s) might have too many polygons)");
         } else {
             jlStatus.setForeground(GREEN);
             jlStatus.setText("Finished");
@@ -243,7 +230,7 @@ public class ImdOutputInfoDialog extends JDialog {
         jbAccept.requestFocus();
     }
 
-    private class StatusColumnCellRenderer extends DefaultTableCellRenderer {
+    private static class StatusColumnCellRenderer extends DefaultTableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
@@ -269,6 +256,7 @@ public class ImdOutputInfoDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings({"Convert2MethodRef", "FieldMayBeFinal"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

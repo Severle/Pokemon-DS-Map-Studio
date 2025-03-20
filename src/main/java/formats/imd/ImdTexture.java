@@ -1,17 +1,17 @@
 
 package formats.imd;
 
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import tileset.TilesetMaterial;
 import utils.Utils;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class ImdTexture {
 
     private static final int COLOR4 = 0;
@@ -31,7 +31,7 @@ public class ImdTexture {
     public int width;
     public int height;
 
-    private boolean isTransparent = false;
+    private final boolean isTransparent;
 
     public ImdTexture(TilesetMaterial material) {
         //System.out.println("Texture name: " + material.getImageName());
@@ -111,6 +111,7 @@ public class ImdTexture {
         paletteData = paletteColorsToPalData(colors);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public void setTextureAndPaletteSemitransp(BufferedImage img, TilesetMaterial material, int nBitsColor) {
         int numColors = numColorsTable[material.getColorFormat()];
         ArrayList<Color> colors = new ArrayList<>();
@@ -137,12 +138,13 @@ public class ImdTexture {
         paletteData = paletteColorsToPalData(colors);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private static byte[] colorIndicesToTexDataSemitransp(short[] colorIndices,
                                                           ArrayList<Color> colors, int nBitsColor) {
         final byte[] texData = new byte[colorIndices.length];
         for (int i = 0; i < texData.length; i++) {
             byte data = 0x00;
-            data |= (colorIndices[i]) | (((colors.get(colorIndices[i]).getAlpha() & 0xFF) >> nBitsColor) << nBitsColor);
+            data |= (byte) ((colorIndices[i]) | (((colors.get(colorIndices[i]).getAlpha() & 0xFF) >> nBitsColor) << nBitsColor));
             texData[i + 1 - (i % 2) * 2] = data;
         }
         return texData;
@@ -157,7 +159,7 @@ public class ImdTexture {
         for (int i = 0; i < dataSize; i++) {
             byte data = 0x00;
             for (int j = 0; j < pixelsPerByte; j++) {
-                data |= (colorIndices[pixelIndex] & mask) << bitDepth * j;
+                data |= (byte) ((colorIndices[pixelIndex] & mask) << bitDepth * j);
                 pixelIndex++;
             }
             texData[i + 1 - (i % 2) * 2] = data;
@@ -221,14 +223,14 @@ public class ImdTexture {
     }
 
     private static String byteArrayToHexString(byte[] data) {
-        String hexString = "";
+        StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
             if (i % 2 == 0) {
-                hexString += " ";
+                hexString.append(" ");
             }
-            hexString += String.format("%02x", data[i]);
+            hexString.append(String.format("%02x", data[i]));
         }
-        return hexString;
+        return hexString.toString();
     }
 
     public int getTextureDataSize() {

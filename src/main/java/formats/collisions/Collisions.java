@@ -1,11 +1,10 @@
 
 package formats.collisions;
 
-import utils.BinaryArrayWriter;
+import lombok.Getter;
 import utils.BinaryBufferWriter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -17,9 +16,10 @@ public class Collisions {
 
     public static final String fileExtension = "per";
     public static final int cols = 32, rows = 32;
-    public int numLayers; //TODO: make this relative to the game used
-    private byte[][][] layers;
-    private ArrayList<Byte> lastBytes;
+    @Getter
+    public        int        numLayers; //TODO: make this relative to the game used
+    private final byte[][][] layers;
+    private final ArrayList<Byte> lastBytes;
 
     public Collisions(int gameIndex) {
         this.numLayers = CollisionTypes.numLayersPerGame[gameIndex];
@@ -27,10 +27,6 @@ public class Collisions {
 
         lastBytes = new ArrayList<>();
     }
-    /*
-    public Collisions() {
-        layers = new byte[numLayers][cols][rows];
-    }*/
 
     public Collisions(String path) throws IOException {
         this(Files.readAllBytes(new File(path).toPath()));
@@ -74,8 +70,8 @@ public class Collisions {
         }
         writer.write(data);
 
-        for (int i = 0; i < lastBytes.size(); i++) {
-            writer.write(lastBytes.get(i));
+        for (Byte lastByte : lastBytes) {
+            writer.write(lastByte);
         }
         return writer.toByteArray();
     }
@@ -83,30 +79,6 @@ public class Collisions {
     public void saveToFile(String path) throws IOException{
         Files.write(new File(path).toPath(), toByteArray());
     }
-
-    /*
-    public void saveToFile(String path) throws IOException {
-        FileOutputStream out = new FileOutputStream(path);
-        byte[] data = new byte[cols * rows * numLayers];
-
-        if (numLayers > 2) {
-            out.write(new byte[]{0x20, 0x00, 0x20, 0x00});
-        }
-
-        for (int i = 0; i < numLayers; i++) {
-            for (int j = 0, c = 0; j < rows; j++) {
-                for (int k = 0; k < cols; k++, c += numLayers) {
-                    data[c + i] = layers[i][k][j];
-                }
-            }
-        }
-        out.write(data);
-
-        for (int i = 0; i < lastBytes.size(); i++) {
-            out.write(lastBytes.get(i));
-        }
-        out.close();
-    }*/
 
     public int getValue(int layer, int x, int y) {
         return layers[layer][x][y] & 0xFF;
@@ -118,10 +90,6 @@ public class Collisions {
 
     public byte[][] getLayer(int index) {
         return layers[index];
-    }
-
-    public int getNumLayers() {
-        return numLayers;
     }
 
     public byte[][] cloneLayer(int index) {

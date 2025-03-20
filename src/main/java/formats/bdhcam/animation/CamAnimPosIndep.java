@@ -4,13 +4,14 @@ import formats.bdhcam.BdhcamHandler;
 import formats.bdhcam.camplate.*;
 import editor.handler.MapEditorHandler;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CamAnimPosIndep extends CamAnimator{
 
-    private CamplatePosIndep plate;
-    private int frame = 0;
+    private final CamPlatePosIndep plate;
+    private       int              frame = 0;
     private int finalFrame = 0;
 
-    public CamAnimPosIndep(MapEditorHandler handler, BdhcamHandler bdhcamHandler, CamplatePosIndep plate) {
+    public CamAnimPosIndep(MapEditorHandler handler, BdhcamHandler bdhcamHandler, CamPlatePosIndep plate) {
         super(handler, bdhcamHandler);
         this.plate = plate;
         for(CamParameter param : plate.parameters){

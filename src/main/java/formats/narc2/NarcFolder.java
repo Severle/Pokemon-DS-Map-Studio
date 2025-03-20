@@ -1,15 +1,23 @@
 
 package formats.narc2;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 
+@Getter
 public class NarcFolder {
 
-    private String name = "";
-    private NarcFolder parent;
-    private ArrayList<NarcFolder> subfolders = new ArrayList<>();
-    private ArrayList<NarcFile> files = new ArrayList<>();
-    private int ID;
+    @Setter
+    private       String                name = "";
+    @Setter
+    private       NarcFolder            parent;
+    private final ArrayList<NarcFolder> subfolders = new ArrayList<>();
+    @Setter
+    private       ArrayList<NarcFile>   files      = new ArrayList<>();
+    @Setter
+    private       int                   ID;
 
     public NarcFolder() {
         name = "";
@@ -22,42 +30,6 @@ public class NarcFolder {
     public NarcFolder(String name, NarcFolder parent) {
         this.name = name;
         this.parent = parent;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setParent(NarcFolder parent) {
-        this.parent = parent;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public NarcFolder getParent() {
-        return parent;
-    }
-
-    public ArrayList<NarcFolder> getSubfolders() {
-        return subfolders;
-    }
-
-    public ArrayList<NarcFile> getFiles() {
-        return files;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setFiles(ArrayList<NarcFile> files) {
-        this.files = files;
     }
 
     public NarcFolder getFolderByName(String folderName){

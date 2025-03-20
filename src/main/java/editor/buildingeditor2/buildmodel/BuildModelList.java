@@ -23,9 +23,9 @@ public class BuildModelList {
     private ArrayList<String> buildModelsName;
 
     public BuildModelList(Narc narc) {
-        final int numModels = narc.getRoot().getFiles().size();
+        final int numModels = narc.root().getFiles().size();
         buildModelsData = new ArrayList<>(numModels);
-        for (NarcFile file : narc.getRoot().getFiles()) {
+        for (NarcFile file : narc.root().getFiles()) {
             buildModelsData.add(file.getData());
         }
         calculateModelsName();

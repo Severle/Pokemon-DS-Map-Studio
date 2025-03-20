@@ -4,21 +4,24 @@
 
 package formats.collisions.bw;
 
+import editor.handler.MapEditorHandler;
+import lombok.Getter;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.text.DecimalFormat;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import editor.handler.MapEditorHandler;
-import net.miginfocom.swing.*;
 
 /**
  * @author Truck
  */
+@SuppressWarnings({"unused", "SpellCheckingInspection", "FieldCanBeLocal"})
 public class CollisionsEditorDialogBW extends JDialog {
 
     protected MapEditorHandler handler;
@@ -50,10 +53,6 @@ public class CollisionsEditorDialogBW extends JDialog {
         collisionsDisplay3D.initHandler(handler, cHandler);
         collisionsDisplayEditor.initHandler(handler, cHandler);
         ctileDisplay3D.init(cHandler);
-    }
-
-    public CTileDisplay3D getCtileDisplay3D() {
-        return ctileDisplay3D;
     }
 
     public void updateView() {
@@ -120,7 +119,7 @@ public class CollisionsEditorDialogBW extends JDialog {
     }
 
     private void jcbXRayActionPerformed(ActionEvent e) {
-        collisionsDisplay3D.setxRayEnabled(jcbXRay.isSelected());
+        collisionsDisplay3D.setXRayEnabled(jcbXRay.isSelected());
         collisionsDisplay3D.repaint();
     }
 
@@ -129,12 +128,7 @@ public class CollisionsEditorDialogBW extends JDialog {
         collisionsDisplay3D.repaint();
     }
 
-    /*
-    private void jcbTransparentActionPerformed(ActionEvent e) {
-        collisionsDisplay3D.setTransparentEnabled(jcbTransparent.isSelected());
-        collisionsDisplay3D.repaint();
-    }*/
-
+    @SuppressWarnings("SameParameterValue")
     private void setJSpinnerPrecission(JSpinner spinner, int minFractionDigits, int maxFractionDigits) {
         JSpinner.NumberEditor editor = (JSpinner.NumberEditor) spinner.getEditor();
         DecimalFormat format = editor.getFormat();
@@ -220,14 +214,8 @@ public class CollisionsEditorDialogBW extends JDialog {
         }
     }
 
-    public JLabel getJlInfo() {
-        return jlInfo;
-    }
 
-
-
-
-
+    @SuppressWarnings({"DataFlowIssue", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         panel10 = new JPanel();
@@ -644,9 +632,10 @@ public class CollisionsEditorDialogBW extends JDialog {
     private CollisionsDisplay3D collisionsDisplayEditor;
     private JPanel panel2;
     private JPanel panel5;
-    private JPanel panel4;
+    private JPanel         panel4;
+    @Getter
     private CTileDisplay3D ctileDisplay3D;
-    private JPanel panel8;
+    private JPanel         panel8;
     private JPanel panel3;
     private JSpinner jsZ0;
     private JSpinner jsZ1;
@@ -663,8 +652,9 @@ public class CollisionsEditorDialogBW extends JDialog {
     private JButton jbFlip;
     private JPanel panel11;
     private JTextArea textArea1;
-    private JLabel jlInfo;
-    private JPanel panel13;
+    @Getter
+    private JLabel    jlInfo;
+    private JPanel    panel13;
     private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

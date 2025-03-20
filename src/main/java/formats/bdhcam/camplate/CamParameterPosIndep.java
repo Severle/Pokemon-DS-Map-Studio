@@ -1,5 +1,6 @@
 package formats.bdhcam.camplate;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class CamParameterPosIndep extends CamParameter{
 
     public int duration;

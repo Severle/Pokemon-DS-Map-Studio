@@ -13,7 +13,7 @@ public class ModelInfo extends ImdNode {
 
     public ModelInfo(int posScale, int materialSize) {
         super("model_info");
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("pos_scale", posScale));
                 add(new ImdAttribute("scaling_rule", "standard"));

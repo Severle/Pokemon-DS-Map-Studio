@@ -7,9 +7,10 @@ import java.util.ArrayList;
  * @author Trifindo
  */
 
-public abstract class Camplate {
+@SuppressWarnings("unused")
+public abstract class CamPlate {
 
-    public static enum Type {
+    public enum Type {
 
         POS_INDEPENDENT(0, "Position independent", Color.orange),
         POS_DEPENDENT_X(1, "Position dependent X", Color.red),
@@ -45,7 +46,7 @@ public abstract class Camplate {
 
     public ArrayList<CamParameter> parameters;
 
-    public Camplate(int x, int y, int z, int width, int height, int type, int numParameters, boolean useZ) {
+    public CamPlate(int x, int y, int z, int width, int height, int type, int numParameters, boolean useZ) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -57,7 +58,7 @@ public abstract class Camplate {
         parameters = new ArrayList<>(numParameters);
     }
 
-    public Camplate(Camplate other, int type, int numParams){
+    public CamPlate(CamPlate other, int type, int numParams){
         this(other.x, other.y, other.z,  other.width, other.height, type, numParams, other.useZ);
     }
 

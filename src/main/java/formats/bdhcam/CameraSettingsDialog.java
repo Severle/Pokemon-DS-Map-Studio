@@ -4,19 +4,22 @@
 
 package formats.bdhcam;
 
-import java.awt.*;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
-import net.miginfocom.swing.*;
+import java.awt.*;
 
 /**
  * @author Truck
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class CameraSettingsDialog extends JDialog {
     public CameraSettingsDialog(Window owner) {
         super(owner);
         initComponents();
     }
 
+    @SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         panel1 = new JPanel();

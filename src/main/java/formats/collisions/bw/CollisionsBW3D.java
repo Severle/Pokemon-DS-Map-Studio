@@ -1,7 +1,6 @@
 package formats.collisions.bw;
 
 import editor.game.Game;
-import formats.bdhcam.camplate.Camplate;
 import utils.BinaryArrayReader;
 import utils.BinaryArrayWriter;
 import utils.Utils;
@@ -9,6 +8,7 @@ import utils.Utils;
 import java.io.File;
 import java.nio.file.Files;
 
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class CollisionsBW3D {
 
     private static final float[][] distances = {
@@ -602,14 +602,14 @@ public class CollisionsBW3D {
     public static final String fileExtension = "per";
     private static final int cols = 32, rows = 32;
 
-    private int[][][] collisions; //Layer X Y
-    private float[][][] tiles;
-    private final float[] xDelta = {0.0f, 1.0f, 1.0f, 0.0f};
+    private final int[][][]   collisions; //Layer X Y
+    private final float[][][] tiles;
+    private final float[]     xDelta = {0.0f, 1.0f, 1.0f, 0.0f};
     private final float[] yDelta = {0.0f, 0.0f, 1.0f, 1.0f};
     private static final float slopeCornerMinDiff = 0.01f;
 
     private static final int TYPE_BW = 0, TYPE_BW2 = 1;
-    private int gameType = TYPE_BW2;
+    private final int gameType;
 
     public CollisionsBW3D(String path, int game) throws Exception {
         this(Files.readAllBytes(new File(path).toPath()), game);
@@ -738,7 +738,7 @@ public class CollisionsBW3D {
         for (int i = 0, c = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
                 for (int k = 0; k < vertexPerTile; k++, c += coordsPerVertex) {
-                    vCoords[c + 0] = i - 16.0f + xDelta[k];
+                    vCoords[c] = i - 16.0f + xDelta[k];
                     vCoords[c + 1] = -(j - 16.0f + yDelta[k]);
                     vCoords[c + 2] = tiles[i][j][k];
                 }
@@ -912,7 +912,8 @@ public class CollisionsBW3D {
         return minIndex * 4;
     }
 
-    private static boolean areArraysEqual(float[] tile1, float tile2[], float tol) {
+    @SuppressWarnings("SameParameterValue")
+    private static boolean areArraysEqual(float[] tile1, float[] tile2, float tol) {
         for (int i = 0; i < tile1.length; i++) {
             if (Math.abs(tile1[i] - tile2[i]) > tol) {
                 return false;
@@ -927,7 +928,7 @@ public class CollisionsBW3D {
         }
     }
 
-    private static void floodFillMatrix(float screen[][][], int x, int y, float[] newC) {
+    private static void floodFillMatrix(float[][][] screen, int x, int y, float[] newC) {
         float[] prevC = screen[x][y];
         if (areArraysEqual(newC, prevC, 0.01f)) {
             return;
@@ -937,7 +938,7 @@ public class CollisionsBW3D {
         floodFillUtil(screen, x, y, prevC, newC, M, N);
     }
 
-    private static void floodFillUtil(float screen[][][], int x, int y, float[] prevC, float[] newC, int M, int N) {
+    private static void floodFillUtil(float[][][] screen, int x, int y, float[] prevC, float[] newC, int M, int N) {
         // Base cases
         if (x < 0 || x >= M || y < 0 || y >= N) {
             return;

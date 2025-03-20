@@ -12,11 +12,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class MapBinPt extends MapBin {
 
-    private byte[] per;
-    private byte[] bld;
-    private byte[] nsbmd;
+    private final byte[] per;
+    private final byte[] bld;
+    private       byte[] nsbmd;
     private byte[] bdhc;
 
     public MapBinPt(String folderPath, String mapName) throws MissingMapBinFileException, NsbmdConversionException {
@@ -52,8 +53,7 @@ public class MapBinPt extends MapBin {
                 if(bdhcam.length > bdhc.length + 10){//BDHCAM has data
                     bdhc = bdhcam;
                 }
-            }catch(Exception ex2){
-
+            } catch (Exception ignored) {
             }
         } catch (Exception ex) {
             throw new MissingMapBinFileException(MissingMapBinFileException.MISSING_BDHC);

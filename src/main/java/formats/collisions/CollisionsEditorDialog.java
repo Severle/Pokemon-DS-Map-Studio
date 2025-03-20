@@ -1,31 +1,27 @@
 package formats.collisions;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
 import editor.game.Game;
 import editor.handler.MapEditorHandler;
 import editor.state.CollisionLayerState;
 import editor.state.StateHandler;
+import net.miginfocom.swing.MigLayout;
+import utils.Utils;
 
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import net.miginfocom.swing.*;
-import utils.Utils;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class CollisionsEditorDialog extends JDialog {
 
     private MapEditorHandler handler;
@@ -37,8 +33,7 @@ public class CollisionsEditorDialog extends JDialog {
     }
 
     private void jSlider1StateChanged(ChangeEvent e) {
-        float value = jSlider1.getValue() / 100f;
-        collisionsDisplay.transparency = value;
+        collisionsDisplay.transparency = jSlider1.getValue() / 100f;
         collisionsDisplay.repaint();
     }
 
@@ -147,7 +142,7 @@ public class CollisionsEditorDialog extends JDialog {
                 path = Utils.addExtensionToPath(path, Collisions.fileExtension);
 
                 collisionHandler.getCollisions().saveToFile(path);
-                JOptionPane.showMessageDialog(this, "Collision succesfully exported.",
+                JOptionPane.showMessageDialog(this, "Collision successfully exported.",
                         "Collisions saved", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Can't save file.",
@@ -202,38 +197,6 @@ public class CollisionsEditorDialog extends JDialog {
         }
     }
 
-    /*
-    public void undoMapState() {
-        StateHandler mapStateHandler = handler.getMapStateHandler();
-        if (mapStateHandler.canGetPreviousState()) {
-            MapLayerState state = (MapLayerState) mapStateHandler.getPreviousState(new MapLayerState("Map Edit", handler));
-            state.revertState();
-            jbRedo.setEnabled(true);
-            if (!mapStateHandler.canGetPreviousState()) {
-                jbUndo.setEnabled(false);
-            }
-            mapDisplay.repaint();
-            thumbnailLayerSelector.drawLayerThumbnail(state.getLayerIndex());
-            thumbnailLayerSelector.repaint();
-        }
-    }
-
-    public void redoMapState() {
-        StateHandler mapStateHandler = handler.getMapStateHandler();
-        if (mapStateHandler.canGetNextState()) {
-            MapLayerState state = (MapLayerState) mapStateHandler.getNextState();
-            state.revertState();
-            jbUndo.setEnabled(true);
-            mapDisplay.repaint();
-            thumbnailLayerSelector.drawLayerThumbnail(state.getLayerIndex());
-            thumbnailLayerSelector.repaint();
-            if (!mapStateHandler.canGetNextState()) {
-                jbRedo.setEnabled(false);
-            }
-        }
-    }
-    */
-
     public JButton getUndoButton() {
         return jbUndo;
     }
@@ -246,6 +209,7 @@ public class CollisionsEditorDialog extends JDialog {
 
 
 
+    @SuppressWarnings({"DataFlowIssue", "Convert2MethodRef", "SpellCheckingInspection"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         panel1 = new JPanel();

@@ -21,7 +21,7 @@ public class BuildAnimeListDPPt {
     private ArrayList<Boolean> slopeAnimations;
 
     public BuildAnimeListDPPt(Narc narc) {
-        NarcFolder root = narc.getRoot();
+        NarcFolder root = narc.root();
         animations = new ArrayList<>(root.getFiles().size());
         secondBytes = new ArrayList<>(root.getFiles().size());
         slopeAnimations = new ArrayList<>(root.getFiles().size());

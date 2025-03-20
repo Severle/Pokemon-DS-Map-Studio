@@ -16,7 +16,7 @@ public class Polygon extends ImdNode {
                    int mtxPrimSize, boolean useVertexColors) {
         super("polygon");
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("name", name));

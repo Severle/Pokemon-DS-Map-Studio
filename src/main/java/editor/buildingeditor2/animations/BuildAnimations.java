@@ -16,10 +16,10 @@ public class BuildAnimations {
     private ArrayList<ModelAnimation> animations;
 
     public BuildAnimations(Narc narc) {
-        final int numAnimations = narc.getRoot().getFiles().size();
+        final int numAnimations = narc.root().getFiles().size();
         animations = new ArrayList<>(numAnimations);
-        for (int i = 0; i < narc.getRoot().getFiles().size(); i++) {
-            animations.add(new ModelAnimation(narc.getRoot().getFiles().get(i).getData(), numAnimations));
+        for (int i = 0; i < narc.root().getFiles().size(); i++) {
+            animations.add(new ModelAnimation(narc.root().getFiles().get(i).getData(), numAnimations));
         }
     }
 

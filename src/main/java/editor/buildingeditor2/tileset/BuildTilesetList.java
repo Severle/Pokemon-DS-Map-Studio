@@ -16,9 +16,9 @@ public class BuildTilesetList {
     private ArrayList<BuildTileset> tilesets;
 
     public BuildTilesetList(Narc narc) {
-        final int numTilesets = narc.getRoot().getFiles().size();
+        final int numTilesets = narc.root().getFiles().size();
         tilesets = new ArrayList<>(numTilesets);
-        for (NarcFile file : narc.getRoot().getFiles()) {
+        for (NarcFile file : narc.root().getFiles()) {
             tilesets.add(new BuildTileset(file.getData()));
         }
     }

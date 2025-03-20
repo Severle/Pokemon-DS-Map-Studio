@@ -15,10 +15,10 @@ public class AreaDataListDPPt {
     private ArrayList<AreaDataDPPt> areaDatas;
 
     public AreaDataListDPPt(Narc narc) throws Exception {
-        final int numFiles = narc.getRoot().getFiles().size();
+        final int numFiles = narc.root().getFiles().size();
         areaDatas = new ArrayList<>(numFiles);
         for (int i = 0; i < numFiles; i++) {
-            areaDatas.add(new AreaDataDPPt(narc.getRoot().getFiles().get(i).getData()));
+            areaDatas.add(new AreaDataDPPt(narc.root().getFiles().get(i).getData()));
         }
     }
 

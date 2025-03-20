@@ -1,18 +1,13 @@
 
 package formats.narc2;
 
+import utils.Utils.MutableInt;
+
 import java.io.File;
 import java.util.ArrayList;
 
-import utils.Utils.MutableInt;
-
-public class Narc {
-
-    private NarcFolder root;
-
-    public Narc(NarcFolder root) {
-        this.root = root;
-    }
+@SuppressWarnings("unused")
+public record Narc(NarcFolder root) {
 
     public boolean hasNamedFiles() {
         return hasNamedFiles(root);
@@ -21,7 +16,7 @@ public class Narc {
     private boolean hasNamedFiles(NarcFolder folder) {
         for (NarcFile file : folder.getFiles()) {
             if (file.getName() != null) {
-                if (!file.getName().equals("")) {
+                if (!file.getName().isEmpty()) {
                     return true;
                 }
             }
@@ -32,10 +27,6 @@ public class Narc {
             }
         }
         return false;
-    }
-
-    public NarcFolder getRoot() {
-        return root;
     }
 
     public void calculateIndices() {
@@ -70,9 +61,7 @@ public class Narc {
     }
 
     private static void addFolderFiles(ArrayList<NarcFile> files, NarcFolder folder) {
-        for (NarcFile file : folder.getFiles()) {
-            files.add(file);
-        }
+        files.addAll(folder.getFiles());
         for (NarcFolder subfolder : folder.getSubfolders()) {
             addFolderFiles(files, subfolder);
         }
@@ -92,15 +81,15 @@ public class Narc {
         }
     }
 
-    public NarcFile getFileByPath(String path){
-        return getFileByPath(path.split(File.separator));
+    public NarcFile getFileByPath(String path) {
+        return getFileByPath(path.split(File.pathSeparator));
     }
 
-    public NarcFile getFileByPath(String[] splitPath){
+    public NarcFile getFileByPath(String[] splitPath) {
         NarcFolder nextFolder = root;
-        for(int i = 0; i < splitPath.length - 1; i++){
+        for (int i = 0; i < splitPath.length - 1; i++) {
             nextFolder = nextFolder.getFolderByName(splitPath[i]);
-            if(nextFolder == null){
+            if (nextFolder == null) {
                 return null;
             }
         }

@@ -4,21 +4,31 @@ import formats.bdhcam.animation.CamAnimPosDep;
 import formats.bdhcam.animation.CamAnimPosIndep;
 import formats.bdhcam.animation.CamAnimator;
 import formats.bdhcam.camplate.CamParameter;
-import formats.bdhcam.camplate.Camplate;
-import formats.bdhcam.camplate.CamplatePosDep;
-import formats.bdhcam.camplate.CamplatePosIndep;
+import formats.bdhcam.camplate.CamPlate;
+import formats.bdhcam.camplate.CamPlatePosDep;
+import formats.bdhcam.camplate.CamPlatePosIndep;
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
+import lombok.Setter;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class BdhcamHandler {
 
-    private MapEditorHandler handler;
+    private final MapEditorHandler   handler;
     //private Bdhcam bdhcam;//Move this to Map Editor Handler
-    private BdhcamEditorDialog dialog;
-    private int indexSelected = 0;
-    private int indexParamSelected = 0;
+    @Getter
+    private final BdhcamEditorDialog dialog;
+    @Getter
+    private       int                indexSelected      = 0;
+    @Getter
+    @Setter
+    private       int                indexParamSelected = 0;
 
+    @Getter
     private CamAnimator animator;
 
+    @Setter
+    @Getter
     private float playerX = 16.0f, playerY = 16.0f;
 
     public BdhcamHandler(MapEditorHandler handler, BdhcamEditorDialog dialog){
@@ -31,7 +41,7 @@ public class BdhcamHandler {
         return handler.getBdhcam();
     }
 
-    public Camplate getSelectedPlate(){
+    public CamPlate getSelectedPlate(){
         Bdhcam bdhcam = handler.getBdhcam();
         if(indexSelected < bdhcam.getPlates().size()){
             return bdhcam.getPlates().get(indexSelected);
@@ -40,7 +50,7 @@ public class BdhcamHandler {
     }
 
     public CamParameter getSelectedParameter(){
-        Camplate plate = getSelectedPlate();
+        CamPlate plate = getSelectedPlate();
         if(plate != null){
             if(indexParamSelected < plate.parameters.size()){
                 return plate.parameters.get(indexParamSelected);
@@ -56,32 +66,8 @@ public class BdhcamHandler {
         }
     }
 
-    public void setIndexParamSelected(int indexParamSelected) {
-        this.indexParamSelected = indexParamSelected;
-    }
-
-    public int getIndexSelected(){
-        return indexSelected;
-    }
-
-    public int getIndexParamSelected() {
-        return indexParamSelected;
-    }
-
-    public BdhcamEditorDialog getDialog() {
-        return dialog;
-    }
-
-    public float getPlayerX() {
-        return playerX;
-    }
-
-    public float getPlayerY() {
-        return playerY;
-    }
-
     public float getSelectedPlateZ(){
-        Camplate plate = getSelectedPlate();
+        CamPlate plate = getSelectedPlate();
         if(plate != null){
             if(plate.useZ){
                 return plate.z;
@@ -90,36 +76,24 @@ public class BdhcamHandler {
         return 0.0f;
     }
 
-    public void setPlayerX(float playerX) {
-        this.playerX = playerX;
-    }
-
-    public void setPlayerY(float playerY) {
-        this.playerY = playerY;
-    }
-
-    public void setPlayerInPlate(Camplate plate){
+    public void setPlayerInPlate(CamPlate plate){
         float[] center = plate.getCenter();
         playerX = (int)center[0];
         playerY = (int)center[1];
     }
 
-    public CamAnimator getAnimator() {
-        return animator;
-    }
-
     public void startAnimation(){
         Bdhcam bdhcam = handler.getBdhcam();
-        if(bdhcam.getPlates().size() > 0) {
+        if(!bdhcam.getPlates().isEmpty()) {
             if (animator != null) {
                 animator.finish();
             }
 
-            if (getSelectedPlate().type.ID == Camplate.Type.POS_INDEPENDENT.ID) {
-                animator = new CamAnimPosIndep(handler, this, (CamplatePosIndep) getSelectedPlate());
+            if (getSelectedPlate().type.ID == CamPlate.Type.POS_INDEPENDENT.ID) {
+                animator = new CamAnimPosIndep(handler, this, (CamPlatePosIndep) getSelectedPlate());
                 animator.start();
             }else{
-                animator = new CamAnimPosDep(handler, this, (CamplatePosDep) getSelectedPlate());
+                animator = new CamAnimPosDep(handler, this, (CamPlatePosDep) getSelectedPlate());
                 animator.start();
             }
         }

@@ -2,27 +2,28 @@ package formats.bdhcam.animation;
 
 import formats.bdhcam.BdhcamHandler;
 import formats.bdhcam.camplate.CameraSettings;
-import formats.bdhcam.camplate.Camplate;
-import formats.bdhcam.camplate.CamplatePosDep;
+import formats.bdhcam.camplate.CamPlate;
+import formats.bdhcam.camplate.CamPlatePosDep;
 import editor.handler.MapEditorHandler;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class CamAnimPosDep extends CamAnimator{
 
-    private CamplatePosDep plate;
-    private int distanceGoal = 1;
-    private float distMoved = 0.0f;
+    private final CamPlatePosDep plate;
+    private final int            distanceGoal;
+    private       float          distMoved = 0.0f;
     private final float increment = 0.05f;
 
-    public CamAnimPosDep(MapEditorHandler handler, BdhcamHandler bdhcamHandler, CamplatePosDep plate) {
+    public CamAnimPosDep(MapEditorHandler handler, BdhcamHandler bdhcamHandler, CamPlatePosDep plate) {
         super(handler, bdhcamHandler);
         this.plate = plate;
-        if(plate.type.ID == Camplate.Type.POS_DEPENDENT_X.ID){
+        if(plate.type.ID == CamPlate.Type.POS_DEPENDENT_X.ID){
             distanceGoal = plate.width;
             bdhcamHandler.setPlayerX(plate.x);
-            bdhcamHandler.setPlayerY((int)((2 * plate.y + plate.height)/2));
+            bdhcamHandler.setPlayerY((float) (2 * plate.y + plate.height) /2);
         }else{
             distanceGoal = plate.height;
-            bdhcamHandler.setPlayerX((int)((2 * plate.x + plate.width)/2));
+            bdhcamHandler.setPlayerX((float) (2 * plate.x + plate.width) /2);
             bdhcamHandler.setPlayerY(plate.y);
         }
     }
@@ -34,7 +35,7 @@ public class CamAnimPosDep extends CamAnimator{
                 bdhcamHandler.getPlayerY() - 16.0f,
                 0.0f};
         bdhcamHandler.getDialog().getBdhcamDisplay().setCamera(new CameraSettings(plate, distMoved / distanceGoal, playerPos));
-        if(plate.type.ID == Camplate.Type.POS_DEPENDENT_X.ID){
+        if(plate.type.ID == CamPlate.Type.POS_DEPENDENT_X.ID){
             bdhcamHandler.setPlayerX(bdhcamHandler.getPlayerX() + increment);
         }else{
             bdhcamHandler.setPlayerY(bdhcamHandler.getPlayerY() + increment);

@@ -3,12 +3,11 @@ package formats.imd.nodes;
 
 import formats.imd.ImdAttribute;
 import formats.imd.ImdNode;
-
-import java.util.ArrayList;
-
 import formats.imd.ImdTextureIndexed;
 import formats.nsbtx2.Nsbtx2;
 import formats.nsbtx2.NsbtxTexture;
+
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
@@ -34,7 +33,7 @@ public class TexImage extends ImdNode {
             color0mode = "color";
         }
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("name", name));
@@ -50,7 +49,6 @@ public class TexImage extends ImdNode {
         };
 
         subnodes.add(new ImdBitmap(imdTexture));
-        //subnodes.add(new ImdBitmap((width * height) / 4));
     }
 
     public TexImage(int index, NsbtxTexture texture, String path) {
@@ -63,7 +61,7 @@ public class TexImage extends ImdNode {
             color0mode = "color";
         }
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("name", texture.getName()));
@@ -79,6 +77,5 @@ public class TexImage extends ImdNode {
         };
 
         subnodes.add(new ImdBitmap(texture));
-        //subnodes.add(new ImdBitmap((width * height) / 4));
     }
 }

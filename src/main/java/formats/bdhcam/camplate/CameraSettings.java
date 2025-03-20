@@ -1,5 +1,6 @@
 package formats.bdhcam.camplate;
 
+@SuppressWarnings("unused")
 public class CameraSettings {
 
     public static final float[] defaultValues = {
@@ -28,7 +29,8 @@ public class CameraSettings {
 
     }
 
-    public CameraSettings(CamplatePosIndep plate, int frame){
+    @SuppressWarnings("SpellCheckingInspection")
+    public CameraSettings(CamPlatePosIndep plate, int frame){
         moveCameraToPlate(plate);
 
         //Apply camera parameters
@@ -41,7 +43,7 @@ public class CameraSettings {
         }
     }
 
-    public CameraSettings(CamplatePosDep plate, float weight, float[] playerPos) {
+    public CameraSettings(CamPlatePosDep plate, float weight, float[] playerPos) {
         moveCameraToPlayer(plate, playerPos);
 
         //Apply camera parameters
@@ -53,7 +55,7 @@ public class CameraSettings {
 
     }
 
-    public CameraSettings(Camplate plate, float weight) {
+    public CameraSettings(CamPlate plate, float weight) {
         moveCameraToPlate(plate);
 
         //Apply camera parameters
@@ -65,7 +67,7 @@ public class CameraSettings {
 
     }
 
-    private void moveCameraToPlayer(Camplate plate, float[] playerPos){
+    private void moveCameraToPlayer(CamPlate plate, float[] playerPos){
         //Copy default values
         System.arraycopy(defaultValues, 0, values, 0, defaultValues.length);
 
@@ -80,7 +82,7 @@ public class CameraSettings {
         }
     }
 
-    private void moveCameraToPlate(Camplate plate){
+    private void moveCameraToPlate(CamPlate plate){
         //Copy default values
         System.arraycopy(defaultValues, 0, values, 0, defaultValues.length);
 

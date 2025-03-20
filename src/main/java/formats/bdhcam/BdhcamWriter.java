@@ -7,18 +7,17 @@ import formats.bdhc.BdhcWriterHGSS;
 import formats.bdhcam.camplate.CamParameter;
 import formats.bdhcam.camplate.CamParameterPosDep;
 import formats.bdhcam.camplate.CamParameterPosIndep;
-import formats.bdhcam.camplate.Camplate;
-import utils.BinaryArrayWriter;
+import formats.bdhcam.camplate.CamPlate;
 import utils.BinaryBufferWriter;
 import utils.BinaryWriter;
 import utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Parameter;
 import java.nio.file.Files;
 
 
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class BdhcamWriter {
 
     public static void writeBdhcamToFile(String path, Bdhcam bdhcam, Bdhc bdhc, int game) throws IOException {
@@ -75,8 +74,8 @@ public class BdhcamWriter {
         writer.writeUInt32(numPlates);
 
         int paramBytesWritten = 0;
-        for (Camplate plate : bdhcam.getPlates()) {
-            if (plate.parameters.size() > 0) {
+        for (CamPlate plate : bdhcam.getPlates()) {
+            if (!plate.parameters.isEmpty()) {
                 int offset = writer.getPos();
 
                 writer.writeUInt8(plate.x);
@@ -105,17 +104,16 @@ public class BdhcamWriter {
                     writer.writeUInt32(param.type.ID);
                     paramBytesWritten += 4;
 
-                    if (plate.type.ID == Camplate.Type.POS_INDEPENDENT.ID) {
+                    if (plate.type.ID == CamPlate.Type.POS_INDEPENDENT.ID) {
                         CamParameterPosIndep paramPI = (CamParameterPosIndep) param;
                         writer.writeUInt32(paramPI.duration);
                         writer.writeUInt32((int) (paramPI.finalValue * 0x10000));
-                        paramBytesWritten += 8;
                     } else {
                         CamParameterPosDep paramPD = (CamParameterPosDep) param;
                         writer.writeUInt32((int) (paramPD.firstValue * 0x10000));
                         writer.writeUInt32((int) (paramPD.secondValue * 0x10000));
-                        paramBytesWritten += 8;
                     }
+                    paramBytesWritten += 8;
                 }
                 writer.reset();
             }

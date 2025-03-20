@@ -38,7 +38,7 @@ public class Material extends ImdNode {
         String texTilingNameU = texTilingToString(texTilingU);
         String texTilingNameV = texTilingToString(texTilingV);
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("name", name));//"mtl" + index));
@@ -73,22 +73,11 @@ public class Material extends ImdNode {
     }
 
     private String texTilingToString(int texTiling) {
-        String texTilingName;
-        switch (texTiling) {
-            case 0:
-                texTilingName = "repeat";
-                break;
-            case 1:
-                texTilingName = "clamp";
-                break;
-            case 2:
-                texTilingName = "flip";
-                break;
-            default:
-                texTilingName = "repeat";
-                break;
-        }
-        return texTilingName;
+        return switch (texTiling) {
+            case 1 -> "clamp";
+            case 2 -> "flip";
+            default -> "repeat";
+        };
     }
 
 }

@@ -28,6 +28,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 
     implementation("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 application {

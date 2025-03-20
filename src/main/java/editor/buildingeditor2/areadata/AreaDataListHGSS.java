@@ -15,10 +15,10 @@ public class AreaDataListHGSS {
     private ArrayList<AreaDataHGSS> areaDatas;
 
     public AreaDataListHGSS(Narc narc) throws Exception {
-        final int numFiles = narc.getRoot().getFiles().size();
+        final int numFiles = narc.root().getFiles().size();
         areaDatas = new ArrayList<>(numFiles);
         for (int i = 0; i < numFiles; i++) {
-            areaDatas.add(new AreaDataHGSS(narc.getRoot().getFiles().get(i).getData()));
+            areaDatas.add(new AreaDataHGSS(narc.root().getFiles().get(i).getData()));
         }
     }
 

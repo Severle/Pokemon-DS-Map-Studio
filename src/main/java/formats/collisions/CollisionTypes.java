@@ -10,19 +10,21 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class CollisionTypes {
 
     public static final int numCollisions = 256;
-    private static final int tileSize = 16;
-    private int numLayers;
-    private Color[][] fillColors;
-    private Color[][] fontColors;
-    private BufferedImage[][] collisionImgs;
-    private String[][] collisionNames;
+    private static final int       tileSize = 16;
+    private final int       numLayers;
+    private final Color[][]         fillColors;
+    private final Color[][]         fontColors;
+    private final BufferedImage[][] collisionImgs;
+    private       String[][]        collisionNames;
 
     public static final String[] collisionTypesFilesPerGame = new String[]{
             "colors/CollisionsColorsDP.txt",
@@ -67,18 +69,18 @@ public class CollisionTypes {
         int layerIndex = 0;
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(
-                    CollisionTypes.class.getClassLoader().getResourceAsStream(path)));
+                    Objects.requireNonNull(CollisionTypes.class.getClassLoader().getResourceAsStream(path))));
 
             String line;
-            while ((line = br.readLine()) != null && collIndex < numCollisions && layerIndex < numLayers) {
+            while ((line = br.readLine()) != null && layerIndex < numLayers) {
                 String[] words = line.split(" ");
-                if (words != null && words.length > 2) {
+                if (words.length > 2) {
                     colors[layerIndex][collIndex] = parseColor(words[1]);
-                    String name = words[2];
+                    StringBuilder name = new StringBuilder(words[2]);
                     for (int i = 3; i < words.length; i++) {
-                        name += " " + words[i];
+                        name.append(" ").append(words[i]);
                     }
-                    collisionNames[layerIndex][collIndex] = name;
+                    collisionNames[layerIndex][collIndex] = name.toString();
                     collIndex++;
                     if (collIndex >= numCollisions) {
                         collIndex = 0;
@@ -126,12 +128,11 @@ public class CollisionTypes {
     private static Color parseColor(String colorString) {
         try {
             if (colorString.startsWith("#")) {
-                colorString = colorString.substring(1, colorString.length());
+                colorString = colorString.substring(1);
             }
             byte[] rgb = hexStringToByteArray(colorString);
 
-            Color color = new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF, 255);
-            return color;
+            return new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF, 255);
         } catch (IndexOutOfBoundsException ex) {
             return new Color(255, 255, 255, 100);
         }
@@ -160,7 +161,7 @@ public class CollisionTypes {
     }
 
     public static Color getContrastColor(Color color) {
-        double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
+        double y = (double) (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
         return y >= 128 ? Color.black : Color.white;
     }
 

@@ -1,35 +1,31 @@
 package formats.collisions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
 import editor.game.Game;
 import editor.state.CollisionLayerState;
 import utils.Utils;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public class CollisionLayerSelector extends JPanel {
 
     private CollisionHandler collHandler;
 
     private static final int cols = 32, rows = 32;
-    private static final int tileSize = 2;
-    private int textGapHeight = 20;
-    private int thumbnailWidth = cols * tileSize, thumbnailHeight = rows * tileSize;
-    private int maxNumLayers = 8;
-    private final int textWidth = thumbnailWidth;
+    private static final int tileSize       = 2;
+    private final        int textGapHeight  = 20;
+    private final int thumbnailWidth  = cols * tileSize;
+    private final int thumbnailHeight = rows * tileSize;
+    private final int maxNumLayers    = 8;
+    private final int textWidth       = thumbnailWidth;
 
     private BufferedImage[] layerImgs;
     private static final Color backColor = new Color(255, 255, 255);
@@ -54,7 +50,7 @@ public class CollisionLayerSelector extends JPanel {
 
         try {
             lockImg = Utils.loadImageAsResource("/icons/lockIcon.png");
-        }catch (IOException ex){
+        } catch (IOException ignored){
 
         }
 
@@ -97,21 +93,12 @@ public class CollisionLayerSelector extends JPanel {
                 g.drawImage(layerImgs[i],
                         textWidth, i * thumbnailHeight, null);
 
-                //AffineTransform orig = g2d.getTransform();
-                //g2d.rotate(-Math.PI/2);
                 String string = layerNames[collHandler.getGame()][i];
                 int width = g.getFontMetrics().stringWidth(string);
                 int height = g.getFontMetrics().getFont().getSize();
                 g.drawString(string,
                         (textWidth - width) / 2
                         , i * thumbnailHeight + (thumbnailHeight + height) / 2);
-                //g.drawString(string, (-1 - i) * thumbnailHeight, (textGapHeight * 2) / 3);
-                /*
-                g.drawString(string,
-                        i * thumbnailHeight + (thumbnailHeight - width) / 2,
-                        (textGapHeight * 2) / 3
-                );*/
-                //g2d.setTransform(orig);
             }
 
             g.setColor(Color.red);
@@ -190,6 +177,7 @@ public class CollisionLayerSelector extends JPanel {
 
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 

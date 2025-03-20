@@ -4,15 +4,14 @@
 
 package formats.bdhcam;
 
-import java.awt.event.*;
-import javax.swing.border.*;
-
-import formats.bdhcam.camplate.Camplate;
 import editor.handler.MapEditorHandler;
+import formats.bdhcam.camplate.CamPlate;
 import utils.Utils;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -20,6 +19,7 @@ import java.io.IOException;
 /**
  * @author Truck
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal", "DuplicatedCode"})
 public class BdhcamPlatesDisplay extends JPanel {
 
     private MapEditorHandler handler;
@@ -65,7 +65,7 @@ public class BdhcamPlatesDisplay extends JPanel {
 
         try {
             playerImg = Utils.loadImageAsResource("/icons/playerIcon.png");
-        } catch (IOException | IllegalArgumentException ex) {
+        } catch (IOException | IllegalArgumentException ignored) {
 
         }
     }
@@ -73,11 +73,11 @@ public class BdhcamPlatesDisplay extends JPanel {
     private void thisMouseDragged(MouseEvent evt) {
         int x = getFixedMouseX(evt);
         int y = getFixedMouseY(evt);
-        if (bdhcamHandler.getBdhcam().getPlates().size() > 0) {
+        if (!bdhcamHandler.getBdhcam().getPlates().isEmpty()) {
             if (dragging && isCursorInsiePanel(evt)) {
                 int deltaX = (x - lastX) / TILE_SIZE;
-                int deltaY = (y - lastY) / TILE_SIZE;
-                Camplate p = bdhcamHandler.getSelectedPlate();
+                int      deltaY = (y - lastY) / TILE_SIZE;
+                CamPlate p      = bdhcamHandler.getSelectedPlate();
                 switch (partSelected) {
                     case CENTER:
                         updatePlate(p, lastPlateX + deltaX, lastPlateY + deltaY, p.width, p.height);
@@ -133,7 +133,7 @@ public class BdhcamPlatesDisplay extends JPanel {
                 lastX = getFixedMouseX(evt);
                 lastY = getFixedMouseY(evt);
 
-                Camplate p = bdhcamHandler.getSelectedPlate();
+                CamPlate p = bdhcamHandler.getSelectedPlate();
                 lastPlateX = p.x;
                 lastPlateY = p.y;
                 lastPlateWidth = p.width;
@@ -145,6 +145,7 @@ public class BdhcamPlatesDisplay extends JPanel {
         }
     }
 
+    @SuppressWarnings("MagicConstant")
     private void thisMouseMoved(MouseEvent evt) {
         int x = getFixedMouseX(evt);
         int y = getFixedMouseY(evt);
@@ -155,7 +156,7 @@ public class BdhcamPlatesDisplay extends JPanel {
                 setCursor(new Cursor(partHovering));
             } else {
                 for (int i = 0; i < bdhcamHandler.getBdhcam().getPlates().size(); i++) {
-                    Camplate p = bdhcamHandler.getBdhcam().getPlate(i);
+                    CamPlate p = bdhcamHandler.getBdhcam().getPlate(i);
                     if (isHoveringPlate(p, x, y)) {
                         partHovering = getPartSelected(p, x, y);
                         indexPlateHovering = i;
@@ -248,9 +249,9 @@ public class BdhcamPlatesDisplay extends JPanel {
             fillPlate(g, bdhcam.getPlate(i));
 
             g.setColor(bdhcam.getPlate(i).getBorderColor());
-            if (bdhcam.getPlate(i).type.ID == Camplate.Type.POS_DEPENDENT_X.ID) {
+            if (bdhcam.getPlate(i).type.ID == CamPlate.Type.POS_DEPENDENT_X.ID) {
                 drawBArrowX(g, bdhcam.getPlate(i), 10);
-            }else if(bdhcam.getPlate(i).type.ID == Camplate.Type.POS_DEPENDENT_Y.ID){
+            }else if(bdhcam.getPlate(i).type.ID == CamPlate.Type.POS_DEPENDENT_Y.ID){
                 drawBArrowY(g, bdhcam.getPlate(i), 10);
             }
 
@@ -285,23 +286,24 @@ public class BdhcamPlatesDisplay extends JPanel {
         }
     }
 
-    private void drawPlateBorder(Graphics g, Camplate p) {
+    private void drawPlateBorder(Graphics g, CamPlate p) {
         g.drawRect(p.x * TILE_SIZE, p.y * TILE_SIZE,
                 p.width * TILE_SIZE - 1, p.height * TILE_SIZE - 1);
     }
 
-    private void drawPlateBorder(Graphics g, Camplate p, int margin) {
+    @SuppressWarnings("SameParameterValue")
+    private void drawPlateBorder(Graphics g, CamPlate p, int margin) {
         g.drawRect(p.x * TILE_SIZE - margin, p.y * TILE_SIZE - margin,
                 p.width * TILE_SIZE - 1 + margin * 2, p.height * TILE_SIZE - 1 + margin * 2);
     }
 
-    private void fillPlate(Graphics g, Camplate p) {
+    private void fillPlate(Graphics g, CamPlate p) {
         g.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE,
                 p.width * TILE_SIZE, p.height * TILE_SIZE);
 
     }
 
-    private void drawPlateIndex(Graphics g, Camplate p, int index) {
+    private void drawPlateIndex(Graphics g, CamPlate p, int index) {
         g.setColor(Color.white);
         g.drawString(
                 String.valueOf(index), p.x * TILE_SIZE + 4, p.y * TILE_SIZE + 12);
@@ -320,7 +322,8 @@ public class BdhcamPlatesDisplay extends JPanel {
         g.fillPolygon(xValues2, yValues2, 3);
     }
 
-    private void drawBArrowX(Graphics g, Camplate p, int scale) {
+    @SuppressWarnings("SameParameterValue")
+    private void drawBArrowX(Graphics g, CamPlate p, int scale) {
         drawBArrowX(g,
                 (p.x) * TILE_SIZE + xOffset,
                 ((p.y + p.y + p.height) * TILE_SIZE / 2 + yOffset),
@@ -342,7 +345,8 @@ public class BdhcamPlatesDisplay extends JPanel {
         g.fillPolygon(xValues2, yValues2, 3);
     }
 
-    private void drawBArrowY(Graphics g, Camplate p, int scale) {
+    @SuppressWarnings("SameParameterValue")
+    private void drawBArrowY(Graphics g, CamPlate p, int scale) {
         drawBArrowY(g,
                 ((p.x + p.x + p.width) * TILE_SIZE / 2 + xOffset),
                 (p.y) * TILE_SIZE + yOffset,
@@ -352,7 +356,7 @@ public class BdhcamPlatesDisplay extends JPanel {
     }
 
 
-    public int getPartSelected(Camplate p, int x, int y) {
+    public int getPartSelected(CamPlate p, int x, int y) {
         if (new Rectangle(
                 p.x * TILE_SIZE + xOffset,
                 p.y * TILE_SIZE + yOffset,
@@ -405,7 +409,7 @@ public class BdhcamPlatesDisplay extends JPanel {
         return CENTER;
     }
 
-    public boolean isHoveringPlate(Camplate p, int x, int y) {
+    public boolean isHoveringPlate(CamPlate p, int x, int y) {
         return new Rectangle(
                 p.x * TILE_SIZE + xOffset,
                 p.y * TILE_SIZE + yOffset,
@@ -423,7 +427,7 @@ public class BdhcamPlatesDisplay extends JPanel {
         ).contains(x, y);
     }
 
-    public void updatePlate(Camplate p, int c, int r, int width, int height) {
+    public void updatePlate(CamPlate p, int c, int r, int width, int height) {
         int xMin = 0;
         int xMax = 32;
         int yMin = 0;

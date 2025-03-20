@@ -3,6 +3,7 @@ package formats.bdhcam.animation;
 import formats.bdhcam.BdhcamHandler;
 import editor.handler.MapEditorHandler;
 
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public abstract class CamAnimator extends Thread{
 
     protected MapEditorHandler handler;

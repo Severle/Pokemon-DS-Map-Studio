@@ -1,13 +1,16 @@
 
 package formats.imd;
 
-import java.math.BigDecimal;
+import formats.bdhc.BdhcLoaderDP;
+import lombok.extern.log4j.Log4j2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * @author Trifindo
  */
+@Log4j2
 public class PolygonData {
 
     public float[] vCoordsQuad;
@@ -40,18 +43,8 @@ public class PolygonData {
             polys.add(new Poly(i, isQuad));
         }
 
-        /*
-        System.out.println("Polygon");
-        for (int i = 0; i < polys.size(); i++) {
-            polys.get(i).printData();
-        }*/
         Collections.sort(polys);
 
-        /*
-        System.out.println("Sorted Polygon");
-        for (int i = 0; i < polys.size(); i++) {
-            polys.get(i).printData();
-        }*/
         if (isQuad) {
             vCoordsQuad = sortByIndices(vCoordsQuad, 12, polys);
             tCoordsQuad = sortByIndices(tCoordsQuad, 8, polys);
@@ -123,6 +116,7 @@ public class PolygonData {
         fixTextureCoords(tCoordsTri, 3, imgWidth, imgHeight);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void fixTextureCoords(float[] tCoords, int vertexPerPolygon, int imgWidth, int imgHeight) {
         final int tPerVertex = 2;
         final int tPerPolygon = tPerVertex * vertexPerPolygon;
@@ -202,13 +196,14 @@ public class PolygonData {
         }
     }
 
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private class Poly implements Comparable<Poly> {
 
-        private static final int nPerVertex = 3;
-        private float[] nCoords;
-        private int nPerPoly;
-        private int index;
-        private int vertexPerPoly;
+        private static final int     nPerVertex = 3;
+        private final float[] nCoords;
+        private final int nPerPoly;
+        private final int index;
+        private final int vertexPerPoly;
 
         public Poly(int index, boolean isQuad) {
             this.index = index;
@@ -224,7 +219,7 @@ public class PolygonData {
         }
 
         public void printData() {
-            System.out.println(index + ": " + hashCode() + " / " + nCoords[index * nPerPoly + 0] + " " + nCoords[index * nPerPoly + 1] + " " + nCoords[index * nPerPoly + 2]);
+            System.out.println(index + ": " + hashCode() + " / " + nCoords[index * nPerPoly] + " " + nCoords[index * nPerPoly + 1] + " " + nCoords[index * nPerPoly + 2]);
         }
 
         @Override
@@ -239,35 +234,17 @@ public class PolygonData {
                 return false;
             }
             final Poly other = (Poly) obj;
-            if (hashCode() != other.hashCode()) {
-                return false;
-            }
-            /*
-            for(int i = 0; i < nPerVertex; i++){
-                if(Math.abs(nCoords[index * nPerPoly + i] - other.nCoords[index * nPerPoly + i]) > 0.0001f){
-                    return false;
-                }
-            }*/
-            return true;
+            return hashCode() == other.hashCode();
         }
 
         @Override
         public int hashCode() {
-            /*
-            float[] nCoordsSubArray = new float[nPerVertex];
-            System.arraycopy(nCoords, index * nPerPoly, nCoordsSubArray, 0, nPerVertex);
-            for(int i = 0; i < nCoordsSubArray.length; i++){
-                nCoordsSubArray[i] = round(nCoordsSubArray[i], 5);
-            }*/
-
             int hash = 3;
-            hash = 13 * hash + Float.floatToIntBits(round(nCoords[index * nPerPoly + 0], 3));
+            hash = 13 * hash + Float.floatToIntBits(round(nCoords[index * nPerPoly], 3));
             hash = 13 * hash + Float.floatToIntBits(round(nCoords[index * nPerPoly + 1], 3));
             hash = 13 * hash + Float.floatToIntBits(round(nCoords[index * nPerPoly + 2], 3));
 
             return hash;
-
-            //return Arrays.hashCode(nCoordsSubArray);
         }
 
         @Override
@@ -278,16 +255,12 @@ public class PolygonData {
     }
 
     public static float round(float d, int decimalPlace) {
-        //System.out.println(d);
         try {
-            BigDecimal bd = new BigDecimal(Float.toString(d));
-            bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-            return bd.floatValue();
+            return BdhcLoaderDP.round(d, decimalPlace);
         } catch (NumberFormatException ex) {
-            //System.out.println("ERROR: " + d);
+            log.warn(ex);
             return 0.0f;
         }
-
     }
 
 }

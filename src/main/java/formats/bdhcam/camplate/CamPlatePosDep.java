@@ -1,16 +1,17 @@
 package formats.bdhcam.camplate;
 
-public class CamplatePosDep extends Camplate{
+@SuppressWarnings("unused")
+public class CamPlatePosDep extends CamPlate {
 
-    public CamplatePosDep(int x, int y, int z, int width, int height, int type, int numParams, boolean useZ) {
+    public CamPlatePosDep(int x, int y, int z, int width, int height, int type, int numParams, boolean useZ) {
         super(x, y, z, width, height, type, numParams, useZ);
     }
 
-    public CamplatePosDep(){
+    public CamPlatePosDep(){
         super(16, 16, 0, 2, 2, Type.POS_DEPENDENT_X.ID, 0, false);
     }
 
-    public CamplatePosDep(Camplate other, int type, int numPlates){
+    public CamPlatePosDep(CamPlate other, int type, int numPlates){
         super(other, type, numPlates);
     }
 

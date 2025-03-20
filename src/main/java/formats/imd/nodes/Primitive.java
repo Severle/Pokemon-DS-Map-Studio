@@ -4,12 +4,15 @@ package formats.imd.nodes;
 import formats.imd.ImdAttribute;
 import formats.imd.ImdNode;
 import formats.imd.PolygonData;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"unused", "SpellCheckingInspection", "DuplicatedCode"})
 public class Primitive extends ImdNode {
 
     private static float[] lastNormalUsed = new float[]{0.0f, 0.0f, 0.0f};
@@ -17,7 +20,7 @@ public class Primitive extends ImdNode {
     public Primitive(int index, String type, int vertexSize) {
         super("primitive");
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("type", type));
@@ -63,7 +66,7 @@ public class Primitive extends ImdNode {
         }
         addNormal(nCoords);
 
-        float[] colors = null;
+        float[] colors;
         if (useVertexColors) {
             colors = getSubArrayCell(cs, 0, 3);
             addColor(colors);
@@ -91,7 +94,6 @@ public class Primitive extends ImdNode {
                 //if(!sameArraysColors(colors, newColors)){
                 addColor(newColors);
                 //}
-                colors = newColors;
             }
 
             float[] newVCoords = getSubArrayCell(vs, v, 3);
@@ -220,13 +222,7 @@ public class Primitive extends ImdNode {
                 }
                 vCoords = newVCoords;
             }
-
-            /*
-            if(firstColor){
-                firstColor = false;
-            }*/
         }
-
     }
 
     private boolean canUseDiff(float[] arr1, float[] arr2) {
@@ -239,10 +235,11 @@ public class Primitive extends ImdNode {
     }
 
     private boolean sameCoordinate(float[] arr1, float[] arr2, int coordInd) {
-        //System.out.println("coord " + coordInd + ": " + arr1[coordInd] + " " + arr2[coordInd]);
+        log.debug("coord {}: {} {}", coordInd, arr1[coordInd], arr2[coordInd]);
         return Math.abs(arr1[coordInd] - arr2[coordInd]) < 0.0001f;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean sameArraysNormals(float[] arr1, float[] arr2) {
         for (int i = 0; i < arr1.length; i++) {
             if (Math.abs(arr1[i] - arr2[i]) > 0.001f) {
@@ -350,9 +347,7 @@ public class Primitive extends ImdNode {
 
     private static float[] getSubArrayCell(float[] array, int cellIndex, int cellSize) {
         float[] subArray = new float[cellSize];
-        for (int i = 0; i < cellSize; i++) {
-            subArray[i] = array[cellIndex * cellSize + i];
-        }
+        System.arraycopy(array, cellIndex * cellSize, subArray, 0, cellSize);
         return subArray;
     }
 

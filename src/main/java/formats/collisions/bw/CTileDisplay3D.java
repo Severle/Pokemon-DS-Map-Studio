@@ -19,6 +19,7 @@ import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 import static com.jogamp.opengl.GL2GL3.*;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
 
+@SuppressWarnings({"unused", "SpellCheckingInspection", "DuplicatedCode"})
 public class CTileDisplay3D extends GLJPanel implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     private CollisionHandlerBW cHandler;
@@ -48,7 +49,7 @@ public class CTileDisplay3D extends GLJPanel implements GLEventListener, MouseLi
             0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
     };
 
-    private static final float cubeCoords[] = new float[]{
+    private static final float[] cubeCoords = new float[]{
             1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
             1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
             1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
@@ -188,30 +189,15 @@ public class CTileDisplay3D extends GLJPanel implements GLEventListener, MouseLi
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        //noinspection StatementWithEmptyBody
         if (SwingUtilities.isLeftMouseButton(e)) {
-            /*
-            float dist = cameraZ;
-            float deltaX = (((float) ((e.getX() - lastMouseX))) / getWidth()) * dist;
-            float deltaZ = (((float) ((e.getY() - lastMouseY))) / getHeight()) * dist;
 
-            Vector3D v = new Vector3D(deltaX, 0.0f, deltaZ);
-            Matrix3D m2 = new Matrix3D(cameraRotZ, new Vector3D(0.0f, 1.0f, 0.0f));
-            v = v.mult(m2);
-
-            cameraX -= (float) v.getX();
-            cameraY += (float) v.getZ();
-
-            lastMouseX = e.getX();
-            lastMouseY = e.getY();
-
-            repaint();
-            */
         } else if (SwingUtilities.isRightMouseButton(e)
                 | SwingUtilities.isMiddleMouseButton(e)) {
             float delta = 100.0f;
-            cameraRotZ -= (((float) ((e.getX() - lastMouseX))) / getWidth()) * delta;
+            cameraRotZ -= ((e.getX() - lastMouseX) / getWidth()) * delta;
             lastMouseX = e.getX();
-            cameraRotX -= (((float) ((e.getY() - lastMouseY))) / getHeight()) * delta;
+            cameraRotX -= ((e.getY() - lastMouseY) / getHeight()) * delta;
             lastMouseY = e.getY();
             repaint();
         }
@@ -227,9 +213,9 @@ public class CTileDisplay3D extends GLJPanel implements GLEventListener, MouseLi
     public void mouseWheelMoved(MouseWheelEvent e) {
 
         if (e.getWheelRotation() > 0) {
-            cameraZ *= 1.1;
+            cameraZ *= 1.1F;
         } else {
-            cameraZ /= 1.1;
+            cameraZ /= 1.1F;
         }
         repaint();
 
@@ -267,9 +253,6 @@ public class CTileDisplay3D extends GLJPanel implements GLEventListener, MouseLi
 
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_LEQUAL);
-
-        //gl.glEnable(GL_ALPHA_TEST);
-        //gl.glAlphaFunc(GL_GREATER, 0.9f);
 
         applyCameraTransform(gl);
 

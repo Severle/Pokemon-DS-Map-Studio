@@ -52,10 +52,12 @@ public class ImdAttribute {
 
     public void setValue(int[] values) {
         this.value = "";
+        var builder = new StringBuilder();
         for (int i = 0; i < values.length - 1; i++) {
-            this.value += String.valueOf(values[i]) + " ";
+            builder.append(values[i]).append(" ");
         }
-        this.value += String.valueOf(values[values.length - 1]);
+        builder.append(values[values.length - 1]);
+        this.value = builder.toString();
     }
 
     public void setValue(float value) {
@@ -64,10 +66,12 @@ public class ImdAttribute {
 
     public void setValue(float[] values) {
         this.value = "";
+        var builder = new StringBuilder();
         for (int i = 0; i < values.length - 1; i++) {
-            this.value += String.format(Locale.US, "%.6f", round(values[i])) + " ";
+            builder.append(String.format(Locale.US, "%.6f", round(values[i]))).append(" ");
         }
-        this.value += String.format(Locale.US, "%.6f", round(values[values.length - 1]));
+        builder.append(String.format(Locale.US, "%.6f", round(values[values.length - 1])));
+        this.value = builder.toString();
     }
 
     public float round(float f) {

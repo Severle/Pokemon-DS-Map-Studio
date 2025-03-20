@@ -1,20 +1,22 @@
 package formats.obj;
 
-import java.awt.*;
-import java.awt.event.*;
+import lombok.Getter;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import net.miginfocom.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ExportMapObjDialog extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
-    private int returnValue = CANCEL_OPTION;
+    @Getter
+    private int     returnValue         = CANCEL_OPTION;
     private boolean includeVertexColors = true;
 
     public ExportMapObjDialog(Window owner, String title) {
@@ -41,10 +43,6 @@ public class ExportMapObjDialog extends JDialog {
         dispose();
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     public boolean includeVertexColors() {
         return includeVertexColors;
     }
@@ -57,6 +55,7 @@ public class ExportMapObjDialog extends JDialog {
         return jrbExportAllMapsJoined.isSelected();
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public float getTileUpscaling(){
         try{
             return (Float)jsTileUpscaling.getValue();
@@ -65,6 +64,7 @@ public class ExportMapObjDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings({"SpellCheckingInspection", "Convert2MethodRef", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();
@@ -170,8 +170,9 @@ public class ExportMapObjDialog extends JDialog {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JPanel jPanel1;
     private JCheckBox jcbVertexColors;
-    private JLabel label1;
-    private JSpinner jsTileUpscaling;
+    private JLabel       label1;
+    @SuppressWarnings("SpellCheckingInspection")
+    private JSpinner     jsTileUpscaling;
     private JRadioButton jrbExportAllMapsSeparately;
     private JRadioButton jrbExportCurrentMap;
     private JRadioButton jrbExportAllMapsJoined;

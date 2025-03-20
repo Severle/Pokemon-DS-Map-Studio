@@ -15,7 +15,7 @@ public class TexPalette extends ImdNode {
     public TexPalette(int index, String name, int colorSize, String content) {
         super("tex_palette");
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("name", name));

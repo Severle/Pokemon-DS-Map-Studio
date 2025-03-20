@@ -1,5 +1,6 @@
 package formats.mapbin;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class MissingMapBinFileException extends Exception{
 
     public static final int MISSING_BGS = 0;

@@ -15,7 +15,7 @@ public class Node extends ImdNode {
                 int triangleSize, int quadSize, ArrayList<Integer> textureIDs) {
         super("node");
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("index", index));
                 add(new ImdAttribute("name", "world_root"));

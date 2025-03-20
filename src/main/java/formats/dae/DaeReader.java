@@ -1,21 +1,22 @@
 
 package formats.dae;
 
-import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class DaeReader {
 
     public static void loadDae(String path) throws ParserConfigurationException, SAXException, IOException {
@@ -51,10 +52,6 @@ public class DaeReader {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                /*
-                System.out.println("Stock Symbol: " + getValue("symbol", element));
-                System.out.println("Stock Price: " + getValue("price", element));
-                System.out.println("Stock Quantity: " + getValue("quantity", element));*/
             }
         }
 

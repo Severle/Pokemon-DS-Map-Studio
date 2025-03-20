@@ -13,12 +13,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class MapBinHGSS extends MapBin {
 
-    private byte[] bgs;
-    private byte[] per;
-    private byte[] bld;
-    private byte[] nsbmd;
+    private final byte[] bgs;
+    private final byte[] per;
+    private final byte[] bld;
+    private       byte[] nsbmd;
     private byte[] bdhc;
 
     public MapBinHGSS(String folderPath, String mapName) throws MissingMapBinFileException, NsbmdConversionException {
@@ -61,7 +62,7 @@ public class MapBinHGSS extends MapBin {
                 if(bdhcam.length > bdhc.length + 10){//BDHCAM has data
                     bdhc = bdhcam;
                 }
-            }catch(Exception ex2){
+            } catch(Exception ignored){
 
             }
         } catch (Exception ex) {

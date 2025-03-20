@@ -2,11 +2,16 @@
 package formats.narc2;
 
 
+import lombok.Getter;
+
+@SuppressWarnings("unused")
 public class NarcFile {
 
-    private String name = "";
-    private NarcFolder parent;
-    private byte[] data;
+    @Getter
+    private final String     name;
+    private final NarcFolder parent;
+    @Getter
+    private       byte[]     data;
 
     public NarcFile(String name, NarcFolder parent) {
         this.name = name;
@@ -18,13 +23,4 @@ public class NarcFile {
         this.parent = parent;
         this.data = data;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
 }

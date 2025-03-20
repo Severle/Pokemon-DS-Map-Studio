@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class DaeGeometry extends DaeNode {
 
     private List<DaeMesh> meshes;

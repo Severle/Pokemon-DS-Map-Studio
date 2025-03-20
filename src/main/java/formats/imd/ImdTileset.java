@@ -7,6 +7,7 @@ import formats.imd.nodes.Head;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class ImdTileset extends ImdNode {
 
     public ImdTileset() {

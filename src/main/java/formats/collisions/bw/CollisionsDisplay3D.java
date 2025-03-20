@@ -12,6 +12,8 @@ import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
 import graphicslib3D.Matrix3D;
 import graphicslib3D.Vector3D;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,12 +25,15 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.jogamp.opengl.GL.*;
 import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
 import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 import static com.jogamp.opengl.GL2GL3.*;
 
+@Log4j2
+@SuppressWarnings({"DuplicatedCode", "unused", "SpellCheckingInspection"})
 public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     protected MapEditorHandler handler;
@@ -68,11 +73,16 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
     protected boolean updateRequested = false;
     protected final float minZ = -8.0f, maxZ = 8.0f;
 
-    protected boolean mapEnabled = true;
-    protected boolean wireframeEnabled = true;
+    @Setter
+    protected boolean mapEnabled         = true;
+    @Setter
+    protected boolean wireframeEnabled   = true;
+    @Setter
     protected boolean transparentEnabled = true;
+    @Setter
     protected boolean xRayEnabled = true;
-    protected float platesAlpha = 0.85f;
+    @Setter
+    protected float   platesAlpha = 0.85f;
 
     protected BufferedImage[][] arrows = new BufferedImage[][]{
             {loadImage("/icons/arrowLU.png"), loadImage("/icons/arrowU.png"), loadImage("/icons/arrowRU.png")},
@@ -156,11 +166,7 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
 
             switch (mode) {
                 case View:
-                    if (transparentEnabled) {
-                        drawCollisions(gl);
-                    } else {
-                        drawCollisions(gl);
-                    }
+                    drawCollisions(gl);
 
                     if (wireframeEnabled) {
                         drawWireframe(gl);
@@ -250,8 +256,8 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
             case View:
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     float dist = cameraZ;
-                    float deltaX = (((float) ((e.getX() - lastMouseX))) / getWidth()) * dist;
-                    float deltaZ = (((float) ((e.getY() - lastMouseY))) / getHeight()) * dist;
+                    float deltaX = ((e.getX() - lastMouseX) / getWidth()) * dist;
+                    float deltaZ = ((e.getY() - lastMouseY) / getHeight()) * dist;
 
                     Vector3D v = new Vector3D(deltaX, 0.0f, deltaZ);
                     Matrix3D m2 = new Matrix3D(cameraRotZ, new Vector3D(0.0f, 1.0f, 0.0f));
@@ -267,9 +273,9 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
                 } else if (SwingUtilities.isRightMouseButton(e)
                         | SwingUtilities.isMiddleMouseButton(e)) {
                     float delta = 100.0f;
-                    cameraRotZ -= (((float) ((e.getX() - lastMouseX))) / getWidth()) * delta;
+                    cameraRotZ -= ((e.getX() - lastMouseX) / getWidth()) * delta;
                     lastMouseX = e.getX();
-                    cameraRotX -= (((float) ((e.getY() - lastMouseY))) / getHeight()) * delta;
+                    cameraRotX -= ((e.getY() - lastMouseY) / getHeight()) * delta;
                     lastMouseY = e.getY();
                     repaint();
                 }
@@ -303,9 +309,9 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
         switch (mode) {
             case View:
                 if (e.getWheelRotation() > 0) {
-                    cameraZ *= 1.1;
+                    cameraZ *= 1.1F;
                 } else {
-                    cameraZ /= 1.1;
+                    cameraZ /= 1.1F;
                 }
                 repaint();
                 break;
@@ -326,22 +332,20 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        switch (mode) {
-            case Edit:
-                Graphics2D g2d = (Graphics2D) g;
+        if (Objects.requireNonNull(mode) == Mode.Edit) {
+            Graphics2D g2d = (Graphics2D) g;
 
-                AffineTransform transf = g2d.getTransform();
+            AffineTransform transf = g2d.getTransform();
 
-                g2d.scale((float) getWidth() / width, (float) getHeight() / height);
+            g2d.scale((float) getWidth() / width, (float) getHeight() / height);
 
-                g.setColor(new Color(0.0f, 0.0f, 0.0f, 0.5f));
-                drawGrid(g);
+            g.setColor(new Color(0.0f, 0.0f, 0.0f, 0.5f));
+            drawGrid(g);
 
-                g2d.setComposite(AlphaComposite.SrcOver.derive(0.35f));
-                drawArrows(g);
+            g2d.setComposite(AlphaComposite.SrcOver.derive(0.35f));
+            drawArrows(g);
 
-                g2d.setTransform(transf);
-                break;
+            g2d.setTransform(transf);
         }
     }
 
@@ -447,13 +451,7 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
         gl.glEnable(GL_ALPHA_TEST);
         gl.glAlphaFunc(GL_GREATER, 0.9f);
 
-        /*
-        drawAllMaps(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });*/
-        drawCurrentMap(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });
+        drawCurrentMap(gl, this::drawGeometryGL);
     }
 
     protected void drawTransparentMaps(GL2 gl) {
@@ -468,14 +466,7 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
         gl.glEnable(GL_ALPHA_TEST);
         gl.glAlphaFunc(GL_NOTEQUAL, 0.0f);
 
-        drawCurrentMap(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });
-
-        /*
-        drawAllMaps(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });*/
+        drawCurrentMap(gl, this::drawGeometryGL);
     }
 
     protected void drawAllMaps(GL2 gl, CollisionsDisplay3D.DrawGeometryGLFunction drawFunction) {
@@ -491,6 +482,7 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
                 0, 0, 0);
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void drawAllMapLayersGL(GL2 gl, CollisionsDisplay3D.DrawGeometryGLFunction drawFunction, MapLayerGL[] mapLayersGL, float x, float y, float z) {
         for (int i = 0; i < mapLayersGL.length; i++) {
             if (handler.renderLayers[i]) {
@@ -583,7 +575,7 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
 
             gl.glDisable(GL_TEXTURE_2D);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -607,10 +599,6 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
         } else {
             gl.glDepthFunc(GL_LEQUAL);
         }
-        //gl.glDepthFunc(GL_LEQUAL);
-
-        //gl.glEnable(GL_ALPHA_TEST);
-        //gl.glAlphaFunc(GL_GREATER, 0.9f);
 
         applyCameraTransform(gl);
 
@@ -641,13 +629,7 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
 
         // adjust OpenGL settings and draw model
         gl.glEnable(GL_DEPTH_TEST);
-        if (xRayEnabled) {
-            //gl.glDepthFunc(GL_ALWAYS);
-            //gl.glClear(GL_DEPTH_BUFFER_BIT);
-            gl.glDepthFunc(GL_LEQUAL);
-        } else {
-            gl.glDepthFunc(GL_LEQUAL);
-        }
+        gl.glDepthFunc(GL_LEQUAL);
 
         gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -739,36 +721,16 @@ public class CollisionsDisplay3D extends GLJPanel implements GLEventListener, Mo
 
     }
 
-    public void setxRayEnabled(boolean xRayEnabled) {
-        this.xRayEnabled = xRayEnabled;
-    }
-
-    public void setMapEnabled(boolean mapEnabled) {
-        this.mapEnabled = mapEnabled;
-    }
-
-    public void setTransparentEnabled(boolean transparentEnabled) {
-        this.transparentEnabled = transparentEnabled;
-    }
-
-    public void setWireframeEnabled(boolean wireframeEnabled) {
-        this.wireframeEnabled = wireframeEnabled;
-    }
-
-    public void setPlatesAlpha(float platesAlpha) {
-        this.platesAlpha = platesAlpha;
-    }
-
     private static BufferedImage loadImage(String path) {
         try {
-            return ImageIO.read(CollisionsDisplay3D.class.getResource(path));
+            return ImageIO.read(Objects.requireNonNull(CollisionsDisplay3D.class.getResource(path)));
         } catch (IOException e) {
             return new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         }
     }
 
-    protected static interface DrawGeometryGLFunction {
-        public void draw(GL2 gl, GeometryGL geometryGL, ArrayList<Texture> textures);
+    protected interface DrawGeometryGLFunction {
+        void draw(GL2 gl, GeometryGL geometryGL, ArrayList<Texture> textures);
     }
 
 }

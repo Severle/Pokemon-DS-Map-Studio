@@ -3,47 +3,47 @@ package formats.obj;
 
 import editor.game.Game;
 import editor.grid.MapGrid;
-
-import static editor.grid.MapGrid.cols;
-import static editor.grid.MapGrid.gridTileSize;
-import static editor.grid.MapGrid.rows;
-
-import java.awt.Point;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import javax.imageio.ImageIO;
-
+import lombok.extern.log4j.Log4j2;
 import tileset.Face;
 import tileset.Tile;
 import tileset.Tileset;
 import tileset.TilesetMaterial;
 import utils.Utils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static editor.grid.MapGrid.*;
+
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode", "unused"})
 public class ObjWriter {
 
-    private Tileset tset;
+    private final Tileset                 tset;
     //private MapGrid grid;
-    private HashMap<Point, MapGrid> maps;
-    private String folderPath;
+    private final HashMap<Point, MapGrid> maps;
+    private       String                  folderPath;
     private String savePathObj;
-    private String matFilename;
-    private boolean saveTextures;
-    private boolean saveVertexColors = true;
-    private float tileUpscale;
+    private       String  matFilename;
+    private final boolean saveTextures;
+    private final boolean saveVertexColors;
+    private final float   tileUpscale;
 
     private ArrayList<Tile> outTiles = new ArrayList<>();
     private ArrayList<Integer> textureUsage;
 
     private static final int maxTileableSizeBW = 16;
     private static final int maxTileableSizeDPHGSS = 8;
-    private int maxTileableSize = 8; //TODO: Use 16 instead??
+    private final        int maxTileableSize; //TODO: Use 16 instead??
 
     public ObjWriter(Tileset tset, HashMap<Point, MapGrid> maps, String savePath, int game,
                      boolean saveTextures, boolean saveVertexColors, float tileUpscale) {
@@ -64,7 +64,7 @@ public class ObjWriter {
     public ObjWriter(Tileset tset, MapGrid grid, String savePath, int game,
                      boolean saveTextures, boolean saveVertexColors, float tileUpscale) {
         this.tset = tset;
-        this.maps = new HashMap<Point, MapGrid>(1) {
+        this.maps = new HashMap<>(1) {
             {
                 put(new Point(0, 0), grid);
             }
@@ -98,7 +98,7 @@ public class ObjWriter {
         long time = System.currentTimeMillis();
 
         for (HashMap.Entry<Point, MapGrid> mapEntry : maps.entrySet()) {
-            for (int k = 0; k < mapEntry.getValue().numLayers; k++) {
+            for (int k = 0; k < numLayers; k++) {
                 boolean[][] writtenGrid = new boolean[cols][rows];
                 for (int i = 0; i < cols; i++) {
                     for (int j = 0; j < rows; j++) {
@@ -119,7 +119,6 @@ public class ObjWriter {
         }
     }
 
-    //TODO This should be done in a separate file
     public void writeTileObj(int tileIndex, float scale, boolean flipYZ) throws FileNotFoundException {
         if (!savePathObj.endsWith(".obj")) {
             savePathObj = savePathObj.concat(".obj");
@@ -143,7 +142,7 @@ public class ObjWriter {
             tile.flipObjModelInvertedYZ();
         }
 
-        outTiles = new ArrayList();
+        outTiles = new ArrayList<>();
         outTiles.add(tile);
 
         writeTiles(outObj, outMtl);
@@ -156,7 +155,6 @@ public class ObjWriter {
         }
     }
 
-    //TODO This should be done in a separate file
     public void writeAllTilesObj(float scale, boolean flipYZ) throws FileNotFoundException {
         File file = new File(savePathObj);
         if (!file.isDirectory()) {
@@ -164,14 +162,14 @@ public class ObjWriter {
         }
         folderPath = file.getPath();
 
-        ArrayList<String> tileObjNames = new ArrayList();
+        ArrayList<String> tileObjNames = new ArrayList<>();
         for (int i = 0; i < tset.size(); i++) {
             String objFilename = tset.get(i).getObjFilename();
             objFilename = Utils.addExtensionToPath(objFilename, "obj");
             int counter = 1;
             String nameNoExtension = Utils.removeExtensionFromPath(objFilename);
             while (tileObjNames.contains(objFilename)) {
-                objFilename = nameNoExtension + "_" + String.valueOf(counter) + ".obj";
+                objFilename = nameNoExtension + "_" + counter + ".obj";
                 counter++;
             }
             tileObjNames.add(objFilename);
@@ -192,7 +190,7 @@ public class ObjWriter {
                 tile.flipObjModelInvertedYZ();
             }
 
-            outTiles = new ArrayList();
+            outTiles = new ArrayList<>();
             outTiles.add(tile);
             writeTiles(outObj, outMtl);
 
@@ -217,7 +215,7 @@ public class ObjWriter {
                     int xSize = getNumEqualTilesX(grid, layer, c, r, writtenGrid, tile.getWidth());
                     int ySize = getNumEqualTilesY(grid, layer, c, r, writtenGrid, tile.getHeight());
                     if (xSize == 1 && ySize == 1) {
-                        stretchTile(tile, 1, 1, c, r); // TODO: Make specific function?
+                        stretchTile(tile, 1, 1, c, r);
                         writeTile(grid, mapCoords, tile, layer, c, r, scale);
                         updateGridTileable(writtenGrid, c, r, tile.getWidth(), tile.getHeight());
                     } else if (xSize > ySize) {
@@ -234,7 +232,7 @@ public class ObjWriter {
                 } else if (tile.isXtileable()) {
                     int xSize = getNumEqualTilesX(grid, layer, c, r, writtenGrid, tile.getWidth());
                     if (xSize == 1) {
-                        stretchTile(tile, 1, 1, c, r); // TODO: Make specific function?
+                        stretchTile(tile, 1, 1, c, r);
                         writeTile(grid, mapCoords, tile, layer, c, r, scale);
                     } else {
                         stretchTile(tile, xSize, 1, c, r);
@@ -244,7 +242,7 @@ public class ObjWriter {
                 } else {
                     int ySize = getNumEqualTilesY(grid, layer, c, r, writtenGrid, tile.getHeight());
                     if (ySize == 1) {
-                        stretchTile(tile, 1, 1, c, r); // TODO: Make specific function?
+                        stretchTile(tile, 1, 1, c, r);
                         writeTile(grid, mapCoords, tile, layer, c, r, scale);
                     } else {
                         stretchTile(tile, 1, ySize, c, r);
@@ -255,7 +253,7 @@ public class ObjWriter {
                 moveTile(tile);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -279,6 +277,7 @@ public class ObjWriter {
         }
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private void stretchTile(Tile tile, int xMult, int yMult, int c, int r) {
         ArrayList<Float> vertexCoords = tile.getVertexCoordsObj();
         int numVertex = vertexCoords.size() / 3;
@@ -293,6 +292,7 @@ public class ObjWriter {
 
         if (!tile.useGlobalTextureMapping()) {
             //TODO: Remove this and make extra configurable for Y tileable?
+            //noinspection StatementWithEmptyBody
             if (tile.isXtileable() && tile.isYtileable()) {
                 //New code
             } else if (tile.isXtileable()) {
@@ -314,12 +314,6 @@ public class ObjWriter {
                 xMult = 1;
                 yMult = 1;
             }
-            /*
-            if (tile.isYtileable() && !tile.isXtileable()) {
-                    xMult = yMult;
-                    yMult = 1;
-                }
-             */
             ArrayList<Float> textureCoords = tile.getTextureCoordsObj();
             int numTextCoords = textureCoords.size() / 2;
             for (int i = 0; i < numTextCoords; i++) {
@@ -331,37 +325,6 @@ public class ObjWriter {
         } else {
             GlobalTextureMapper.applyGlobalTextureMapping(tile, c, r);
 
-            /*
-            ArrayList<Float> textureCoords = tile.getTextureCoordsObj();
-            int numTextCoords = textureCoords.size() / 2;
-            BufferedImage texture = tset.getTextureImg(tile.getTextureIDs().get(0));
-            float minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE;
-            float maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
-            for (int i = 0; i < tile.getTextureCoordsObj().size(); i += 2) {
-                float xValue = tile.getTextureCoordsObj().get(i);
-                if (xValue < minX) {
-                    minX = xValue;
-                } else if (xValue > maxX) {
-                    maxX = xValue;
-                }
-
-                float yValue = tile.getTextureCoordsObj().get(i + 1);
-                if (yValue < minY) {
-                    minY = yValue;
-                } else if (yValue > maxY) {
-                    maxY = yValue;
-                }
-            }
-
-            float detltaX = ((maxX - minX) / tile.getWidth()) * tile.getGlobalTextureScale();
-            float detltaY = ((maxY - minY) / tile.getHeight()) * tile.getGlobalTextureScale();
-            for (int i = 0; i < numTextCoords; i++) {
-                float xValue = textureCoords.get(i * 2) * xMult + c * detltaX;
-                float yValue = textureCoords.get(i * 2 + 1) * yMult + r * detltaY;
-                textureCoords.set(i * 2, xValue);
-                textureCoords.set(i * 2 + 1, yValue);
-            }
-             */
         }
 
     }
@@ -458,8 +421,7 @@ public class ObjWriter {
         int n = 1;
         for (int i = width, limit = cols - c; i < limit && n < maxTileableSize; i += width) {
             int nextC = c + i;
-            int nextR = r;
-            if (sameHeightAndType(grid, layer, c, r, nextC, nextR) && !writtenGrid[nextC][nextR]) {
+            if (sameHeightAndType(grid, layer, c, r, nextC, r) && !writtenGrid[nextC][r]) {
                 n++;
             } else {
                 return n;
@@ -471,9 +433,8 @@ public class ObjWriter {
     private int getNumEqualTilesY(MapGrid grid, int layer, int c, int r, boolean[][] writtenGrid, int height) {
         int n = 1;
         for (int i = height, limit = rows - r; i < limit && n < maxTileableSize; i += height) {
-            int nextC = c;
             int nextR = r + i;
-            if (sameHeightAndType(grid, layer, c, r, nextC, nextR) && !writtenGrid[nextC][nextR]) {
+            if (sameHeightAndType(grid, layer, c, r, c, nextR) && !writtenGrid[c][nextR]) {
                 n++;
             } else {
                 return n;
@@ -488,9 +449,8 @@ public class ObjWriter {
     }
 
     private void writeTile(MapGrid grid, Point mapCoords, Tile tile, int layer, int c, int r, float scale) {
-        if(true){//tile.isXtileable() && tile.isYtileable()){
-            scaleTile(tile, scale);
-        }
+        //tile.isXtileable() && tile.isYtileable()){
+        scaleTile(tile, scale);
 
         displaceTile(tile,
                 c - cols / 2 + mapCoords.x * cols,
@@ -512,9 +472,7 @@ public class ObjWriter {
 
         // Create and fill an array with all the v, t and n coordinates
         // Create and fill an array storing the offsets for the indices
-        for (int i = 0; i < outTiles.size(); i++) {
-            Tile tile = outTiles.get(i);
-
+        for (Tile tile : outTiles) {
             vertexCoordsOffsets.add(vertexCoords.size() / 3);
             textureCoordsOffsets.add(textureCoords.size() / 2);
             normalCoordsOffsets.add(normalCoords.size() / 3);
@@ -553,8 +511,7 @@ public class ObjWriter {
         }
 
         for (int tex = 0; tex < numTextures; tex++) {
-            for (int t = 0; t < outTiles.size(); t++) {
-                Tile tile = outTiles.get(t);
+            for (Tile tile : outTiles) {
                 int index = tile.getTextureIDs().indexOf(tex);
                 if (index != -1) {
                     fIndsQuad.get(tex).addAll(tile.getFaceIndQuadOfTex(index));
@@ -693,7 +650,7 @@ public class ObjWriter {
                 try {
                     ImageIO.write(tset.getTextureImg(i), "png", outputfile);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    log.error(ex);
                 }
             }
         }
@@ -707,7 +664,7 @@ public class ObjWriter {
             try {
                 ImageIO.write(tset.getTextureImg(i), "png", outputfile);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                log.error(ex);
             }
         }
     }

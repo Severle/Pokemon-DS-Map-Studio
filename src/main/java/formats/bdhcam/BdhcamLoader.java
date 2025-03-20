@@ -8,6 +8,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class BdhcamLoader {
 
     public static Bdhcam loadBdhcam(String path) throws Exception{
@@ -30,10 +31,10 @@ public class BdhcamLoader {
         String signature = reader.readString(4);
 
         int numPlates = (int) reader.readUInt32();
-        Bdhcam bdhcam = new Bdhcam(numPlates);
-        ArrayList<Camplate> plates = bdhcam.getPlates();
+        Bdhcam              bdhcam = new Bdhcam(numPlates);
+        ArrayList<CamPlate> plates = bdhcam.getPlates();
         for (int i = 0; i < numPlates; i++) {
-            Camplate plate;
+            CamPlate plate;
 
             reader.mark();
             int x1 = reader.readUInt8();
@@ -54,8 +55,8 @@ public class BdhcamLoader {
 
             reader.skip(paramOffset);
             int numParams = (int) reader.readUInt32();
-            if (plateType == Camplate.Type.POS_INDEPENDENT.ID) {
-                plate = new CamplatePosIndep(x1, y1, z, x2 - x1, y2 - y1, plateType, numPlates, useZ);
+            if (plateType == CamPlate.Type.POS_INDEPENDENT.ID) {
+                plate = new CamPlatePosIndep(x1, y1, z, x2 - x1, y2 - y1, plateType, numPlates, useZ);
                 for (int j = 0; j < numParams; j++) {
                     int paramID = (int) reader.readUInt32();
                     int duration = (int) reader.readUInt32();
@@ -66,7 +67,7 @@ public class BdhcamLoader {
                     plate.parameters.add(param);
                 }
             } else {
-                plate = new CamplatePosDep(x1, y1, z, x2 - x1, y2 - y1, plateType, numPlates, useZ);
+                plate = new CamPlatePosDep(x1, y1, z, x2 - x1, y2 - y1, plateType, numPlates, useZ);
                 for (int j = 0; j < numParams; j++) {
                     int paramID = (int) reader.readUInt32();
                     float firstValue = (float)reader.readInt32() / 0x10000;

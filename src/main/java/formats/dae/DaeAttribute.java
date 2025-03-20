@@ -4,10 +4,11 @@ package formats.dae;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class DaeAttribute {
 
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
 
     public DaeAttribute(String name, String value) {
         this.name = name;

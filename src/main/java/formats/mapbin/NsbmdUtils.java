@@ -1,9 +1,9 @@
 package formats.mapbin;
 
-import utils.BinaryArrayReader;
 import utils.BinaryReader;
 import utils.BinaryWriter;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class NsbmdUtils {
 
     public static boolean hasNsbtx(byte[] nsbmd){
@@ -14,8 +14,8 @@ public class NsbmdUtils {
         if(hasNsbtx(nsbmdTex)){
             int offset1 = (int) BinaryReader.readUInt32(nsbmdTex, 0x10);
             int offset2 = (int) BinaryReader.readUInt32(nsbmdTex, 0x14);
-            String type1 = BinaryReader.readString(nsbmdTex, (int) offset1, 4);
-            String type2 = BinaryReader.readString(nsbmdTex, (int) offset2, 4);
+            String type1 = BinaryReader.readString(nsbmdTex, offset1, 4);
+            String type2 = BinaryReader.readString(nsbmdTex, offset2, 4);
 
             int offset;
             if(type1.equals("MDL0")){

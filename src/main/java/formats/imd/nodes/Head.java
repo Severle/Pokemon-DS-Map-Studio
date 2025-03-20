@@ -15,7 +15,7 @@ public class Head extends ImdNode {
         super("head");
 
         ImdNode snCreate = new ImdNode("create");
-        snCreate.attributes = new ArrayList<ImdAttribute>() {
+        snCreate.attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("user", "unknown"));
                 add(new ImdAttribute("host", "unknown"));
@@ -30,7 +30,7 @@ public class Head extends ImdNode {
         subnodes.add(snTitle);
 
         ImdNode snGenerator = new ImdNode("generator");
-        snGenerator.attributes = new ArrayList<ImdAttribute>() {
+        snGenerator.attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("name", "Pokemon DS Map Studio"));
                 add(new ImdAttribute("version", "1.0"));

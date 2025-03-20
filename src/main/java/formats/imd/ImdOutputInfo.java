@@ -4,6 +4,7 @@ package formats.imd;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class ImdOutputInfo {
 
     public String objName;
@@ -26,7 +27,6 @@ public class ImdOutputInfo {
     }
 
     public ImdOutputInfo(String objName, Exception ex) {
-        this.objName = this.objName;
         this.ex = ex;
     }
 }

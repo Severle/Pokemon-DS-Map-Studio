@@ -15,9 +15,9 @@ public class AreaBuildList {
     private ArrayList<AreaBuild> areaBuilds;
 
     public AreaBuildList(Narc narc) {
-        final int numFiles = narc.getRoot().getFiles().size();
+        final int numFiles = narc.root().getFiles().size();
         areaBuilds = new ArrayList<>(numFiles);
-        for (NarcFile file : narc.getRoot().getFiles()) {
+        for (NarcFile file : narc.root().getFiles()) {
             areaBuilds.add(new AreaBuild(file.getData()));
         }
         System.out.println("Donete");

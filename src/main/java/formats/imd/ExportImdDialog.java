@@ -1,37 +1,36 @@
 package formats.imd;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import net.miginfocom.swing.*;
-
-import utils.swing.*;
 import editor.handler.MapEditorHandler;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import net.miginfocom.swing.MigLayout;
 import utils.Utils;
+import utils.swing.JScrollCheckboxList;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"unused", "DuplicatedCode", "FieldCanBeLocal", "SpellCheckingInspection"})
 public class ExportImdDialog extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
+    @Getter
     private int returnValue = CANCEL_OPTION;
 
-    private String objFolderPath = "";
-    private String imdFolderPath = "";
+    @Getter
+    private String            objFolderPath    = "";
+    @Getter
+    private String            imdFolderPath    = "";
+    @Getter
     private ArrayList<String> selectedObjNames = new ArrayList<>();
 
     private MapEditorHandler handler;
@@ -123,7 +122,7 @@ public class ExportImdDialog extends JDialog {
                     selectedObjNames.add(model.get(i).getText());
                 }
             }
-            if (selectedObjNames.size() > 0) {
+            if (!selectedObjNames.isEmpty()) {
                 returnValue = APPROVE_OPTION;
                 dispose();
             } else {
@@ -179,17 +178,14 @@ public class ExportImdDialog extends JDialog {
     private void loadObjFilesFromFolder(String folderPath) {
         try {
             File folder = new File(folderPath);
-            File[] files = folder.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".obj");
-                }
-            });
+            File[] files = folder.listFiles((dir, name) -> name.endsWith(".obj"));
 
-            DefaultListModel<JCheckBox> model = new DefaultListModel();
+            DefaultListModel<JCheckBox> model = new DefaultListModel<>();
             this.jScrollCheckboxList.getCheckboxList().setModel(model);
-            for (File file : files) {
-                model.addElement(new JCheckBox(file.getName()));
+            if (files != null) {
+                for (File file : files) {
+                    model.addElement(new JCheckBox(file.getName()));
+                }
             }
 
             for (int i = 0; i < model.getSize(); i++) {
@@ -200,7 +196,7 @@ public class ExportImdDialog extends JDialog {
             objFolderPath = folderPath;
             jtfObjFolderPath.setText(folderPath);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -224,43 +220,7 @@ public class ExportImdDialog extends JDialog {
         }
     }
 
-    /*
-    private boolean hasMatrixCoordsInObjName(String objName) {
-        String name = Utils.removeExtensionFromPath(objName);
-        try {
-            String[] splitName = name.split("_");
-            return (hasCoordInName(splitName[splitName.length - 2], "X")
-                    && hasCoordInName(splitName[splitName.length - 1], "Y"));
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    private boolean hasCoordInName(String name, String coordChar) {
-        try {
-            Integer.parseInt(name.substring(1));
-            return name.startsWith(coordChar);
-        } catch (Exception ex) {
-            return false;
-        }
-    }*/
-
-    public int getReturnValue() {
-        return returnValue;
-    }
-
-    public String getObjFolderPath() {
-        return objFolderPath;
-    }
-
-    public String getImdFolderPath() {
-        return imdFolderPath;
-    }
-
-    public ArrayList<String> getSelectedObjNames() {
-        return selectedObjNames;
-    }
-
+    @SuppressWarnings("Convert2MethodRef")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

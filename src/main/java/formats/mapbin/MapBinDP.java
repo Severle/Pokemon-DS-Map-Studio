@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class MapBinDP extends MapBin{
 
-    private byte[] per;
-    private byte[] bld;
-    private byte[] nsbmd;
-    private byte[] bdhc;
+    private final byte[] per;
+    private final byte[] bld;
+    private       byte[] nsbmd;
+    private final byte[] bdhc;
 
     public MapBinDP(String folderPath, String mapName) throws MissingMapBinFileException, NsbmdConversionException{
         mapName = Utils.removeExtensionFromPath(mapName);

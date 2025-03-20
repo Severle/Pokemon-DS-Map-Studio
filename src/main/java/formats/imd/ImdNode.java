@@ -6,6 +6,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class ImdNode {
     public String nodeName;
     public ArrayList<ImdAttribute> attributes;

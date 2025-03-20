@@ -4,7 +4,7 @@ import java.awt.*;
 
 public abstract class CamParameter{
 
-    public static enum Type{
+    public enum Type{
         UNKNOWN_1(0x00,"Unknown 1", Color.black, 0, -1),
         UNKNOWN_2(0x04,"Unknown 2", Color.black, 1,-1),
         UNKNOWN_3(0x08,"Unknown 3", Color.black, 2,-1),

@@ -12,6 +12,8 @@ import editor.grid.MapGrid;
 import editor.grid.MapLayerGL;
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import utils.Utils;
 
 import java.awt.*;
@@ -27,6 +29,8 @@ import static com.jogamp.opengl.GL.GL_NOTEQUAL;
 import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
 import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     //Editor Handler
@@ -58,6 +62,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
     protected static final float defaultCamRotX = 40.0f, defaultCamRotY = 0.0f, defaultCamRotZ = 0.0f;
 
     //Camera
+    @Setter
     protected CameraSettings camera = new CameraSettings();
 
     //Update
@@ -97,7 +102,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
         try {
             playerImg = Utils.loadImageAsResource("/icons/playerIcon.png");
         } catch (IOException | IllegalArgumentException ex) {
-
+            log.warn(ex);
         }
     }
 
@@ -150,15 +155,6 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
         }
 
         try {
-            /*
-            //Draw grid
-            if (drawGridEnabled) {
-                drawGridMaps(gl);
-            }
-
-            //Draw axis
-            drawAxis();
-            */
             //Draw opaque tiles
             if (handler.getTileset().size() > 0) {
                 drawOpaqueMaps(gl);
@@ -173,7 +169,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
 
             gl.glFinish();
         } catch (GLException ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
 
     }
@@ -266,11 +262,6 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
 
             gl.glTranslatef(-cameraX, -cameraY, 0.0f);
         }
-
-        //Point mapCoords = handler.getMapSelected();
-        //gl.glTranslatef(-mapCoords.x * MapGrid.cols, mapCoords.y * MapGrid.rows, -0.0f);
-
-
     }
 
     public void updateMapLayersGL() {
@@ -299,9 +290,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
         gl.glEnable(GL_ALPHA_TEST);
         gl.glAlphaFunc(GL_GREATER, 0.9f);
 
-        drawAllMaps(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });
+        drawAllMaps(gl, this::drawGeometryGL);
     }
 
     protected void drawTransparentMaps(GL2 gl) {
@@ -316,9 +305,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
         gl.glEnable(GL_ALPHA_TEST);
         gl.glAlphaFunc(GL_NOTEQUAL, 0.0f);
 
-        drawAllMaps(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });
+        drawAllMaps(gl, this::drawGeometryGL);
     }
 
     protected void drawAllMaps(GL2 gl, DrawGeometryGLFunction drawFunction) {
@@ -328,6 +315,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void drawAllMapLayersGL(GL2 gl, DrawGeometryGLFunction drawFunction, MapLayerGL[] mapLayersGL, float x, float y, float z) {
         for (int i = 0; i < mapLayersGL.length; i++) {
             if (handler.renderLayers[i]) {
@@ -423,7 +411,7 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
 
             gl.glDisable(GL_TEXTURE_2D);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -467,14 +455,14 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
 
     public void loadPlayerTextureGL(){
         if(playerImg != null){
-            Texture tex = null;
+            Texture tex;
             try {
                 BufferedImage img = playerImg;
                 ImageUtil.flipImageVertically(img);
                 tex = AWTTextureIO.newTexture(GLProfile.getDefault(), img, false);
                 playerTexture = tex;
-            }catch(Exception ex){
-
+            } catch(Exception ex){
+                log.warn(ex);
             }
         }
     }
@@ -488,12 +476,8 @@ public class BdhcamCameraDisplay extends GLJPanel implements GLEventListener, Mo
         updateRequested = true;
     }
 
-    public void setCamera(CameraSettings camera){
-        this.camera = camera;
-    }
-
-    protected static interface DrawGeometryGLFunction {
-        public void draw(GL2 gl, GeometryGL geometryGL, ArrayList<Texture> textures);
+    protected interface DrawGeometryGLFunction {
+        void draw(GL2 gl, GeometryGL geometryGL, ArrayList<Texture> textures);
     }
 
 

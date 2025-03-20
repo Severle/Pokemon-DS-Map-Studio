@@ -19,7 +19,7 @@ public class BuildAnimeListHGSS {
     private ArrayList<BuildAnimInfoHGSS> animations;
 
     public BuildAnimeListHGSS(Narc narc) {
-        NarcFolder root = narc.getRoot();
+        NarcFolder root = narc.root();
         animations = new ArrayList<>(root.getFiles().size());
         for (NarcFile file : root.getFiles()) {
             try {

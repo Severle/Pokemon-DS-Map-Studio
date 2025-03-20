@@ -1,19 +1,16 @@
 package formats.collisions;
 
-import utils.Utils;
-
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class CollisionsTypesSelector extends JPanel {
 
     private static final int rows = 32, cols = CollisionTypes.numCollisions / rows;
