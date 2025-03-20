@@ -1,5 +1,7 @@
 package formats.bdhc;
 
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import net.miginfocom.swing.MigLayout;
 import utils.Utils;
 import utils.Utils.MutableBoolean;
@@ -13,9 +15,12 @@ import java.awt.event.ActionEvent;
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class AngleCalculatorDialog extends JDialog {
     public static final int ACCEPTED = 0, CANCELED = 1;
-    private int returnValue = CANCELED;
+    @Getter
+    private       int            returnValue            = CANCELED;
     private final MutableBoolean jtfTilesForwardEnabled = new MutableBoolean(true);
     private final MutableBoolean jtfTilesUpEnabled = new MutableBoolean(true);
     private static final Color editingColor = new Color(255, 185, 185);
@@ -23,7 +28,8 @@ public class AngleCalculatorDialog extends JDialog {
 
     private float tilesForward = 1.0f;
     private float tilesUp = 1.0f;
-    private float angle = 45.0f;
+    @Getter
+    private float angle   = 45.0f;
 
     public AngleCalculatorDialog(Window owner, float angle, float tilesForward) {
         super(owner);
@@ -45,7 +51,7 @@ public class AngleCalculatorDialog extends JDialog {
         try {
             tilesForward = Float.parseFloat(jtfTilesForward.getText());
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
         updateTilesForward();
         updateAngle();
@@ -55,7 +61,7 @@ public class AngleCalculatorDialog extends JDialog {
         try {
             tilesUp = Float.parseFloat(jtfTilesUp.getText());
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
         updateTilesUp();
         updateAngle();
@@ -92,14 +98,7 @@ public class AngleCalculatorDialog extends JDialog {
         jtfAngle.setText(String.valueOf(angle));
     }
 
-    public float getAngle() {
-        return angle;
-    }
-
-    public int getReturnValue() {
-        return returnValue;
-    }
-
+    @SuppressWarnings({"", "SpellCheckingInspection", "Convert2MethodRef", "DataFlowIssue"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

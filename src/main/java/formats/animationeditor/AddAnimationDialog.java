@@ -9,6 +9,7 @@ import java.awt.*;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class AddAnimationDialog extends JDialog {
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
 

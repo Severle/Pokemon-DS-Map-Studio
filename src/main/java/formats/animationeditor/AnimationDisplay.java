@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"DuplicatedCode", "unused"})
 public class AnimationDisplay extends JPanel {
     private static final int size = 160;
     private AnimationHandler animHandler;

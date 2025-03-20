@@ -1,21 +1,19 @@
 
 package utils.sound;
 
+import lombok.extern.log4j.Log4j2;
+import utils.LambdaUtils.VoidInterface;
+
+import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
-
-import utils.LambdaUtils.VoidInterface;
 
 /**
  * @author Trifindo
  */
+@Log4j2
 public class SoundPlayer extends Thread {
     private final AtomicBoolean running = new AtomicBoolean(false);
 
@@ -36,15 +34,17 @@ public class SoundPlayer extends Thread {
             if (filename != null) {
                 try {
                     InputStream inputStream = SoundPlayer.class.getResourceAsStream(filename);
-                    bufferedIn = new BufferedInputStream(inputStream);
+                    if (inputStream != null) {
+                        bufferedIn = new BufferedInputStream(inputStream);
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
 
                 try {
                     audioStream = AudioSystem.getAudioInputStream(bufferedIn);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
 
                 AudioFormat audioFormat = audioStream.getFormat();
@@ -54,7 +54,7 @@ public class SoundPlayer extends Thread {
                     sourceLine = (SourceDataLine) AudioSystem.getLine(info);
                     sourceLine.open(audioFormat);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
 
                 sourceLine.start();
@@ -66,7 +66,7 @@ public class SoundPlayer extends Thread {
                     try {
                         nBytesRead = audioStream.read(abData, 0, abData.length);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.error(e);
                     }
                     if (nBytesRead >= 0) {
                         @SuppressWarnings("unused")
@@ -77,7 +77,7 @@ public class SoundPlayer extends Thread {
                 sourceLine.close();
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         } finally {
             endAction.action();
         }
@@ -85,14 +85,14 @@ public class SoundPlayer extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Running");
+        log.debug("Running");
         running.set(true);
         playSound();
-        System.out.println("Finished");
+        log.debug("Finished");
     }
 
     public void stopPlayer() {
-        System.out.println("Stopping");
+        log.debug("Stopping");
         running.set(false);
         if (sourceLine != null) {
             sourceLine.stop();

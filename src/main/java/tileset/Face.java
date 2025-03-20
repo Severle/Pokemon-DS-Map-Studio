@@ -1,9 +1,9 @@
 
 package tileset;
 
-import java.util.ArrayList;
-
 import utils.Utils;
+
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
@@ -45,9 +45,7 @@ public class Face {
 
     public static ArrayList<Face> cloneArrayList(ArrayList<Face> array) {
         ArrayList<Face> newArray = new ArrayList<>(array.size());
-        array.forEach((f) -> {
-            newArray.add(f.deepClone());
-        });
+        array.forEach((f) -> newArray.add(f.deepClone()));
         return newArray;
     }
 

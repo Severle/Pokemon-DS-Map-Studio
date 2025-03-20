@@ -14,10 +14,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class BinaryWriter {
 
-    private FileOutputStream fos;
+    private final FileOutputStream fos;
 
     public BinaryWriter(String path) throws FileNotFoundException {
-        fos = new FileOutputStream(new File(path));
+        fos = new FileOutputStream(path);
     }
 
     public BinaryWriter(File file) throws FileNotFoundException {
@@ -99,7 +99,7 @@ public class BinaryWriter {
         writeUInt16(fullData, offset + 2, (int) intValue);
     }
 
-    public static void writeString(byte[] fullData, int offset, String string) throws Exception{
+    public static void writeString(byte[] fullData, int offset, String string) {
         byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(bytes, 0, fullData, offset, bytes.length);
     }

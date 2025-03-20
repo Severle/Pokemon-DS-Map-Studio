@@ -1,60 +1,36 @@
 
 package tileset;
 
-import com.jogamp.opengl.DefaultGLCapabilitiesChooser;
-
-import static com.jogamp.opengl.GL.GL_BLEND;
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_DEPTH_TEST;
-import static com.jogamp.opengl.GL.GL_GREATER;
-import static com.jogamp.opengl.GL.GL_LESS;
-import static com.jogamp.opengl.GL.GL_NEAREST;
-import static com.jogamp.opengl.GL.GL_NOTEQUAL;
-import static com.jogamp.opengl.GL.GL_ONE_MINUS_DST_ALPHA;
-import static com.jogamp.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
-import static com.jogamp.opengl.GL.GL_REPEAT;
-import static com.jogamp.opengl.GL.GL_SRC_ALPHA;
-import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
-import static com.jogamp.opengl.GL.GL_TEXTURE_MAG_FILTER;
-import static com.jogamp.opengl.GL.GL_TEXTURE_MIN_FILTER;
-import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_S;
-import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_T;
-import static com.jogamp.opengl.GL.GL_TRIANGLES;
-
-import com.jogamp.opengl.GL2;
-
-import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
-
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLDrawableFactory;
-import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+import utils.Utils;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import tileset.Tile;
-import tileset.Tileset;
-import utils.Utils;
+import static com.jogamp.opengl.GL.*;
+import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
+import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class TilesetRenderer {
 
-    private int tileSize = 16; //in pixels
-    private boolean[] renderVboTile = new boolean[4];
-    private Tileset tileset;
-    private float cameraX = 0.0f;
-    private float cameraY = 0.0f;
-    private float cameraZ = 32.0f;
+    private final int       tileSize      = 16; //in pixels
+    private final boolean[] renderVboTile = new boolean[4];
+    @Setter
+    private       Tileset   tileset;
+    private final float     cameraX = 0.0f;
+    private final float cameraY = 0.0f;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final float cameraZ = 32.0f;
 
-    private int smallTileSize = 2;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int smallTileSize = 2;
 
     private GLAutoDrawable drawable;
     private GL2 gl;
@@ -94,12 +70,8 @@ public class TilesetRenderer {
 
             tileset.loadTexturesGL();
         } catch (GLException ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
-    }
-
-    public void setTileset(Tileset tileset) {
-        this.tileset = tileset;
     }
 
     public void renderTiles() {
@@ -118,11 +90,10 @@ public class TilesetRenderer {
 
             setupVAOsVBOs(tile);
 
+            //noinspection GrazieInspection
             drawOpaqueTile(tile); //NEW CODE REMOVED Remove this for transparent background
             drawTransparentTile(tile);
 
-            //BufferedImage img = new AWTGLReadBufferUtil(drawable.getGLProfile(), false).readPixelsToBufferedImage(drawable.getGL(), 0, 0, tile.getWidth() * tileSize, tile.getHeight() * tileSize, true /* awtOrientation */);
-            //BufferedImage img = new AWTGLReadBufferUtil(drawable.getGLProfile(), true).readPixelsToBufferedImage(drawable.getGL(), true /* awtOrientation */); //Use this for transparent background
             BufferedImage img = new AWTGLReadBufferUtil(drawable.getGLProfile(), false).readPixelsToBufferedImage(drawable.getGL(), true /* awtOrientation */);
             img = img.getSubimage(0, 0, tile.getWidth() * tileSize, tile.getHeight() * tileSize);
 
@@ -131,7 +102,7 @@ public class TilesetRenderer {
             tile.setSmallThumbnail(Utils.resize(
                     img, smallTileSize * tile.getWidth(), smallTileSize * tile.getHeight()));
         } catch (GLException ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -153,11 +124,6 @@ public class TilesetRenderer {
                 ((float) (-Tile.maxTileSize)) / 2,
                 ((float) (Tile.maxTileSize)) / 2 - tile.getHeight(),
                 -cameraZ);
-        /*
-        gl.glTranslatef(
-                ((float) (-Tile.maxTileSize)) / 2,
-                ((float) (-Tile.maxTileSize)) / 2,
-                -cameraZ); // translate into the screen*/
 
         gl.glColor3f(1.0f, 1.0f, 1.0f);
 
@@ -165,6 +131,7 @@ public class TilesetRenderer {
         drawTris(gl, tile, 2);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void drawQuads(GL2 gl, Tile tile, int vboID) {
         if (!(renderVboTile[vboID] && renderVboTile[vboID + 1])) {
             return;
@@ -205,6 +172,7 @@ public class TilesetRenderer {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void drawTris(GL2 gl, Tile tile, int vboID) {
         if (!(renderVboTile[vboID] && renderVboTile[vboID + 1])) {
             return;
@@ -281,12 +249,5 @@ public class TilesetRenderer {
 
     public void destroy() {
         drawable.getContext().destroy();
-        /*try {
-            drawable.destroy();
-        } catch (GLException ex) {
-ex.printStackTrace();
-}*/
-
     }
-
 }

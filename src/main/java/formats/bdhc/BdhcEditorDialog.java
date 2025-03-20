@@ -2,33 +2,38 @@ package formats.bdhc;
 
 import editor.game.Game;
 import editor.handler.MapEditorHandler;
-import net.miginfocom.swing.*;
+import net.miginfocom.swing.MigLayout;
 import utils.Utils;
 
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal", "DuplicatedCode"})
 public class BdhcEditorDialog extends JDialog {
     private MapEditorHandler handler;
     private BdhcHandler bdhcHandler;
 
-    private boolean plateListEnabled = true;
-    private MutableBoolean jtfCoordZEnabled = new MutableBoolean(true);
-    private MutableBoolean jtfAngleXEnabled = new MutableBoolean(true);
-    private MutableBoolean jtfAngleYEnabled = new MutableBoolean(true);
-    private boolean jcbTypeEnabled = true;
+    private       boolean        plateListEnabled = true;
+    private final MutableBoolean jtfCoordZEnabled = new MutableBoolean(true);
+    private final MutableBoolean jtfAngleXEnabled = new MutableBoolean(true);
+    private final MutableBoolean jtfAngleYEnabled = new MutableBoolean(true);
+    private       boolean        jcbTypeEnabled   = true;
     private boolean jsCoordZEnabled = true;
 
     private static final Color redColor = new Color(255, 185, 185);
@@ -77,16 +82,6 @@ public class BdhcEditorDialog extends JDialog {
             repaint();
         }
     }
-
-    /*
-    private void jtfCoordZFocusGained(FocusEvent e) {
-        jtfCoordZ.selectAll();
-    }*/
-
-    /*
-    private void jbCoordinateZActionPerformed(ActionEvent e) {
-        changeCoordZ();
-    }*/
 
     private void jcbTypeActionPerformed(ActionEvent e) {
         if (jcbTypeEnabled) {
@@ -287,7 +282,7 @@ public class BdhcEditorDialog extends JDialog {
     }
 
     private void jcbXRayPlatesActionPerformed(ActionEvent e) {
-        bdhcDisplay3D.setxRayEnabled(jcbXRayPlates.isSelected());
+        bdhcDisplay3D.setXRayEnabled(jcbXRayPlates.isSelected());
         bdhcDisplay3D.repaint();
     }
 
@@ -436,10 +431,6 @@ public class BdhcEditorDialog extends JDialog {
     }
 
     public void updateViewSlopes() {
-        //jtfSlopeX.setText(String.valueOf(bdhcHandler.getSelectedPlate().getSlope()[0]));
-        //jtfSlopeY.setText(String.valueOf(bdhcHandler.getSelectedPlate().getSlope()[2]));
-        //jtfSlopeZ.setText(String.valueOf(bdhcHandler.getSelectedPlate().getSlope()[1]));
-
         angleDisplay1.repaint();
         angleDisplay2.repaint();
     }
@@ -460,7 +451,7 @@ public class BdhcEditorDialog extends JDialog {
 
     private void updateViewPlateNames() {
         plateListEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < bdhcHandler.getPlates().size(); i++) {
             String name = "Plate " + i;
             demoList.addElement(name);
@@ -470,16 +461,10 @@ public class BdhcEditorDialog extends JDialog {
         plateListEnabled = true;
     }
 
-    /*
-    public void changeCoordZ() {
-        bdhcHandler.getSelectedPlate().z = getValueFromJTextField(
-                jtfCoordZ, bdhcHandler.getSelectedPlate().z, jtfCoordZEnabled);
-    }*/
-
     public int getValueFromJTextField(JTextField jtf, int defaultValue, MutableBoolean enabled) {
         int value;
         try {
-            value = Integer.valueOf(jtf.getText());
+            value = Integer.parseInt(jtf.getText());
             int max = 4096;
             int min = -4096;
             if (value > max) {
@@ -502,7 +487,7 @@ public class BdhcEditorDialog extends JDialog {
     public float getValueFromJTextField(JTextField jtf, float defaultValue, MutableBoolean enabled) {
         float value;
         try {
-            value = Float.valueOf(jtf.getText());
+            value = Float.parseFloat(jtf.getText());
         } catch (NumberFormatException e) {
             value = defaultValue;
         }
@@ -543,7 +528,7 @@ public class BdhcEditorDialog extends JDialog {
 
 
 
-    private class MutableBoolean {
+    public static class MutableBoolean {
 
         public boolean value;
 
@@ -553,6 +538,7 @@ public class BdhcEditorDialog extends JDialog {
 
     }
 
+    @SuppressWarnings({"DataFlowIssue", "Convert2MethodRef", "Convert2Diamond", "FieldMayBeFinal"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         panel4 = new JPanel();

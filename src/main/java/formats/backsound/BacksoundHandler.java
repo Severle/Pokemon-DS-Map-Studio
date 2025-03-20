@@ -32,16 +32,16 @@ public class BacksoundHandler {
         this.indexSelected = index;
     }
 
-    public Backsound getBacksound() {
+    public BackSound getBacksound() {
         return handler.getBacksound();
     }
 
-    public Soundplate getSelectedSoundplate() {
+    public SoundPlate getSelectedSoundplate() {
         return handler.getBacksound().getSoundplate(indexSelected);
     }
 
-    public ArrayList<Soundplate> getSoundplates() {
-        return handler.getBacksound().getSoundplates();
+    public ArrayList<SoundPlate> getSoundplates() {
+        return handler.getBacksound().getSoundPlates();
     }
 
     public BacksoundEditorDialog getDialog() {
@@ -49,11 +49,11 @@ public class BacksoundHandler {
     }
 
     public void addSoundplate() {
-        handler.getBacksound().getSoundplates().add(new Soundplate());
+        handler.getBacksound().getSoundPlates().add(new SoundPlate());
     }
 
     public void removeSelectedSoundplate() {
-        handler.getBacksound().getSoundplates().remove(indexSelected);
+        handler.getBacksound().getSoundPlates().remove(indexSelected);
         if (indexSelected > 0) {
             indexSelected--;
         } else {

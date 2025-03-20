@@ -3,6 +3,8 @@ package formats.animationeditor;
 
 import formats.nsbtx2.Nsbtx2;
 import formats.nsbtx2.NsbtxLoader2;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,15 +15,20 @@ import java.util.logging.Logger;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class AnimationHandler {
 
-    private Nsbtx2 nsbtx;
+    @Getter
+    private Nsbtx2        nsbtx;
+    @Getter
     private AnimationFile animationFile;
-    private AnimationEditorDialog dialog;
+    private final AnimationEditorDialog dialog;
 
     private ArrayList<BufferedImage> nsbtxImages;
-    private int currentFrameIndex = 0;
-    private AnimationThread animationThread;
+    @Setter
+    @Getter
+    private int                      currentFrameIndex = 0;
+    private AnimationThread          animationThread;
 
     public AnimationHandler(AnimationEditorDialog dialog) {
         this.dialog = dialog;
@@ -49,14 +56,6 @@ public class AnimationHandler {
                 }
             }
         }
-    }
-
-    public int getCurrentFrameIndex() {
-        return currentFrameIndex;
-    }
-
-    public void setCurrentFrameIndex(int index) {
-        this.currentFrameIndex = index;
     }
 
     public String getTextureName(int index) {
@@ -168,14 +167,6 @@ public class AnimationHandler {
         animationFile.removeAnimation(index);
     }
 
-    public AnimationFile getAnimationFile() {
-        return animationFile;
-    }
-
-    public Nsbtx2 getNsbtx() {
-        return nsbtx;
-    }
-
     public void repaintDialog() {
         dialog.repaintFrames();
     }
@@ -199,7 +190,7 @@ public class AnimationHandler {
 
     public boolean isAnimationRunning() {
         if (animationThread != null) {
-            return animationThread.isRunnning();
+            return animationThread.isRunning();
         } else {
             return false;
         }

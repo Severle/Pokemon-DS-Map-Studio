@@ -1,38 +1,35 @@
 
 package utils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
+import lombok.extern.log4j.Log4j2;
+import tileset.Face;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
-import javax.imageio.ImageIO;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import tileset.Face;
+import java.util.List;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"DuplicatedCode", "unused"})
+@Log4j2
 public class Utils {
 
     public static String[] readShaderAsResource(String filename) {
-        Vector lines = new Vector();
+        Vector<String> lines = new Vector<>();
         Scanner sc;
-        sc = new Scanner(Utils.class.getClassLoader().getResourceAsStream(filename));
+        sc = new Scanner(Objects.requireNonNull(Utils.class.getClassLoader().getResourceAsStream(filename)));
 
         while (sc.hasNext()) {
             lines.addElement(sc.nextLine());
@@ -41,7 +38,7 @@ public class Utils {
         String[] program = new String[lines.size()];
 
         for (int i = 0; i < lines.size(); ++i) {
-            program[i] = (String) lines.elementAt(i) + "\n";
+            program[i] = lines.elementAt(i) + "\n";
         }
 
         sc.close();
@@ -49,9 +46,9 @@ public class Utils {
     }
 
     public static BufferedImage loadTexImageAsResource(String path) {
-        BufferedImage img = null;
+        BufferedImage img;
         try {
-            img = ImageIO.read(Utils.class.getResource(path));
+            img = ImageIO.read(Objects.requireNonNull(Utils.class.getResource(path)));
         } catch (IOException | IllegalArgumentException ex) {
             int size = 64;
             img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
@@ -64,14 +61,14 @@ public class Utils {
             g.fillRect(size / 2, size / 2, size, size);
             g.setColor(Color.BLACK);
             g.drawRect(0, 0, size - 1, size - 1);
-            System.out.println("IO Exception leyendo imagen como resource");
+            //noinspection SpellCheckingInspection
+            log.debug("IO Exception leyendo imagen como resource");
         }
         return img;
     }
 
     public static BufferedImage loadImageAsResource(String path) throws IOException, IllegalArgumentException {
-        BufferedImage img = ImageIO.read(Utils.class.getResource(path));
-        return img;
+        return ImageIO.read(Objects.requireNonNull(Utils.class.getResource(path)));
     }
 
     public static BufferedImage[] loadHorizontalImageArrayAsResource(String path,
@@ -163,19 +160,19 @@ public class Utils {
             return (BufferedImage) img;
         }
 
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D bGr = bimage.createGraphics();
+        Graphics2D bGr = image.createGraphics();
         bGr.drawImage(img, 0, 0, null);
         bGr.dispose();
 
-        return bimage;
+        return image;
     }
 
     public static float[] floatListToArray(ArrayList<Float> list) {
         float[] array = new float[list.size()];
         for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i).floatValue();
+            array[i] = list.get(i);
         }
         return array;
     }
@@ -183,7 +180,7 @@ public class Utils {
     public static int[] intListToArray(ArrayList<Integer> list) {
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i).intValue();
+            array[i] = list.get(i);
         }
         return array;
     }
@@ -198,19 +195,11 @@ public class Utils {
     }
 
     public static ArrayList<Integer> cloneArrayListInt(ArrayList<Integer> list) {
-        ArrayList<Integer> newList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            newList.add(new Integer(list.get(i).intValue()));
-        }
-        return newList;
+        return new ArrayList<>(list);
     }
 
     public static ArrayList<Float> cloneArrayListFloat(ArrayList<Float> list) {
-        ArrayList<Float> newList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            newList.add(new Float(list.get(i).floatValue()));
-        }
-        return newList;
+        return new ArrayList<>(list);
     }
 
     public static float[] cloneArray(float[] src) {
@@ -220,9 +209,7 @@ public class Utils {
     }
 
     public static void incrementAllElements(ArrayList<Integer> list, int increment) {
-        for (int i = 0; i < list.size(); i++) {
-            list.set(i, list.get(i) + increment);
-        }
+        list.replaceAll(integer -> integer + increment);
     }
 
     public static String removeExtensionFromPath(String path) {
@@ -239,13 +226,13 @@ public class Utils {
     public static String removeMapCoordsFromName(String name) {
         try {
             if (nameHasMapCoords(name)) {
-                String[] splitString = name.split("_");
-                String newName = "";
+                String[]      splitString = name.split("_");
+                StringBuilder newName     = new StringBuilder();
                 for (int i = 0; i < splitString.length - 3; i++) {
-                    newName += splitString[i] + "_";
+                    newName.append(splitString[i]).append("_");
                 }
-                newName += splitString[splitString.length - 3];
-                return newName;
+                newName.append(splitString[splitString.length - 3]);
+                return newName.toString();
             } else {
                 return name;
             }
@@ -257,9 +244,9 @@ public class Utils {
     private static boolean nameHasMapCoords(String fileName) {
         String name = Utils.removeExtensionFromPath(fileName);
         try {
-            String[] splittedName = name.split("_");
-            return canParseInteger(splittedName[splittedName.length - 1])
-                    && canParseInteger(splittedName[splittedName.length - 2]);
+            String[] splitName = name.split("_");
+            return canParseInteger(splitName[splitName.length - 1])
+                    && canParseInteger(splitName[splitName.length - 2]);
         } catch (Exception ex) {
             return false;
         }
@@ -274,7 +261,7 @@ public class Utils {
         }
     }
 
-    public static String removeLastOcurrences(String string, char c) {
+    public static String removeLastOccurrences(String string, char c) {
         int nCharsToRemove = 0;
         for (int i = string.length() - 1; i >= 0; i--) {
             if (string.charAt(i) == c) {
@@ -348,13 +335,13 @@ public class Utils {
 
     public static BufferedImage resize(BufferedImage img, int newW, int newH, int scalingType) {
         Image tmp = img.getScaledInstance(newW, newH, scalingType);
-        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage dImg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2d = dimg.createGraphics();
+        Graphics2D g2d = dImg.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
 
-        return dimg;
+        return dImg;
     }
 
     public static BufferedImage generateTransparentBackground(int size, int tileSize) {
@@ -372,7 +359,7 @@ public class Utils {
 
     }
 
-    public static void floodFillMatrix(int screen[][], int x, int y, int newC) {
+    public static void floodFillMatrix(int[][] screen, int x, int y, int newC) {
         int prevC = screen[x][y];
         if (newC == prevC) {
             return;
@@ -382,7 +369,7 @@ public class Utils {
         Utils.floodFillUtil(screen, x, y, prevC, newC, M, N);
     }
 
-    private static void floodFillUtil(int screen[][], int x, int y, int prevC, int newC, int M, int N) {
+    private static void floodFillUtil(int[][] screen, int x, int y, int prevC, int newC, int M, int N) {
         // Base cases 
         if (x < 0 || x >= M || y < 0 || y >= N) {
             return;
@@ -401,7 +388,7 @@ public class Utils {
         floodFillUtil(screen, x, y - 1, prevC, newC, M, N);
     }
 
-    public static void floodFillMatrix(int screen[][], boolean[][] mask, int x, int y, int newC) {
+    public static void floodFillMatrix(int[][] screen, boolean[][] mask, int x, int y, int newC) {
         int prevC = screen[x][y];
         if (newC == prevC) {
             return;
@@ -411,7 +398,7 @@ public class Utils {
         Utils.floodFillUtil(screen, mask, x, y, prevC, newC, M, N);
     }
 
-    private static void floodFillUtil(int screen[][], boolean[][] mask, int x, int y, int prevC, int newC, int M, int N) {
+    private static void floodFillUtil(int[][] screen, boolean[][] mask, int x, int y, int prevC, int newC, int M, int N) {
         // Base cases 
         if (x < 0 || x >= M || y < 0 || y >= N) {
             return;
@@ -434,7 +421,7 @@ public class Utils {
         floodFillUtil(screen, mask, x, y - 1, prevC, newC, M, N);
     }
 
-    public static void floodFillMatrix(int screen[][], boolean[][] mask, int x, int y, int newC, int tileWidth, int tileHeight) {
+    public static void floodFillMatrix(int[][] screen, boolean[][] mask, int x, int y, int newC, int tileWidth, int tileHeight) {
         int prevC = screen[x][y];
         if (newC == prevC) {
             return;
@@ -444,7 +431,7 @@ public class Utils {
         Utils.floodFillUtil(screen, mask, x, y, prevC, newC, M, N, tileWidth, tileHeight);
     }
 
-    private static void floodFillUtil(int screen[][], boolean[][] mask, int x, int y, int prevC, int newC, int M, int N, int tileWidth, int tileHeight) {
+    private static void floodFillUtil(int[][] screen, boolean[][] mask, int x, int y, int prevC, int newC, int M, int N, int tileWidth, int tileHeight) {
         if (!isTileAreaAvailable(screen, mask, x, y, prevC, newC, M, N, tileWidth, tileHeight)) {
             return;
         }
@@ -477,7 +464,7 @@ public class Utils {
         floodFillUtil(screen, mask, x, y - tileHeight, prevC, newC, M, N, tileWidth, tileHeight);
     }
 
-    private static boolean isTileAreaAvailable(int screen[][], boolean[][] mask, int x, int y, int prevC, int newC, int M, int N, int tileWidth, int tileHeight) {
+    private static boolean isTileAreaAvailable(int[][] screen, boolean[][] mask, int x, int y, int prevC, int newC, int M, int N, int tileWidth, int tileHeight) {
         try {
             for (int i = 0; i < tileWidth; i++) {
                 for (int j = 0; j < tileHeight; j++) {
@@ -492,7 +479,7 @@ public class Utils {
         return true;
     }
 
-    public static void floodFillMatrix(byte screen[][], int x, int y, byte newC) {
+    public static void floodFillMatrix(byte[][] screen, int x, int y, byte newC) {
         byte prevC = screen[x][y];
         if (newC == prevC) {
             return;
@@ -502,7 +489,7 @@ public class Utils {
         Utils.floodFillUtil(screen, x, y, prevC, newC, M, N);
     }
 
-    private static void floodFillUtil(byte screen[][], int x, int y, byte prevC, byte newC, int M, int N) {
+    private static void floodFillUtil(byte[][] screen, int x, int y, byte prevC, byte newC, int M, int N) {
         // Base cases 
         if (x < 0 || x >= M || y < 0 || y >= N) {
             return;
@@ -545,7 +532,7 @@ public class Utils {
     }
 
     public static boolean hasDuplicates(ArrayList<Integer> array) {
-        Set<Integer> set = new HashSet<Integer>();
+        Set<Integer> set = new HashSet<>();
         for (int i : array) {
             if (set.contains(i)) {
                 return true;
@@ -600,8 +587,6 @@ public class Utils {
         }
     }
 
-    ;
-
     public static class MutableInt {
 
         public int value;
@@ -611,8 +596,6 @@ public class Utils {
         }
     }
 
-    ;
-
     public static class MutableLong {
 
         public long value;
@@ -621,7 +604,5 @@ public class Utils {
             this.value = value;
         }
     }
-
-    ;
 
 }

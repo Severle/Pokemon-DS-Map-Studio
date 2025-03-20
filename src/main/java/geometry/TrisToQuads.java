@@ -3,32 +3,37 @@ package geometry;
 
 import java.util.ArrayList;
 
-import tileset.Tile;
-
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class TrisToQuads {
 
-    private float[] vCoordsTri;
-    private float[] nCoordsTri;
-    private float[] tCoordsTri;
+    private final float[] vCoordsTri;
+    private final float[] nCoordsTri;
+    private final float[] tCoordsTri;
 
-    private float[] vCoordsQuad;
-    private float[] nCoordsQuad;
-    private float[] tCoordsQuad;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final float[] vCoordsQuad;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final float[] nCoordsQuad;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final float[] tCoordsQuad;
 
     private static final int vPerVertex = 3;
     private static final int tPerVertex = 2;
     private static final int nPerVertex = 3;
     private static final int vertexPerFace = 3;
     private static final int edgesPerFace = 3;
-    private int numFaces;
-    private int numEdges;
+    private final int numFaces;
+    private final int numEdges;
 
-    private ArrayList<Edge> edges;
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private ArrayList<Edge>               edges;
+    @SuppressWarnings("FieldCanBeLocal")
     private ArrayList<ArrayList<Integer>> edgesConnected;
-    private boolean[] usedFaces;
+    @SuppressWarnings({"FieldCanBeLocal"})
+    private boolean[]                     usedFaces;
 
     public TrisToQuads(PolygonData pData) {
 
@@ -44,20 +49,6 @@ public class TrisToQuads {
         this.numEdges = numFaces * edgesPerFace;
     }
 
-    public void calculateQuads() {
-        edges = calculateEdges();
-        edgesConnected = generateConnectedEdges(edges);
-        usedFaces = new boolean[numFaces];
-
-        for (int i = 0; i < edgesConnected.size(); i++) {
-            int faceIndex = edgesConnected.get(i).get(0) / edgesPerFace;
-            if (edgesConnected.get(i) != null && !usedFaces[faceIndex] && !usedFaces[i / edgesPerFace]) {
-
-            }
-        }
-
-    }
-
     private ArrayList<Edge> calculateEdges() {
         ArrayList<Edge> edges = new ArrayList<>(numEdges);
         for (int i = 0; i < numFaces; i++) {
@@ -69,6 +60,7 @@ public class TrisToQuads {
         return edges;
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private ArrayList<ArrayList<Integer>> generateConnectedEdges(ArrayList<Edge> edges) {
         ArrayList<ArrayList<Integer>> conectedEdges = new ArrayList<>(numEdges);
         for (int i = 0; i < numEdges; i++) {
@@ -85,7 +77,7 @@ public class TrisToQuads {
         return conectedEdges;
     }
 
-    private class PolygonData {
+    public static class PolygonData {
 
         public float[] vCoordsTri;
         public float[] nCoordsTri;
@@ -94,12 +86,9 @@ public class TrisToQuads {
         public float[] vCoordsQuad;
         public float[] nCoordsQuad;
         public float[] tCoordsQuad;
-
-        public PolygonData() {
-
-        }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private class Edge {
 
         public int vertexIndex1;
@@ -121,6 +110,7 @@ public class TrisToQuads {
             vertexIndex2 = temp;
         }
 
+        @SuppressWarnings("SpellCheckingInspection")
         private boolean sameVertexCoords(float[] coordData, int coordsPerVertex,
                                          int vertexIndex1, int vertexIndex2) {
             int offset1 = vertexIndex1 * coordsPerVertex;
@@ -141,22 +131,17 @@ public class TrisToQuads {
                 }
             } else */
             if (sameVertexCoords(coords, coordsPerVertex, this.vertexIndex1, other.vertexIndex2)) {
-                if (sameVertexCoords(coords, coordsPerVertex, this.vertexIndex2, other.vertexIndex1)) {
-                    return true;
-                }
+                return sameVertexCoords(coords, coordsPerVertex, this.vertexIndex2, other.vertexIndex1);
             }
             return false;
         }
 
         @Override
         public boolean equals(Object obj) {
-            final Edge other = (Edge) obj;
-            if (sameEdgeCoords(vCoordsTri, vPerVertex, other)
+            if (!(obj instanceof Edge other)) return false;
+            return sameEdgeCoords(vCoordsTri, vPerVertex, other)
                     && sameEdgeCoords(tCoordsTri, tPerVertex, other)
-                    && sameEdgeCoords(nCoordsTri, nPerVertex, other)) {
-                return true;
-            }
-            return false;
+                    && sameEdgeCoords(nCoordsTri, nPerVertex, other);
         }
 
     }

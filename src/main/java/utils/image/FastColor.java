@@ -6,6 +6,7 @@ import java.awt.Color;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class FastColor extends Color implements Comparable<FastColor> {
 
     private final int hashCode;
@@ -37,11 +38,8 @@ public class FastColor extends Color implements Comparable<FastColor> {
 
     @Override
     public boolean equals(Object obj) {
-        final FastColor other = (FastColor) obj;
-        if (this.hashCode != other.hashCode) {
-            return false;
-        }
-        return true;
+        if (!(obj instanceof FastColor other)) return false;
+        return this.hashCode == other.hashCode;
     }
 
     @Override

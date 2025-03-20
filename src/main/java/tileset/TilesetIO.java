@@ -3,26 +3,22 @@ package tileset;
 
 import editor.MainFrame;
 import editor.smartdrawing.SmartGrid;
+import lombok.extern.log4j.Log4j2;
+import utils.Utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import utils.Utils;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class TilesetIO {
 
     private static final byte TAG_TILE = 0;
@@ -76,7 +72,7 @@ public class TilesetIO {
     private static final byte TAG_SMARTGRID = 26;
 
     public static void saveTilesetToFile(String path, Tileset tset)
-            throws FileNotFoundException, IOException {
+            throws IOException {
 
         FileOutputStream out = new FileOutputStream(path);
 
@@ -138,30 +134,29 @@ public class TilesetIO {
     }
 
     public static Tileset readTilesetFromFileAsResourceURI(String path)
-            throws FileNotFoundException, IOException, NullPointerException,
-            TextureNotFoundException {
+            throws IOException, NullPointerException {
         try {
-            File file = new File(MainFrame.class.getResource(path).toURI());
-            return readTilesetFromFile(MainFrame.class.getResourceAsStream(file.getPath()), path, true);
+            File file = new File(Objects.requireNonNull(MainFrame.class.getResource(path)).toURI());
+            return readTilesetFromFile(Objects.requireNonNull(MainFrame.class.getResourceAsStream(file.getPath())), path, true);
         } catch (URISyntaxException ex) {
             throw new FileNotFoundException();
         }
     }
 
     public static Tileset readTilesetFromFileAsResource(String path)
-            throws FileNotFoundException, IOException, NullPointerException,
+            throws IOException, NullPointerException,
             TextureNotFoundException {
-        return readTilesetFromFile(TilesetIO.class.getResourceAsStream(path), path, true);
+        return readTilesetFromFile(Objects.requireNonNull(TilesetIO.class.getResourceAsStream(path)), path, true);
     }
 
     public static Tileset readTilesetFromFile(String path)
-            throws FileNotFoundException, IOException, NullPointerException,
+            throws IOException, NullPointerException,
             TextureNotFoundException {
         return readTilesetFromFile(new FileInputStream(path), path, false);
     }
 
     private static Tileset readTilesetFromFile(InputStream in, String path, boolean asResource)
-            throws FileNotFoundException, IOException, NullPointerException, TextureNotFoundException {
+            throws IOException, NullPointerException {
         Tileset tset = new Tileset();
         tset.tilesetFolderPath = new File(path).getParent();
         tset.tilesetFolderPath = tset.tilesetFolderPath.replace('\\', '/');
@@ -176,61 +171,99 @@ public class TilesetIO {
                     material = new TilesetMaterial();
                     break;
                 case TAG_IMG_NAME:
-                    material.setImageName(readStringElement(in));
+                    if (material != null) {
+                        material.setImageName(readStringElement(in));
+                    }
                     break;
                 case TAG_MAT_NAME:
-                    material.setMaterialName(readStringElement(in));
+                    if (material != null) {
+                        material.setMaterialName(readStringElement(in));
+                    }
                     break;
                 case TAG_PNAME_IMD:
-                    material.setPaletteNameImd(readStringElement(in));
+                    if (material != null) {
+                        material.setPaletteNameImd(readStringElement(in));
+                    }
                     break;
                 case TAG_TNAME_IMD:
-                    material.setTextureNameImd(readStringElement(in));
+                    if (material != null) {
+                        material.setTextureNameImd(readStringElement(in));
+                    }
                     break;
                 case TAG_FOG:
-                    material.setFogEnabled(readBoolElement(in));
+                    if (material != null) {
+                        material.setFogEnabled(readBoolElement(in));
+                    }
                     break;
                 case TAG_BOTHFACE:
-                    material.setRenderBothFaces(readBoolElement(in));
+                    if (material != null) {
+                        material.setRenderBothFaces(readBoolElement(in));
+                    }
                     break;
                 case TAG_NORMALORIENT:
-                    material.setUniformNormalOrientation(readBoolElement(in));
+                    if (material != null) {
+                        material.setUniformNormalOrientation(readBoolElement(in));
+                    }
                     break;
                 case TAG_INCLUDE_IN_IMD:
-                    material.setAlwaysIncludeInImd(readBoolElement(in));
+                    if (material != null) {
+                        material.setAlwaysIncludeInImd(readBoolElement(in));
+                    }
                     break;
                 case TAG_LIGHT0:
-                    material.setLight0(readBoolElement(in));
+                    if (material != null) {
+                        material.setLight0(readBoolElement(in));
+                    }
                     break;
                 case TAG_LIGHT1:
-                    material.setLight1(readBoolElement(in));
+                    if (material != null) {
+                        material.setLight1(readBoolElement(in));
+                    }
                     break;
                 case TAG_LIGHT2:
-                    material.setLight2(readBoolElement(in));
+                    if (material != null) {
+                        material.setLight2(readBoolElement(in));
+                    }
                     break;
                 case TAG_LIGHT3:
-                    material.setLight3(readBoolElement(in));
+                    if (material != null) {
+                        material.setLight3(readBoolElement(in));
+                    }
                     break;
                 case TAG_RENDER_BORDER:
-                    material.setRenderBorder(readBoolElement(in));
+                    if (material != null) {
+                        material.setRenderBorder(readBoolElement(in));
+                    }
                     break;
                 case TAG_VERTEX_COLORS:
-                    material.setVertexColorsEnabled(readBoolElement(in));
+                    if (material != null) {
+                        material.setVertexColorsEnabled(readBoolElement(in));
+                    }
                     break;
                 case TAG_ALPHA:
-                    material.setAlpha(readIntElement(in));
+                    if (material != null) {
+                        material.setAlpha(readIntElement(in));
+                    }
                     break;
                 case TAG_TEXGENMODE:
-                    material.setTexGenMode(readIntElement(in));
+                    if (material != null) {
+                        material.setTexGenMode(readIntElement(in));
+                    }
                     break;
                 case TAG_TEX_TILING_U:
-                    material.setTexTilingU(readIntElement(in));
+                    if (material != null) {
+                        material.setTexTilingU(readIntElement(in));
+                    }
                     break;
                 case TAG_TEX_TILING_V:
-                    material.setTexTilingV(readIntElement(in));
+                    if (material != null) {
+                        material.setTexTilingV(readIntElement(in));
+                    }
                     break;
                 case TAG_COLOR_FORMAT:
-                    material.setColorFormat(readIntElement(in));
+                    if (material != null) {
+                        material.setColorFormat(readIntElement(in));
+                    }
                     break;
                 case TAG_MATERIAL_END:
                     readIntElement(in); //Discard
@@ -245,7 +278,7 @@ public class TilesetIO {
                         // Check if all textures can be read
                         findAndFixMissedTextures(tset, tile, asResource);
 
-                        if (tile.getColorsObj().size() == 0) {
+                        if (tile.getColorsObj().isEmpty()) {
                             ArrayList<Float> colors = new ArrayList<>();
                             colors.add(1.0f);
                             colors.add(1.0f);
@@ -255,87 +288,118 @@ public class TilesetIO {
 
                         tile.objDataToGlData();
                         tset.addTile(tile);
-                        /*
-                        int id = idOfMissedTexture(tset, tile);
-                        if (id == -1) {
-                            tile.objDataToGlData();
-                            tset.addTile(tile);
-                        } else {
-                            System.out.println("Missed texture at ID: " + id);
-                        }*/
- /*else {
-                            throw new TextureNotFoundException(
-                                    "Can't load texture named "
-                                    + tset.getTextureName(id));
-                        }*/
                     }
                     tile = new Tile();
                     break;
                 case TAG_WIDTH:
-                    tile.setWidth(readIntElement(in));
+                    if (tile != null) {
+                        tile.setWidth(readIntElement(in));
+                    }
                     break;
                 case TAG_HEIGHT:
-                    tile.setHeight(readIntElement(in));
+                    if (tile != null) {
+                        tile.setHeight(readIntElement(in));
+                    }
                     break;
                 case TAG_XTILEABLE:
-                    tile.setXtileable(readBoolElement(in));
+                    if (tile != null) {
+                        tile.setXtileable(readBoolElement(in));
+                    }
                     break;
                 case TAG_YTILEABLE:
-                    tile.setYtileable(readBoolElement(in));
+                    if (tile != null) {
+                        tile.setYtileable(readBoolElement(in));
+                    }
                     break;
                 case TAG_UTILEABLE:
-                    tile.setUtileable(readBoolElement(in));
+                    if (tile != null) {
+                        tile.setUtileable(readBoolElement(in));
+                    }
                     break;
                 case TAG_VTILEABLE:
-                    tile.setVtileable(readBoolElement(in));
+                    if (tile != null) {
+                        tile.setVtileable(readBoolElement(in));
+                    }
                     break;
                 case TAG_GLOBALMAPPING:
-                    tile.setGlobalTextureMapping(readBoolElement(in));
+                    if (tile != null) {
+                        tile.setGlobalTextureMapping(readBoolElement(in));
+                    }
                     break;
                 case TAG_GLOBALTEXSCALE:
-                    tile.setGlobalTextureScale(readFloatElement(in));
+                    if (tile != null) {
+                        tile.setGlobalTextureScale(readFloatElement(in));
+                    }
                     break;
                 case TAG_XOFFSET:
-                    tile.setXOffset(readFloatElement(in));
+                    if (tile != null) {
+                        tile.setXOffset(readFloatElement(in));
+                    }
                     break;
                 case TAG_YOFFSET:
-                    tile.setYOffset(readFloatElement(in));
+                    if (tile != null) {
+                        tile.setYOffset(readFloatElement(in));
+                    }
                     break;
                 case TAG_VCOORDS:
-                    tile.setVertexCoordsObj(readFloatArray(in));
+                    if (tile != null) {
+                        tile.setVertexCoordsObj(readFloatArray(in));
+                    }
                     break;
                 case TAG_TCOORDS:
-                    tile.setTextureCoordsObj(readFloatArray(in));
+                    if (tile != null) {
+                        tile.setTextureCoordsObj(readFloatArray(in));
+                    }
                     break;
                 case TAG_NCOORDS:
-                    tile.setNormalCoordsObj(readFloatArray(in));
+                    if (tile != null) {
+                        tile.setNormalCoordsObj(readFloatArray(in));
+                    }
                     break;
                 case TAG_COLORS:
-                    tile.setColorsObj(readFloatArray(in));
+                    if (tile != null) {
+                        tile.setColorsObj(readFloatArray(in));
+                    }
                     break;
                 case TAG_FINDSQUADS:
-                    tile.setFaceIndsQuads(readFaceArray(in, true));
+                    if (tile != null) {
+                        tile.setFaceIndsQuads(readFaceArray(in, true));
+                    }
                     break;
                 case TAG_FINDSTRIS:
-                    tile.setFaceIndsTris(readFaceArray(in, false));
+                    if (tile != null) {
+                        tile.setFaceIndsTris(readFaceArray(in, false));
+                    }
                     break;
                 case TAG_FINDSQUADS_EXTENDED:
-                    tile.setFaceIndsQuads(readFaceExtendedArray(in, true));
+                    if (tile != null) {
+                        tile.setFaceIndsQuads(readFaceExtendedArray(in, true));
+                    }
                     break;
                 case TAG_FINDSTRIS_EXTENDED:
-                    tile.setFaceIndsTris(readFaceExtendedArray(in, false));
+                    if (tile != null) {
+                        tile.setFaceIndsTris(readFaceExtendedArray(in, false));
+                    }
                     break;
                 case TAG_TIDS:
-                    tile.setTextureIDs(readIntArrayElement(in));
+                    if (tile != null) {
+                        tile.setTextureIDs(readIntArrayElement(in));
+                    }
                     break;
                 case TAG_TOFFSETSQUAD:
-                    tile.setTexOffsetsQuad(readIntArrayElement(in));
+                    if (tile != null) {
+                        tile.setTexOffsetsQuad(readIntArrayElement(in));
+                    }
                     break;
                 case TAG_TOFFSETSTRI:
-                    tile.setTexOffsetsTri(readIntArrayElement(in));
+                    if (tile != null) {
+                        tile.setTexOffsetsTri(readIntArrayElement(in));
+                    }
                     break;
                 case TAG_OBJNAME:
-                    tile.setObjFilename(readStringElement(in));
+                    if (tile != null) {
+                        tile.setObjFilename(readStringElement(in));
+                    }
                     break;
             }
         }
@@ -343,7 +407,7 @@ public class TilesetIO {
         findAndFixMissedTextures(tset, tile, asResource);
 
         if (tile != null) {
-            if (tile.getColorsObj().size() == 0) {
+            if (tile.getColorsObj().isEmpty()) {
                 ArrayList<Float> colors = new ArrayList<>();
                 colors.add(1.0f);
                 colors.add(1.0f);
@@ -354,14 +418,8 @@ public class TilesetIO {
             tile.objDataToGlData();
             tset.addTile(tile);
         }
-        /*
-        int id = idOfMissedTexture(tset, tile);
-        if (id == -1) {
-            tile.objDataToGlData();
-            tset.addTile(tile);
-        }*/
 
-        if (tset.getSmartGridArray().size() < 1) {
+        if (tset.getSmartGridArray().isEmpty()) {
             tset.getSmartGridArray().add(new SmartGrid());
         }
 
@@ -394,7 +452,7 @@ public class TilesetIO {
                             ImageIO.write(Tileset.defaultTexture, "png", file);
                             tset.getMaterial(tile.getTextureIDs().get(i)).setImageName(textName);
                         } catch (FileNotFoundException ex) {
-                            ex.printStackTrace();
+                            log.error(ex);
                         }
                     }
                 }
@@ -455,6 +513,7 @@ public class TilesetIO {
         return readInt(in) == 1;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static String readStringElement(InputStream in)
             throws IOException {
         int size = readInt(in);
@@ -490,12 +549,14 @@ public class TilesetIO {
         return readInt(in);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static int readInt(InputStream in) throws IOException {
         byte[] data = new byte[Integer.BYTES];
         in.read(data);
         return ByteBuffer.wrap(data).getInt();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static float readFloat(InputStream in) throws IOException {
         byte[] data = new byte[Float.BYTES];
         in.read(data);
@@ -513,9 +574,7 @@ public class TilesetIO {
         for (int i = 0; i < f.nInd.length; i++) {
             f.nInd[i] = readInt(in);
         }
-        for (int i = 0; i < f.cInd.length; i++) {
-            f.cInd[i] = 1;
-        }
+        Arrays.fill(f.cInd, 1);
         return f;
     }
 
@@ -550,13 +609,14 @@ public class TilesetIO {
         writeIntArray(out, Utils.intListToArray(data));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void writeIntElement(FileOutputStream out, byte tag, int[][] data)
             throws IOException {
         writeTag(out, tag);
         writeIntValue(out, data.length);
-        for (int i = 0; i < data.length; i++) {
-            writeIntValue(out, data[i].length);
-            writeIntArray(out, data[i]);
+        for (int[] datum : data) {
+            writeIntValue(out, datum.length);
+            writeIntArray(out, datum);
         }
     }
 

@@ -1,16 +1,18 @@
 
 package utils.swing;
 
+import lombok.Getter;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import java.awt.*;
 
 /**
  * @author Trifindo
  */
+@Getter
 public class JScrollCheckboxList extends JScrollPane {
 
     JCheckboxList checkboxList = new JCheckboxList();
@@ -21,13 +23,9 @@ public class JScrollCheckboxList extends JScrollPane {
         checkboxList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         add(checkboxList);
-        DefaultListModel model = new DefaultListModel<JCheckBox>();
+        DefaultListModel<JCheckBox> model = new DefaultListModel<>();
         checkboxList.setModel(model);
         setViewportView(checkboxList);
-    }
-
-    public JCheckboxList getCheckboxList() {
-        return checkboxList;
     }
 
     @Override

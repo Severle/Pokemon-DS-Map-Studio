@@ -115,7 +115,7 @@ public class BuildModelList {
 
     private static String getModelName(byte[] data) throws Exception {
         long nameOffset = BinaryReader.readUInt32(data, 16);
-        return Utils.removeLastOcurrences(BinaryReader.readString(data, (int) (32 + nameOffset), 16), '\u0000');
+        return Utils.removeLastOccurrences(BinaryReader.readString(data, (int) (32 + nameOffset), 16), '\u0000');
     }
 
 }

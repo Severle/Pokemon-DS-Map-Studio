@@ -4,6 +4,7 @@ import math.mat.Mat3f;
 import math.mat.Mat4f;
 import math.vec.Vec3f;
 
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class TransfMat {
 
     public static void perspective(float fovy, float aspect, float zNear, float zFar, Mat4f dst) {

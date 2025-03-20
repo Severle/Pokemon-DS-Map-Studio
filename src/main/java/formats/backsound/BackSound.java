@@ -1,32 +1,33 @@
 
 package formats.backsound;
 
-import utils.exceptions.WrongFormatException;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import lombok.Getter;
 import utils.BinaryReader;
 import utils.BinaryWriter;
+import utils.exceptions.WrongFormatException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
-public class Backsound {
+@Getter
+@SuppressWarnings("SpellCheckingInspection")
+public class BackSound {
 
     public static final String fileExtension = "bgs";
     private static final int SIGNATURE = 4660;
     private static final int BYTES_PER_SOUNDPLATE = 8;
 
-    private ArrayList<Soundplate> soundplates = new ArrayList<>();
+    private final ArrayList<SoundPlate> soundPlates;
 
-    public Backsound() {
-        soundplates = new ArrayList<>();
+    public BackSound() {
+        soundPlates = new ArrayList<>();
         //soundplates.add(new Soundplate());
     }
 
-    public Backsound(String path) throws FileNotFoundException, IOException, WrongFormatException {
+    public BackSound(String path) throws IOException, WrongFormatException {
         BinaryReader reader = new BinaryReader(path);
 
         if (reader.readUInt16() != SIGNATURE) {
@@ -36,7 +37,7 @@ public class Backsound {
         final int sectionSize = reader.readUInt16();
         final int numPlates = sectionSize / BYTES_PER_SOUNDPLATE;
 
-        soundplates = new ArrayList<>(numPlates);
+        soundPlates = new ArrayList<>(numPlates);
         for (int i = 0; i < numPlates; i++) {
             int soundCode = reader.readUInt8();
             int volume = reader.readUInt8();
@@ -47,20 +48,19 @@ public class Backsound {
             int width = reader.readUInt8() - x + 1;
             int height = reader.readUInt8() - y + 1;
 
-            soundplates.add(new Soundplate(soundCode, volume, byte3, byte4, x, y, width, height));
+            soundPlates.add(new SoundPlate(soundCode, volume, byte3, byte4, x, y, width, height));
         }
 
         reader.close();
     }
 
-    public void writeToFile(String path) throws FileNotFoundException, IOException {
+    public void writeToFile(String path) throws IOException {
         BinaryWriter writer = new BinaryWriter(path);
 
         writer.writeUInt16(SIGNATURE);
-        writer.writeUInt16(soundplates.size() * BYTES_PER_SOUNDPLATE);
+        writer.writeUInt16(soundPlates.size() * BYTES_PER_SOUNDPLATE);
 
-        for (int i = 0; i < soundplates.size(); i++) {
-            Soundplate soundplate = soundplates.get(i);
+        for (SoundPlate soundplate : soundPlates) {
             writer.writeUInt8(soundplate.getSoundCode());
             writer.writeUInt8(soundplate.getVolume());
             writer.writeUInt8(soundplate.byte3);//Unknown
@@ -74,12 +74,8 @@ public class Backsound {
         writer.close();
     }
 
-    public ArrayList<Soundplate> getSoundplates() {
-        return soundplates;
-    }
-
-    public Soundplate getSoundplate(int index) {
-        return soundplates.get(index);
+    public SoundPlate getSoundplate(int index) {
+        return soundPlates.get(index);
     }
 
 }

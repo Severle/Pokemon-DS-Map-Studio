@@ -1,11 +1,10 @@
 package formats.mapbin;
 
 import editor.buildingeditor2.buildfile.BuildFile;
-import formats.backsound.Backsound;
+import formats.backsound.BackSound;
 import formats.bdhc.Bdhc;
 import formats.bdhcam.Bdhcam;
 import formats.collisions.Collisions;
-import utils.BinaryArrayWriter;
 import utils.BinaryWriter;
 import utils.Utils;
 
@@ -25,7 +24,7 @@ public class MapBinHGSS extends MapBin {
     public MapBinHGSS(String folderPath, String mapName) throws MissingMapBinFileException, NsbmdConversionException {
         mapName = Utils.removeExtensionFromPath(mapName);
         try {
-            bgs = Files.readAllBytes(Paths.get(folderPath + File.separator + mapName + "." + Backsound.fileExtension));
+            bgs = Files.readAllBytes(Paths.get(folderPath + File.separator + mapName + "." + BackSound.fileExtension));
         } catch (Exception ex) {
             throw new MissingMapBinFileException(MissingMapBinFileException.MISSING_BGS);
         }

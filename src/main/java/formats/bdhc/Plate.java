@@ -1,4 +1,3 @@
-
 package formats.bdhc;
 
 import java.awt.Color;
@@ -7,45 +6,30 @@ import java.awt.Rectangle;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class Plate {
 
-    public static final int PLANE = 0;
-    public static final int BRIDGE = 1;
-    public static final int LEFT_STAIRS = 2;
+    public static final int PLANE        = 0;
+    public static final int BRIDGE       = 1;
+    public static final int LEFT_STAIRS  = 2;
     public static final int RIGHT_STAIRS = 3;
-    public static final int UP_STAIRS = 4;
-    public static final int DOWN_STAIRS = 5;
-    public static final int OTHER = 6;
+    public static final int UP_STAIRS    = 4;
+    public static final int DOWN_STAIRS  = 5;
+    public static final int OTHER        = 6;
 
     public static final float SLOPE_UNIT = 4095.56247663f;
 
-    public static final int[][] slopes = new int[][]{
-            {0, 4096, 0},
-            {0, 4096, 0},
-            {2896, 2896, 0},
-            {-2896, 2896, 0},
-            {0, 2896, 2896},
-            {0, 2896, -2896},};
+    public static final int[][] slopes = new int[][]{{0, 4096, 0}, {0, 4096, 0}, {2896, 2896, 0}, {-2896, 2896, 0}, {0, 2896, 2896}, {0, 2896, -2896},};
 
-    public static final Color[] colors = new Color[]{
-            new Color(100, 100, 255, 100),
-            new Color(100, 255, 100, 100),
-            new Color(100, 255, 255, 100),
-            new Color(255, 100, 255, 100),
-            new Color(255, 255, 100, 100),
-            new Color(255, 255, 255, 100),
-            new Color(255, 100, 0, 100)
-    };
+    public static final Color[] colors = new Color[]{new Color(100, 100, 255, 100), new Color(100, 255, 100, 100), new Color(100, 255, 255, 100), new Color(255, 100, 255, 100), new Color(255, 255, 100, 100), new Color(255, 255, 255, 100), new Color(255, 100, 0, 100)};
 
     public int x, y;
     public int width, height;
     public float z;
-    public int type;
+    public int   type;
     public int[] customSlope = new int[]{0, 4096, 0};
     //public int slopeX, slopeY, slopeZ;
 
-    //private Color color;
-    //private static final Color defaultColor = new Color(100, 100, 255, 100);
     public static final Color selectedColor = new Color(255, 100, 100, 100);
 
     public Plate(int x, int y, float z, int width, int height, int type) {
@@ -76,10 +60,6 @@ public class Plate {
 
         this.type = PLANE;
 
-        //this.slopeX = 0;
-        //this.slopeY = 0;
-        //this.slopeZ = 4096;
-        //this.color = defaultColor;
     }
 
     public Color getColor() {
@@ -118,7 +98,7 @@ public class Plate {
             //System.out.println("x: " + (Math.sin(-angle) * SLOPE_UNIT) + " z: " + (Math.cos(-angle) * SLOPE_UNIT) + " y: " + (0.0f));
             customSlope[0] = (int) (Math.round(Math.sin(-angle) * SLOPE_UNIT));
             customSlope[1] = (int) (Math.round(Math.cos(-angle) * SLOPE_UNIT));
-            customSlope[2] = (int) (0.0f);
+            customSlope[2] = 0;
             //System.out.println("x: " + customSlope[0] + " z: " + customSlope[1] + " y: " + customSlope[2]);
         }
     }
@@ -126,7 +106,7 @@ public class Plate {
     public void setAngleY(float angle) {
         type = angleYToType(angle);
         if (type == OTHER) {
-            customSlope[0] = (int) (0.0f);
+            customSlope[0] = 0;
             customSlope[1] = (int) (Math.round(Math.cos(-angle) * SLOPE_UNIT));
             customSlope[2] = (int) (Math.round(Math.sin(-angle) * SLOPE_UNIT));
         }
@@ -186,51 +166,24 @@ public class Plate {
     }
 
     public float[] getVertexCoords() {
-        final float tol = 0.001f;
-        float angleX = getAngleY();
-        float angleY = getAngleX();
+        final float tol    = 0.001f;
+        float       angleX = getAngleY();
+        float       angleY = getAngleX();
 
         // 0  1
         // 3  2
         float[] vertexData;
         if (Math.abs(angleY) > tol) {
             if (angleY > 0.0f) {
-                return new float[]{
-                        x, -y, z,
-                        x + width, -y, z + width * (float) Math.tan(angleY),
-                        x + width, -(y + height), z + width * (float) Math.tan(angleY),
-                        x, -(y + height), z
-                };
+                return new float[]{x, -y, z, x + width, -y, z + width * (float) Math.tan(angleY), x + width, -(y + height), z + width * (float) Math.tan(angleY), x, -(y + height), z};
             } else {
-                return new float[]{
-                        x + width, -y, z,
-                        x, -y, z -  width * (float) Math.tan(angleY),
-                        x, -(y + height), z -  width * (float) Math.tan(angleY),
-                        x + width, -(y + height), z
-                };
-                /*
-                return new float[]{
-                        x + width, y, z + width * (float) Math.tan(angleY),
-                        x, y, z,
-                        x, y + height, z,
-                        x + width, y + height, z + width * (float) Math.tan(angleY)
-                };*/
+                return new float[]{x + width, -y, z, x, -y, z - width * (float) Math.tan(angleY), x, -(y + height), z - width * (float) Math.tan(angleY), x + width, -(y + height), z};
             }
         } else {
             if (angleX > 0.0f) {
-                return new float[]{
-                        x, -y, z,
-                        x + width, -y, z,
-                        x + width, -(y + height), z + height * (float) Math.tan(angleX),
-                        x, -(y + height), z + height * (float) Math.tan(angleX)
-                };
+                return new float[]{x, -y, z, x + width, -y, z, x + width, -(y + height), z + height * (float) Math.tan(angleX), x, -(y + height), z + height * (float) Math.tan(angleX)};
             } else {
-                return new float[]{
-                        x + width, -y, z - height * (float) Math.tan(angleX),
-                        x, -y, z  - height * (float) Math.tan(angleX),
-                        x, -(y + height), z,
-                        x + width, -(y + height), z
-                };
+                return new float[]{x + width, -y, z - height * (float) Math.tan(angleX), x, -y, z - height * (float) Math.tan(angleX), x, -(y + height), z, x + width, -(y + height), z};
             }
         }
     }

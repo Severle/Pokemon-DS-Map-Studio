@@ -12,6 +12,8 @@ import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
 import graphicslib3D.Matrix3D;
 import graphicslib3D.Vector3D;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +29,8 @@ import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
 import static com.jogamp.opengl.GL2GL3.GL_LINE;
 
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     //Editor Handler
@@ -65,10 +69,14 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
     protected float[] plateCoords;
     protected final float minZ = -10.0f, maxZ = 10.0f;
 
-    protected boolean mapEnabled = true;
-    protected boolean wireframeEnabled = true;
+    @Setter
+    protected boolean mapEnabled         = true;
+    @Setter
+    protected boolean wireframeEnabled   = true;
+    @Setter
     protected boolean transparentEnabled = true;
-    protected boolean xRayEnabled = true;
+    @Setter
+    protected boolean xRayEnabled        = true;
 
     public BdhcDisplay3D() {
         setPreferredSize(new Dimension(width, height));
@@ -204,8 +212,8 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
 
         if (SwingUtilities.isLeftMouseButton(e)) {
             float dist = cameraZ;
-            float deltaX = (((float) ((e.getX() - lastMouseX))) / getWidth()) * dist;
-            float deltaZ = (((float) ((e.getY() - lastMouseY))) / getHeight()) * dist;
+            float deltaX = ((e.getX() - lastMouseX) / getWidth()) * dist;
+            float deltaZ = ((e.getY() - lastMouseY) / getHeight()) * dist;
 
             Vector3D v = new Vector3D(deltaX, 0.0f, deltaZ);
             Matrix3D m2 = new Matrix3D(cameraRotZ, new Vector3D(0.0f, 1.0f, 0.0f));
@@ -221,9 +229,9 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
         } else if (SwingUtilities.isRightMouseButton(e)
                 | SwingUtilities.isMiddleMouseButton(e)) {
             float delta = 100.0f;
-            cameraRotZ -= (((float) ((e.getX() - lastMouseX))) / getWidth()) * delta;
+            cameraRotZ -= ((e.getX() - lastMouseX) / getWidth()) * delta;
             lastMouseX = e.getX();
-            cameraRotX -= (((float) ((e.getY() - lastMouseY))) / getHeight()) * delta;
+            cameraRotX -= ((e.getY() - lastMouseY) / getHeight()) * delta;
             lastMouseY = e.getY();
             repaint();
         }
@@ -237,9 +245,9 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (e.getWheelRotation() > 0) {
-            cameraZ *= 1.1;
+            cameraZ *= 1.1F;
         } else {
-            cameraZ /= 1.1;
+            cameraZ /= 1.1F;
         }
         repaint();
     }
@@ -284,9 +292,6 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
             gl.glBegin(GL_QUADS);
             for (int j = 0; j < vertexPerPlate; j++) {
                 float color = (plateCoords[i * coordsPerPlate + j * coordsPerVertex + 2] - minZ) / (maxZ - minZ);
-                //float scale = 0.75f;
-                //color *= (1.0f - scale) + scale;
-                //color = Math.max(Math.min(color, 1.0f), 0.0f);
                 color = Math.max(Math.min(color, 1.0f), 0.0f);
                 gl.glColor3f(color, color, color);
                 gl.glVertex3fv(plateCoords, i * coordsPerPlate + j * coordsPerVertex);
@@ -435,13 +440,7 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
         gl.glEnable(GL_ALPHA_TEST);
         gl.glAlphaFunc(GL_GREATER, 0.9f);
 
-        /*
-        drawAllMaps(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });*/
-        drawCurrentMap(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });
+        drawCurrentMap(gl, this::drawGeometryGL);
     }
 
     protected void drawTransparentMaps(GL2 gl) {
@@ -456,14 +455,7 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
         gl.glEnable(GL_ALPHA_TEST);
         gl.glAlphaFunc(GL_NOTEQUAL, 0.0f);
 
-        drawCurrentMap(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });
-
-        /*
-        drawAllMaps(gl, (gl2, geometryGL, textures) -> {
-            drawGeometryGL(gl2, geometryGL, textures);
-        });*/
+        drawCurrentMap(gl, this::drawGeometryGL);
     }
 
     protected void drawAllMaps(GL2 gl, BdhcDisplay3D.DrawGeometryGLFunction drawFunction) {
@@ -479,6 +471,7 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
                 0, 0, 0);
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void drawAllMapLayersGL(GL2 gl, BdhcDisplay3D.DrawGeometryGLFunction drawFunction, MapLayerGL[] mapLayersGL, float x, float y, float z) {
         for (int i = 0; i < mapLayersGL.length; i++) {
             if (handler.renderLayers[i]) {
@@ -571,27 +564,11 @@ public class BdhcDisplay3D extends GLJPanel implements GLEventListener, MouseLis
 
             gl.glDisable(GL_TEXTURE_2D);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
-    public void setxRayEnabled(boolean xRayEnabled) {
-        this.xRayEnabled = xRayEnabled;
-    }
-
-    public void setMapEnabled(boolean mapEnabled) {
-        this.mapEnabled = mapEnabled;
-    }
-
-    public void setTransparentEnabled(boolean transparentEnabled) {
-        this.transparentEnabled = transparentEnabled;
-    }
-
-    public void setWireframeEnabled(boolean wireframeEnabled) {
-        this.wireframeEnabled = wireframeEnabled;
-    }
-
-    protected static interface DrawGeometryGLFunction {
-        public void draw(GL2 gl, GeometryGL geometryGL, ArrayList<Texture> textures);
+    protected interface DrawGeometryGLFunction {
+        void draw(GL2 gl, GeometryGL geometryGL, ArrayList<Texture> textures);
     }
 }

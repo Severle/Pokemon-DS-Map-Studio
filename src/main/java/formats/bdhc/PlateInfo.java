@@ -4,7 +4,7 @@ package formats.bdhc;
 /**
  * @author Trifindo
  */
-public class PlateInfo implements Comparable {
+public class PlateInfo implements Comparable<PlateInfo> {
 
     public int plateIndex;
     public int y;
@@ -15,8 +15,8 @@ public class PlateInfo implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return Integer.compare(this.y, ((PlateInfo) o).y);
+    public int compareTo(PlateInfo o) {
+        return Integer.compare(this.y, o.y);
     }
 
 

@@ -29,7 +29,7 @@ public class NsbtxPalette {
         System.arraycopy(nsbtxData, paletteDataOffset + paletteOffset, data, 0, Math.min(data.length, nsbtxData.length - paletteOffset));
 
         //Load palette name
-        name = Utils.removeLastOcurrences(new String(nsbtxData, offsetPaletteName, 16), '\u0000');
+        name = Utils.removeLastOccurrences(new String(nsbtxData, offsetPaletteName, 16), '\u0000');
     }
 
     public NsbtxPalette(String name, int numColors) {

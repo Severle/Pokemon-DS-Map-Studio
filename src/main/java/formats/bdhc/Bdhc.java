@@ -1,11 +1,15 @@
 
 package formats.bdhc;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class Bdhc {
 
     public static final String fileExtension = "bdhc";
@@ -25,10 +29,6 @@ public class Bdhc {
         plates.add(new Plate());
         plates.add(new Plate());
 
-    }
-
-    public ArrayList<Plate> getPlates() {
-        return plates;
     }
 
     public Plate getPlate(int index) {

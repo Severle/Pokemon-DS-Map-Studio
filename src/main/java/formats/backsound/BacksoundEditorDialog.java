@@ -189,7 +189,7 @@ public class BacksoundEditorDialog extends JDialog {
         if (handler.getLastBdhcDirectoryUsed() != null) {
             fc.setCurrentDirectory(new File(handler.getLastBdhcDirectoryUsed()));
         }
-        fc.setFileFilter(new FileNameExtensionFilter("Backsound File (*.bgs)", Backsound.fileExtension));
+        fc.setFileFilter(new FileNameExtensionFilter("Backsound File (*.bgs)", BackSound.fileExtension));
         fc.setApproveButtonText("Open");
         fc.setDialogTitle("Open Background Sound File");
         int returnVal = fc.showOpenDialog(this);
@@ -198,7 +198,7 @@ public class BacksoundEditorDialog extends JDialog {
                 String path = fc.getSelectedFile().getPath();
                 handler.setLastBdhcDirectoryUsed(fc.getSelectedFile().getParent());
 
-                handler.setBacksound(new Backsound(path));
+                handler.setBacksound(new BackSound(path));
 
                 backsoundHandler.setIndexSelected(0);
                 updateView();
@@ -216,7 +216,7 @@ public class BacksoundEditorDialog extends JDialog {
         if (handler.getLastBdhcDirectoryUsed() != null) {
             fc.setCurrentDirectory(new File(handler.getLastBdhcDirectoryUsed()));
         }
-        fc.setFileFilter(new FileNameExtensionFilter("Backsound File (*.bgs)", Backsound.fileExtension));
+        fc.setFileFilter(new FileNameExtensionFilter("Backsound File (*.bgs)", BackSound.fileExtension));
         fc.setApproveButtonText("Save");
         fc.setDialogTitle("Save Background Sound File");
         int returnVal = fc.showOpenDialog(this);
@@ -224,7 +224,7 @@ public class BacksoundEditorDialog extends JDialog {
             try {
                 String path = fc.getSelectedFile().getPath();
                 handler.setLastBdhcDirectoryUsed(fc.getSelectedFile().getParent());
-                path = Utils.addExtensionToPath(path, Backsound.fileExtension);
+                path = Utils.addExtensionToPath(path, BackSound.fileExtension);
 
                 backsoundHandler.getBacksound().writeToFile(path);
             } catch (IOException ex) {

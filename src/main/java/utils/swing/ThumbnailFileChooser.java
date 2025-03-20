@@ -1,11 +1,8 @@
-
 package utils.swing;
 
-/**
- * @author Trifindo
- */
-
-import java.awt.Image;
+import javax.swing.*;
+import javax.swing.filechooser.FileView;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Map;
@@ -14,13 +11,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileView;
-
+/**
+ * @author Trifindo
+ */
 public class ThumbnailFileChooser extends JFileChooser {
 
     /**
@@ -41,7 +34,7 @@ public class ThumbnailFileChooser extends JFileChooser {
     /**
      * Use a weak hash map to cache images until the next garbage collection (saves memory)
      */
-    private final Map imageCache = new WeakHashMap();
+    private final Map<File, ImageIcon> imageCache = new WeakHashMap<>();
 
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

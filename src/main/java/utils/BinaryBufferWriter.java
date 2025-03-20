@@ -1,15 +1,19 @@
 package utils;
 
+import lombok.Getter;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
+@SuppressWarnings("unused")
 public class BinaryBufferWriter {
 
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
-    protected byte buf[];
-    protected int pos;
-    protected int size;
+    private static final int    MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+    protected byte[] buf;
+    @Getter
+    protected int    pos;
+    protected int    size;
     protected int mark;
 
     public BinaryBufferWriter(int size){
@@ -46,7 +50,7 @@ public class BinaryBufferWriter {
                 MAX_ARRAY_SIZE;
     }
 
-    public synchronized byte toByteArray()[] {
+    public synchronized byte[] toByteArray() {
         return Arrays.copyOf(buf, size);
     }
 
@@ -57,11 +61,11 @@ public class BinaryBufferWriter {
         size = Math.max(pos, size);
     }
 
-    public synchronized void write(byte b[]) {
+    public synchronized void write(byte[] b) {
         write(b, 0, b.length);
     }
 
-    public synchronized void write(byte b[], int off, int len) {
+    public synchronized void write(byte[] b, int off, int len) {
         if ((off < 0) || (off > b.length) || (len < 0) ||
                 ((off + len) - b.length > 0)) {
             throw new IndexOutOfBoundsException();
@@ -108,7 +112,7 @@ public class BinaryBufferWriter {
         write(array, 0, array.length);
     }
 
-    public void writeInt32(long value) throws Exception {
+    public void writeInt32(long value) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(4);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
         byteBuffer.putInt((int)value);
@@ -119,9 +123,5 @@ public class BinaryBufferWriter {
     public void writeString(String string){
         byte[] array = string.getBytes();
         write(array, 0, array.length);
-    }
-
-    public int getPos(){
-        return pos;
     }
 }

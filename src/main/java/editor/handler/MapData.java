@@ -1,7 +1,7 @@
 
 package editor.handler;
 
-import formats.backsound.Backsound;
+import formats.backsound.BackSound;
 import formats.bdhc.Bdhc;
 import editor.buildingeditor2.buildfile.BuildFile;
 import formats.bdhcam.Bdhcam;
@@ -30,7 +30,7 @@ public class MapData {
     private Bdhcam bdhcam;
 
     //Backsound
-    private Backsound backsound;
+    private BackSound backsound;
 
     //Collisions
     private Collisions collisions;
@@ -52,7 +52,7 @@ public class MapData {
         grid = new MapGrid(handler);
 
         bdhc = new Bdhc();
-        backsound = new Backsound();
+        backsound = new BackSound();
         collisions = new Collisions(handler.getGameIndex());
         collisions2 = new Collisions(handler.getGameIndex());;
         buildings = new BuildFile();
@@ -116,11 +116,11 @@ public class MapData {
         this.bdhc = bdhc;
     }
 
-    public Backsound getBacksound() {
+    public BackSound getBacksound() {
         return backsound;
     }
 
-    public void setBacksound(Backsound backsound) {
+    public void setBacksound(BackSound backsound) {
         this.backsound = backsound;
     }
 

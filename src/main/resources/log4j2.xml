@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Create Date: 22:14  2025.03.20 星期四 -->
+<!-- Create User: 20965 -->
+<Configuration status="WARN" monitorInterval="30" shutdownHook="enable">
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{[%-5level]}{ERROR=Bright RED, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %style{[%t]}{bright,magenta} %style{%c{1.}.%M(%L)}{cyan}: %msg%n"/>
+        </Console>
+        <RollingFile name="RollingFile-Appender" fileName="logs/latest.log"
+                     filePattern="logs/%d-%i.log.gz" append="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36}(%L) - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <Async name="Async-RollingFile-Appender">
+            <AppenderRef ref="RollingFile-Appender"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="jdk.event.security" level="INFO"/>
+        <Logger name="java.lang.Runtime" level="INFO"/>
+        <Logger name="java.io" level="INFO"/>
+        <Logger name="java.awt" level="INFO"/>
+        <Logger name="javax.swing" level="INFO"/>
+        <Logger name="javax.management" level="INFO"/>
+        <Logger name="sun.awt" level="INFO"/>
+        <Logger name="sun.net" level="INFO"/>
+        <Logger name="sun.rmi" level="INFO"/>
+        <Logger name="org.apache.fury" level="ERROR"/>
+        <Logger name="org.springframework" level="INFO"/>
+
+        <Root level="all">
+            <Appender-Ref ref="Console-Appender"/>
+            <Appender-Ref ref="Async-RollingFile-Appender"/>
+        </Root>
+    </Loggers>
+    <Properties>
+        <Property name="log4j2.console.encoding">UTF-8</Property>
+    </Properties>
+</Configuration>

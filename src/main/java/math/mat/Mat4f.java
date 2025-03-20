@@ -1,5 +1,9 @@
 package math.mat;
 
+import lombok.extern.log4j.Log4j2;
+
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
+@Log4j2
 public class Mat4f {
 
     public float m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33;
@@ -43,6 +47,7 @@ public class Mat4f {
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Mat4f clone() {
         return new Mat4f(this);
     }
@@ -54,15 +59,10 @@ public class Mat4f {
                 + String.format(columnFormat, m10, m11, m12, m13)
                 + String.format(columnFormat, m20, m21, m22, m23)
                 + String.format(columnFormat, m30, m31, m32, m33);
-        /*
-        return "|" + m00 + ", " + m01 + ", " + m02 + ", " + m03 + "|\n"
-                + "|" + m10 + ", " + m11 + ", " + m12 + ", " + m13 + "|\n"
-                + "|" + m20 + ", " + m21 + ", " + m22 + ", " + m23 + "|\n"
-                + "|" + m30 + ", " + m31 + ", " + m32 + ", " + m33 + "|";*/
     }
 
     public void print() {
-        System.out.println(toString());
+        log.debug(this.toString());
     }
 
     public final void set(Mat4f other) {
@@ -301,22 +301,6 @@ public class Mat4f {
         return mul_(this, other);
     }
 
-    /*
-    public void setRow(int index, Vec3f row) {
-        float[] data = toArray();
-        index *= 4;
-        data[index] = row.x;
-        data[index + 1] = row.y;
-        data[index + 2] = row.z;
-        set(data);
-    }
-    public void setCol(int index, Vec3f col) {
-        float[] data = toArray();
-        data[index] = col.x;
-        data[index + 4] = col.y;
-        data[index + 8] = col.z;
-        set(data);
-    }*/
     public static void inverse(Mat4f src, Mat4f dst) {
         float a = src.m00 * src.m11 - src.m01 * src.m10;
         float b = src.m00 * src.m12 - src.m02 * src.m10;
@@ -333,28 +317,24 @@ public class Mat4f {
 
         float det = a * l - b * k + c * j + d * i - e * h + f * g;
 
-        /*
-        if(Math.abs(det) < 0.0001f){
-            return false;
-        }*/
         det = 1.0f / det;
         dst.set(
-                (+src.m11 * l - src.m12 * k + src.m13 * j) * det,
+                (src.m11 * l - src.m12 * k + src.m13 * j) * det,
                 (-src.m01 * l + src.m02 * k - src.m03 * j) * det,
-                (+src.m31 * f - src.m32 * e + src.m33 * d) * det,
+                (src.m31 * f - src.m32 * e + src.m33 * d) * det,
                 (-src.m21 * f + src.m22 * e - src.m23 * d) * det,
                 (-src.m10 * l + src.m12 * i - src.m13 * h) * det,
-                (+src.m00 * l - src.m02 * i + src.m03 * h) * det,
+                (src.m00 * l - src.m02 * i + src.m03 * h) * det,
                 (-src.m30 * f + src.m32 * c - src.m33 * b) * det,
-                (+src.m20 * f - src.m22 * c + src.m23 * b) * det,
-                (+src.m10 * k - src.m11 * i + src.m13 * g) * det,
+                (src.m20 * f - src.m22 * c + src.m23 * b) * det,
+                (src.m10 * k - src.m11 * i + src.m13 * g) * det,
                 (-src.m00 * k + src.m01 * i - src.m03 * g) * det,
-                (+src.m30 * e - src.m31 * c + src.m33 * a) * det,
+                (src.m30 * e - src.m31 * c + src.m33 * a) * det,
                 (-src.m20 * e + src.m21 * c - src.m23 * a) * det,
                 (-src.m10 * j + src.m11 * h - src.m12 * g) * det,
-                (+src.m00 * j - src.m01 * h + src.m02 * g) * det,
+                (src.m00 * j - src.m01 * h + src.m02 * g) * det,
                 (-src.m30 * d + src.m31 * b - src.m32 * a) * det,
-                (+src.m20 * d - src.m21 * b + src.m22 * a) * det);
+                (src.m20 * d - src.m21 * b + src.m22 * a) * det);
         //return true;
     }
 

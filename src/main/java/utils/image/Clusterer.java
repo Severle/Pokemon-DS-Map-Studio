@@ -1,6 +1,8 @@
 
 package utils.image;
 
+import lombok.extern.log4j.Log4j2;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -11,23 +13,23 @@ import java.util.TreeSet;
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class Clusterer {
 
     public static BufferedImage clusterColors(BufferedImage img, int numColors, int maxIte, float tol) {
-        //return applyPaletteToImage(img, clusterColors(getPalette(img), numColors, maxIte, tol));
         return floydSteinbergDithering(img, clusterColors(getPalette(img), numColors, maxIte, tol));
     }
 
     public static ArrayList<Color> getPalette(BufferedImage img) {
-        Set<FastColor> set = new TreeSet<FastColor>();
+        Set<FastColor> set = new TreeSet<>();
         for (int j = 0; j < img.getHeight(); j++) {
             for (int i = 0; i < img.getWidth(); i++) {
                 set.add(new FastColor(img.getRGB(i, j), true));
             }
         }
-        ArrayList<Color> colors = new ArrayList<>();
-        colors.addAll(set);
-        System.out.println("Number of colors original image: " + colors.size());
+        ArrayList<Color> colors = new ArrayList<>(set);
+        log.debug("Number of colors original image: {}", colors.size());
         return colors;
     }
 
@@ -112,7 +114,7 @@ public class Clusterer {
             }
 
             for (int i = 0; i < centroids.size(); i++) {
-                if (colorsIndicesInClusters.get(i).size() > 0) {
+                if (!colorsIndicesInClusters.get(i).isEmpty()) {
                     centroids.set(i, getMeanColor(colors, colorsIndicesInClusters.get(i)));
                 } else {
                     centroids.set(i, colors.get(new Random().nextInt(colors.size())));
@@ -128,12 +130,12 @@ public class Clusterer {
             lastCentroids = copyColors(centroids);
 
             ite++;
-            System.out.println(ite);
+            log.debug(ite);
         }
 
-        System.out.println("Number of centroids: " + centroids.size());
-        for (int i = 0; i < centroids.size(); i++) {
-            System.out.println(centroids.get(i).getRGB());
+        log.debug("Number of centroids: {}", centroids.size());
+        for (Color centroid : centroids) {
+            log.debug(centroid.getRGB());
         }
 
         return centroids;
@@ -141,8 +143,8 @@ public class Clusterer {
 
     private static ArrayList<Color> copyColors(ArrayList<Color> colors) {
         ArrayList<Color> copys = new ArrayList<>(colors.size());
-        for (int i = 0; i < colors.size(); i++) {
-            copys.add(new Color(colors.get(i).getRGB(), true));
+        for (Color color : colors) {
+            copys.add(new Color(color.getRGB(), true));
         }
         return copys;
     }
@@ -161,8 +163,8 @@ public class Clusterer {
         int bSum = 0;
         int aSum = 0;
 
-        for (int i = 0; i < indices.size(); i++) {
-            Color c = colors.get(indices.get(i));
+        for (Integer index : indices) {
+            Color c = colors.get(index);
             rSum += c.getRed();
             gSum += c.getGreen();
             bSum += c.getBlue();
@@ -172,6 +174,7 @@ public class Clusterer {
 
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private static int getCloserColorIndex(Color c, ArrayList<Color> colors) {
         int index = 0;
         int minDist = Integer.MAX_VALUE;
@@ -185,6 +188,7 @@ public class Clusterer {
         return index;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private static int getDistanceToColor(Color c1, Color c2) {
         int rd = c1.getRed() - c2.getRed();
         int gd = c1.getGreen() - c2.getGreen();

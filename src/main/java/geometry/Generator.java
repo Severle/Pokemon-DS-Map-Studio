@@ -6,26 +6,29 @@ import graphicslib3D.Matrix3D;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class Generator {
 
     public static float[] generateCenteredGrid(int cols, int rows, float size, float z) {
         float[] grid = new float[(cols + rows + 2) * 2 * 3];
         for (int i = 0; i < rows + 1; i++) {
-            grid[i * 6 + 0] = -(size * cols) / 2;
-            grid[i * 6 + 1] = size * i - (size * rows) / 2;
+            grid[i * 6] = -(size * cols) / 2;
+            float v = size * i - (size * rows) / 2;
+            grid[i * 6 + 1] = v;
             grid[i * 6 + 2] = z;
 
             grid[i * 6 + 3] = (size * cols) / 2;
-            grid[i * 6 + 4] = size * i - (size * rows) / 2;
+            grid[i * 6 + 4] = v;
             grid[i * 6 + 5] = z;
         }
 
         for (int i = 0; i < cols + 1; i++) {
-            grid[(i + rows + 1) * 6 + 0] = size * i - (size * cols) / 2;
+            float v = size * i - (size * cols) / 2;
+            grid[(i + rows + 1) * 6] = v;
             grid[(i + rows + 1) * 6 + 1] = -(size * rows) / 2;
             grid[(i + rows + 1) * 6 + 2] = z;
 
-            grid[(i + rows + 1) * 6 + 3] = size * i - (size * cols) / 2;
+            grid[(i + rows + 1) * 6 + 3] = v;
             grid[(i + rows + 1) * 6 + 4] = (size * rows) / 2;
             grid[(i + rows + 1) * 6 + 5] = z;
         }
@@ -64,7 +67,7 @@ public class Generator {
     public static float[] generateGrid(int cols, int rows, float size, float z) {
         float[] grid = new float[(cols + rows + 2) * 2 * 3];
         for (int i = 0; i < rows + 1; i++) {
-            grid[i * 6 + 0] = 0;
+            grid[i * 6] = 0;
             grid[i * 6 + 1] = size * i;
             grid[i * 6 + 2] = z;
 
@@ -74,7 +77,7 @@ public class Generator {
         }
 
         for (int i = 0; i < cols + 1; i++) {
-            grid[(i + rows + 1) * 6 + 0] = size * i;
+            grid[(i + rows + 1) * 6] = size * i;
             grid[(i + rows + 1) * 6 + 1] = 0;
             grid[(i + rows + 1) * 6 + 2] = z;
 
@@ -99,6 +102,7 @@ public class Generator {
         return axis;
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static Matrix3D perspective(float fovy, float aspect, float n, float f) {
         float q = 1.0f / ((float) Math.tan(Math.toRadians(0.5f * fovy)));
         float A = q / aspect;
@@ -119,6 +123,7 @@ public class Generator {
         return r;
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static Matrix3D ortographic(float l, float r, float b, float t, float n, float f) {
         Matrix3D m = new Matrix3D();
         float A = 2 / (r - l);

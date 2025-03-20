@@ -4,6 +4,7 @@ package formats.bdhc;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection", "unused", "MismatchedReadAndWriteOfArray", "DuplicatedCode"})
 public class BdhcLoaderDP {
 
     private final int offsetSizeCoord = 0x08;
@@ -53,7 +55,7 @@ public class BdhcLoaderDP {
     }
 
     private ArrayList<Plate> loadPlatesFromBdhcDP(String path) throws IOException {
-        ArrayList plates = new ArrayList<>();
+        ArrayList<Plate> plates = new ArrayList<>();
 
         File file = new File(path);
         byte[] data = Files.readAllBytes(file.toPath());
@@ -125,20 +127,13 @@ public class BdhcLoaderDP {
             } else {
                 plates.add(new Plate(x, y, z, width, height, type));
             }
-            /*
-            plates.add(new Plate(
-                    x,
-                    y,
-                    z,
-                    width,
-                    height,
-                    type));*/
 
         }
 
         return plates;
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public float calculateZ(float d, int plateIndex) {
         int slopeIndex = plateIndices[plateIndex][2];
         //final float den = 4095.56247663f;
@@ -175,16 +170,16 @@ public class BdhcLoaderDP {
 
     public static float round(float d, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
         return bd.floatValue();
     }
 
     public static float dataToDistance(byte[] data, int offset) {
         short fractionalPart = (short) dataToUnsignedShort(data, offset);
         short decimalPart = dataToSignedShort(data, offset + 2);
-        float value = (float) (-decimalPart - (fractionalPart & 0xFFFF) / 65536f); //TODO: Do not use minus sign?
+        //TODO: Do not use minus sign?
         //System.out.println("dec: " + decimalPart + " frac: " + (fractionalPart & 0xFFFF) + " value: " + value);
-        return value;
+        return -decimalPart - (fractionalPart & 0xFFFF) / 65536f;
     }
 
     public static int dataToUnsignedShort(byte[] data, int offset) {
@@ -193,9 +188,9 @@ public class BdhcLoaderDP {
 
     public static float minCoord(float[] coords, int[] indices) {
         float min = Float.MAX_VALUE;
-        for (int i = 0; i < indices.length; i++) {
-            if (coords[indices[i]] < min) {
-                min = coords[indices[i]];
+        for (int index : indices) {
+            if (coords[index] < min) {
+                min = coords[index];
             }
         }
         return min;
@@ -203,9 +198,9 @@ public class BdhcLoaderDP {
 
     public static int minCoord(int[] coords, int[] indices) {
         int min = Integer.MAX_VALUE;
-        for (int i = 0; i < indices.length; i++) {
-            if (coords[indices[i]] < min) {
-                min = coords[indices[i]];
+        for (int index : indices) {
+            if (coords[index] < min) {
+                min = coords[index];
             }
         }
         return min;
@@ -225,9 +220,9 @@ public class BdhcLoaderDP {
 
     public static int maxCoord(int[] coords, int[] indices) {
         int max = Integer.MIN_VALUE;
-        for (int i = 0; i < indices.length; i++) {
-            if (coords[indices[i]] > max) {
-                max = coords[indices[i]];
+        for (int index : indices) {
+            if (coords[index] > max) {
+                max = coords[index];
             }
         }
         return max;
@@ -235,9 +230,9 @@ public class BdhcLoaderDP {
 
     public static int min(int[] array) {
         int min = Integer.MAX_VALUE;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] < min) {
-                min = array[i];
+        for (int j : array) {
+            if (j < min) {
+                min = j;
             }
         }
         return min;
@@ -245,9 +240,9 @@ public class BdhcLoaderDP {
 
     public static int max(int[] array) {
         int max = Integer.MIN_VALUE;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > max) {
-                max = array[i];
+        for (int j : array) {
+            if (j > max) {
+                max = j;
             }
         }
         return max;
@@ -275,17 +270,8 @@ public class BdhcLoaderDP {
     public static float dataToCoordZ(byte[] data, int offset) {
         short fractionalPart = (short) dataToUnsignedShort(data, offset);
         short decimalPart = dataToSignedShort(data, offset + 2);
-        float value = (float) (decimalPart + (fractionalPart & 0xFFFF) / 65536f); //TODO: Do not use minus sign?
+        //TODO: Do not use minus sign?
         //System.out.println("dec: " + decimalPart + " frac: " + (fractionalPart & 0xFFFF) + " value: " + value);
-        return value;
+        return decimalPart + (fractionalPart & 0xFFFF) / 65536f;
     }
-    
-    /*
-    public static float dataToCoordZ(byte[] data, int offset) {
-        short fractionalPart = dataToSignedShort(data, offset);
-        short decimalPart = dataToSignedShort(data, offset + 2);
-        //System.out.println(decimalPart + " " + fractionalPart);
-        return (float) (decimalPart - fractionalPart / 65536f); //TODO: Do not use minus sign?
-    }*/
-
 }

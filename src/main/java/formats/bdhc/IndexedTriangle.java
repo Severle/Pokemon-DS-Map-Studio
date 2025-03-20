@@ -6,6 +6,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class IndexedTriangle {
 
     public int pointInd1, pointInd2, pointInd3;

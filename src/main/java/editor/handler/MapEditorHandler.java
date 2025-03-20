@@ -4,7 +4,7 @@ package editor.handler;
 import editor.mapmatrix.MapMatrix;
 import editor.grid.MapGrid;
 import editor.MainFrame;
-import formats.backsound.Backsound;
+import formats.backsound.BackSound;
 import formats.bdhc.Bdhc;
 import editor.bordermap.BorderMapsGrid;
 import editor.buildingeditor2.buildfile.BuildFile;
@@ -385,11 +385,11 @@ public class MapEditorHandler {
         getCurrentMap().setBdhc(bdhc);
     }
 
-    public Backsound getBacksound() {
+    public BackSound getBacksound() {
         return getCurrentMap().getBacksound();
     }
 
-    public void setBacksound(Backsound backsound) {
+    public void setBacksound(BackSound backsound) {
         getCurrentMap().setBacksound(backsound);
     }
 

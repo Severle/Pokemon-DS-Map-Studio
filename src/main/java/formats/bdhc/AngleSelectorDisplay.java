@@ -7,6 +7,7 @@ import java.awt.*;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("unused")
 public class AngleSelectorDisplay extends JPanel {
     private static final Color gridColor = Color.LIGHT_GRAY;
     private static final Color plateColor = Color.ORANGE;

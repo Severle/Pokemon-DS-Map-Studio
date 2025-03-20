@@ -1,7 +1,10 @@
 package math.mat;
 
+import lombok.extern.log4j.Log4j2;
 import math.vec.Vec3f;
 
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
+@Log4j2
 public class Mat3f {
 
     public float m00, m01, m02, m10, m11, m12, m20, m21, m22;
@@ -33,6 +36,7 @@ public class Mat3f {
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Mat3f clone() {
         return new Mat3f(this);
     }
@@ -43,13 +47,10 @@ public class Mat3f {
         return String.format(columnFormat, m00, m01, m02)
                 + String.format(columnFormat, m10, m11, m12)
                 + String.format(columnFormat, m20, m21, m22);
-        /*return "|" + m00 + ", " + m01 + ", " + m02 + "|\n"
-                + "|" + m10 + ", " + m11 + ", " + m12 + "|\n"
-                + "|" + m20 + ", " + m21 + ", " + m22 + "|";*/
     }
 
     public void print() {
-        System.out.println(toString());
+        log.debug(this.toString());
     }
 
     public final void set(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
@@ -212,9 +213,7 @@ public class Mat3f {
     public void setRow(int index, Vec3f row) {
         float[] data = toArray();
         index *= 3;
-        data[index] = row.x;
-        data[index + 1] = row.y;
-        data[index + 2] = row.z;
+        Vec3f.writeInArray(data, index, row);
         set(data);
     }
 

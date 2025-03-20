@@ -1,34 +1,30 @@
 
 package tileset;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import utils.Utils;
+
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode", "unused"})
 public class TileReaderObj {
 
+    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "UnusedAssignment", "CommentedOutCode"})
     public static Tile2 loadTileObj(String folderPath, String objName, Tileset tileset)
-            throws FileNotFoundException, IOException, IndexOutOfBoundsException, TextureNotFoundException {
+            throws IOException, IndexOutOfBoundsException, TextureNotFoundException {
 
         //Load OBJ file data
-        InputStream inputObj = new FileInputStream(new File(folderPath + "/" + objName));
+        InputStream inputObj = new FileInputStream(folderPath + "/" + objName);
         BufferedReader brObj = new BufferedReader(new InputStreamReader(inputObj));
 
         ArrayList<ArrayList<Float>> vCoordsObj = new ArrayList<>();
         ArrayList<ArrayList<Float>> tCoordsObj = new ArrayList<>();
         ArrayList<ArrayList<Float>> nCoordsObj = new ArrayList<>();
 
-        ArrayList<String> materialNames = new ArrayList();
+        ArrayList<String> materialNames = new ArrayList<>();
 
         ArrayList<ArrayList<Face>> fIndsQuadArray = new ArrayList<>();
         ArrayList<ArrayList<Face>> fIndsTriArray = new ArrayList<>();
@@ -38,15 +34,16 @@ public class TileReaderObj {
         String lineObj;
         while ((lineObj = brObj.readLine()) != null) {
             if (lineObj.startsWith("mtllib")) {
-                mtlName = lineObj.substring(lineObj.indexOf(" ") + 1, lineObj.length());
-            } else if (lineObj.startsWith("o")) {
+                mtlName = lineObj.substring(lineObj.indexOf(" ") + 1);
+            } else //noinspection StatementWithEmptyBody
+                if (lineObj.startsWith("o")) {
 
             } else if (lineObj.startsWith("v ")) {
-                vCoordsObj.add(loadFloatLineObj(lineObj, 3, 3, 0.0f));
+                vCoordsObj.add(loadFloatLineObj(lineObj, 3, 3));
             } else if (lineObj.startsWith("vt")) {
-                tCoordsObj.add(loadFloatLineObj(lineObj, 2, 2, 0.0f));
+                tCoordsObj.add(loadFloatLineObj(lineObj, 2, 2));
             } else if (lineObj.startsWith("vn")) {
-                nCoordsObj.add(loadFloatLineObj(lineObj, 3, 3, 0.0f));
+                nCoordsObj.add(loadFloatLineObj(lineObj, 3, 3));
             } else if (lineObj.startsWith("usemtl")) {
                 String name = lineObj.split(" ")[1];
                 materialIndex = materialNames.indexOf(name);
@@ -59,11 +56,11 @@ public class TileReaderObj {
             } else if (lineObj.startsWith("f")) {
                 String[] splittedLine = (lineObj.substring(2)).split(" ");
                 int numVertex = 0;
-                for (int i = 0; i < splittedLine.length; i++) {
-                    if (splittedLine[i].contains("/")) {
-                        numVertex++;
+                    for (String s : splittedLine) {
+                        if (s.contains("/")) {
+                            numVertex++;
+                        }
                     }
-                }
                 if (numVertex > 3) {
                     fIndsQuadArray.get(materialIndex).add(loadFaceIndicesObj(splittedLine, 4));
                 } else {
@@ -75,11 +72,11 @@ public class TileReaderObj {
 
         //Load Mtl file
         ArrayList<Integer> textureIDs = new ArrayList<>();
-        int numMaterials = countNumberOfStarts(new File(folderPath + "/" + mtlName), "newmtl");
+        int numMaterials = countNumberOfStarts(new File(folderPath + "/" + mtlName));
         for (int i = 0; i < numMaterials; i++) {
             textureIDs.add(0);
         }
-        InputStream inputMtl = new FileInputStream(new File(folderPath + "/" + mtlName));
+        InputStream inputMtl = new FileInputStream(folderPath + "/" + mtlName);
         BufferedReader brMtl = new BufferedReader(new InputStreamReader(inputMtl));
         int matIndex = 0;
         String lineMtl;
@@ -94,13 +91,7 @@ public class TileReaderObj {
                     if (new File(folderPath + "/" + textName).exists()) {
                         textureIDs.set(matIndex, tileset.getMaterials().size());
                         try {
-                            TilesetMaterial material = new TilesetMaterial();
-                            material.loadTextureImgFromPath(folderPath + "/" + textName);
-                            material.setImageName(textName);
-                            String textNameImd = Utils.removeExtensionFromPath(textName);
-                            material.setMaterialName(textNameImd);
-                            material.setTextureNameImd(textNameImd);
-                            material.setPaletteNameImd(textNameImd + "_pl");
+                            TilesetMaterial material = getTilesetMaterial(folderPath, textName);
                             tileset.getMaterials().add(material);
                         } catch (IOException ex) {
                             throw new TextureNotFoundException(
@@ -147,26 +138,16 @@ public class TileReaderObj {
             int id = textureIDs.get(i);
             int index = textureIDsFixed.indexOf(id);
             if (index == -1) {
-                ArrayList<Face> fIndsQuad = new ArrayList<>();
-                ArrayList<Face> fIndsTri = new ArrayList<>();
-                for (int j = 0; j < fIndsQuadArray.get(i).size(); j++) {
-                    fIndsQuad.add(fIndsQuadArray.get(i).get(j));
-                }
-                for (int j = 0; j < fIndsTriArray.get(i).size(); j++) {
-                    fIndsTri.add(fIndsTriArray.get(i).get(j));
-                }
+                ArrayList<Face> fIndsQuad = new ArrayList<>(fIndsQuadArray.get(i));
+                ArrayList<Face> fIndsTri  = new ArrayList<>(fIndsTriArray.get(i));
                 fIndsQuadArrayFixed.add(fIndsQuad);
                 fIndsTriArrayFixed.add(fIndsTri);
                 textureIDsFixed.add(id);
             } else {
                 ArrayList<Face> fIndsQuad = fIndsQuadArrayFixed.get(index);
                 ArrayList<Face> fIndsTri = fIndsTriArrayFixed.get(index);
-                for (int j = 0; j < fIndsQuadArray.get(i).size(); j++) {
-                    fIndsQuad.add(fIndsQuadArray.get(i).get(j));
-                }
-                for (int j = 0; j < fIndsTriArray.get(i).size(); j++) {
-                    fIndsTri.add(fIndsTriArray.get(i).get(j));
-                }
+                fIndsQuad.addAll(fIndsQuadArray.get(i));
+                fIndsTri.addAll(fIndsTriArray.get(i));
             }
         }
         textureIDs = textureIDsFixed;
@@ -194,17 +175,28 @@ public class TileReaderObj {
         return null;//Change this
     }
 
+    private static TilesetMaterial getTilesetMaterial(String folderPath, String textName) throws IOException {
+        TilesetMaterial material = new TilesetMaterial();
+        material.loadTextureImgFromPath(folderPath + "/" + textName);
+        material.setImageName(textName);
+        String textNameImd = Utils.removeExtensionFromPath(textName);
+        material.setMaterialName(textNameImd);
+        material.setTextureNameImd(textNameImd);
+        material.setPaletteNameImd(textNameImd + "_pl");
+        return material;
+    }
+
     private static ArrayList<Float> loadFloatLineObj(String line, int minNumElemn,
-                                                     int maxNumElem, float defaultValue) {
+                                                     int maxNumElem) {
         String[] splittedLine = line.split(" ");
         int numElements = Math.max(Math.min(maxNumElem, splittedLine.length - 1), minNumElemn);
         ArrayList<Float> floats = new ArrayList<>(numElements);
         for (int i = 0; i < numElements; i++) {
             float value;
             try {
-                value = Float.valueOf(splittedLine[i + 1]);
+                value = Float.parseFloat(splittedLine[i + 1]);
             } catch (NumberFormatException | IndexOutOfBoundsException ex) {
-                value = defaultValue;
+                value = (float) 0.0;
             }
             floats.add(value);
         }
@@ -215,10 +207,10 @@ public class TileReaderObj {
         Face f = new Face(numVertex);
         for (int i = 0; i < numVertex; i++) {
             String[] sArray = splittedLine[i].split("/");
-            f.vInd[i] = Integer.valueOf(sArray[0]);
-            f.tInd[i] = Integer.valueOf(sArray[1]);
+            f.vInd[i] = Integer.parseInt(sArray[0]);
+            f.tInd[i] = Integer.parseInt(sArray[1]);
             if (sArray.length > 2) {
-                f.nInd[i] = Integer.valueOf(sArray[2]);
+                f.nInd[i] = Integer.parseInt(sArray[2]);
             } else {
                 f.nInd[i] = -1;
             }
@@ -226,13 +218,13 @@ public class TileReaderObj {
         return f;
     }
 
-    private static int countNumberOfStarts(File file, String content) throws IOException {
+    private static int countNumberOfStarts(File file) throws IOException {
         InputStream input = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(input));
         int count = 0;
         String line;
         while ((line = br.readLine()) != null) {
-            if (line.startsWith(content)) {
+            if (line.startsWith("newmtl")) {
                 count++;
             }
         }

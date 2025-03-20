@@ -71,8 +71,8 @@ public class BacksoundDisplay extends JPanel {
     private void formMouseDragged(MouseEvent e) {
         if (backsoundHandler.getSoundplates().size() > 0) {
             if (dragging && isCursorInsiePanel(e)) {
-                Soundplate p = backsoundHandler.getSelectedSoundplate();
-                int deltaX = (e.getX() - lastX) / TILE_SIZE;
+                SoundPlate p      = backsoundHandler.getSelectedSoundplate();
+                int        deltaX = (e.getX() - lastX) / TILE_SIZE;
                 int deltaY = (e.getY() - lastY) / TILE_SIZE;
                 switch (partSelected) {
                     case CENTER:
@@ -117,8 +117,8 @@ public class BacksoundDisplay extends JPanel {
                 indexPlateHovering = backsoundHandler.getIndexSelected();
                 setCursor(new Cursor(partHovering));
             } else {
-                for (int i = 0; i < backsoundHandler.getBacksound().getSoundplates().size(); i++) {
-                    Soundplate p = backsoundHandler.getBacksound().getSoundplate(i);
+                for (int i = 0; i < backsoundHandler.getBacksound().getSoundPlates().size(); i++) {
+                    SoundPlate p = backsoundHandler.getBacksound().getSoundplate(i);
                     if (isHoveringPlate(p, x, y)) {
                         partHovering = getPartSelected(p, x, y);
                         indexPlateHovering = i;
@@ -150,7 +150,7 @@ public class BacksoundDisplay extends JPanel {
                     lastX = e.getX();
                     lastY = e.getY();
 
-                    Soundplate p = backsoundHandler.getSelectedSoundplate();
+                    SoundPlate p = backsoundHandler.getSelectedSoundplate();
                     lastPlateX = p.x;
                     lastPlateY = p.y;
                     lastPlateWidth = p.width;
@@ -172,7 +172,7 @@ public class BacksoundDisplay extends JPanel {
         super.paintComponent(g);
 
         if (mapImage != null && handler != null && backsoundHandler != null) {
-            Backsound backsound = backsoundHandler.getBacksound();
+            BackSound backsound = backsoundHandler.getBacksound();
             g.drawImage(mapImage, 0, 0, null);
 
             g.setColor(new Color(255, 255, 255, 100));
@@ -187,9 +187,9 @@ public class BacksoundDisplay extends JPanel {
         this.mapImage = mapImage;
     }
 
-    private void drawPlates(Graphics g, Backsound backsound) {
+    private void drawPlates(Graphics g, BackSound backsound) {
         if (backsoundHandler.getSoundplates().size() > 0) {
-            for (int i = 0; i < backsound.getSoundplates().size(); i++) {
+            for (int i = 0; i < backsound.getSoundPlates().size(); i++) {
 
                 g.setColor(getColorWithAlpha(getPlateColor(backsound, i), 120));
                 fillPlate(g, backsound.getSoundplate(i));
@@ -198,7 +198,7 @@ public class BacksoundDisplay extends JPanel {
 
             Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new BasicStroke(3));
-            for (int i = 0; i < backsound.getSoundplates().size(); i++) {
+            for (int i = 0; i < backsound.getSoundPlates().size(); i++) {
                 //g.setColor(bdhc.getPlate(i).getBorderColor());//g.setColor(Color.blue);
                 g.setColor(getColorWithAlpha(getPlateColor(backsound, i), 200));
                 drawPlateBorder(g, backsound.getSoundplate(i));
@@ -209,7 +209,7 @@ public class BacksoundDisplay extends JPanel {
         }
     }
 
-    private Color getPlateColor(Backsound backsound, int plateIndex) {
+    private Color getPlateColor(BackSound backsound, int plateIndex) {
         int soundCode = backsound.getSoundplate(plateIndex).soundCode;
         if (soundCode < colorLookupTable.length) {
             return colorLookupTable[Math.max(0, soundCode)];
@@ -222,7 +222,7 @@ public class BacksoundDisplay extends JPanel {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
     }
 
-    public void updatePlate(Soundplate p, int c, int r, int width, int height) {
+    public void updatePlate(SoundPlate p, int c, int r, int width, int height) {
         int xMin = 0;
         int xMax = 32;
         int yMin = 0;
@@ -239,7 +239,7 @@ public class BacksoundDisplay extends JPanel {
         }
     }
 
-    public int getPartSelected(Soundplate p, int x, int y) {
+    public int getPartSelected(SoundPlate p, int x, int y) {
         if (new Rectangle(
                 p.x * TILE_SIZE + xOffset,
                 p.y * TILE_SIZE + yOffset,
@@ -301,7 +301,7 @@ public class BacksoundDisplay extends JPanel {
         return true;
     }
 
-    public boolean isHoveringPlate(Soundplate p, int x, int y) {
+    public boolean isHoveringPlate(SoundPlate p, int x, int y) {
         return new Rectangle(
                 p.x * TILE_SIZE + xOffset,
                 p.y * TILE_SIZE + yOffset,
@@ -310,18 +310,18 @@ public class BacksoundDisplay extends JPanel {
         ).contains(x, y);
     }
 
-    private void drawPlateBorder(Graphics g, Soundplate p) {
+    private void drawPlateBorder(Graphics g, SoundPlate p) {
         g.drawRect(p.x * TILE_SIZE, p.y * TILE_SIZE,
                 p.width * TILE_SIZE - 1, p.height * TILE_SIZE - 1);
     }
 
-    private void fillPlate(Graphics g, Soundplate p) {
+    private void fillPlate(Graphics g, SoundPlate p) {
         g.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE,
                 p.width * TILE_SIZE, p.height * TILE_SIZE);
 
     }
 
-    private void drawPlateIndex(Graphics g, Soundplate p, int index) {
+    private void drawPlateIndex(Graphics g, SoundPlate p, int index) {
         g.setColor(Color.white);
         g.drawString(
                 String.valueOf(index), p.x * TILE_SIZE + 4, p.y * TILE_SIZE + 12);

@@ -3,15 +3,13 @@ package formats.bdhc;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "FieldCanBeLocal", "MismatchedReadAndWriteOfArray"})
 public class BdhcLoaderHGSS {
 
     private static final int offsetNumCoords = 0x04;
@@ -52,7 +50,7 @@ public class BdhcLoaderHGSS {
     }
 
     private ArrayList<Plate> loadPlatesFromBdhcDP(String path) throws IOException {
-        ArrayList plates = new ArrayList<>();
+        ArrayList<Plate> plates = new ArrayList<>();
 
         File file = new File(path);
         byte[] data = Files.readAllBytes(file.toPath());
@@ -125,6 +123,7 @@ public class BdhcLoaderHGSS {
         return plates;
     }
 
+    @SuppressWarnings({"SuspiciousNameCombination", "DuplicatedCode"})
     public float calculateZ(float d, int plateIndex) {
         int slopeIndex = plateIndices[plateIndex][2];
         //final float den = 4095.56247663f;
@@ -162,13 +161,7 @@ public class BdhcLoaderHGSS {
     public static int getType(int xSlope, int zSlope, int ySlope) {
         //TODO check if bridge
 
-        for (int i = 0; i < Plate.slopes.length; i++) {
-            int[] slopes = Plate.slopes[i];
-            if (xSlope == slopes[0] && zSlope == slopes[1] && ySlope == slopes[2]) {
-                return i;
-            }
-        }
-        return Plate.OTHER;
+        return BdhcLoaderDP.getType(xSlope, zSlope, ySlope);
     }
 
     public static int dataToUnsignedShort(byte[] data, int offset) {
@@ -176,13 +169,7 @@ public class BdhcLoaderHGSS {
     }
 
     public static int dataToSignedInt(byte[] data, int offset) {
-        byte[] bytes = new byte[]{
-                data[offset],
-                data[offset + 1],
-                data[offset + 2],
-                data[offset + 3]
-        };
-        return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
+        return BdhcLoaderDP.dataToSignedInt(data, offset);
     }
 
     public static short dataToSignedShort(byte[] data, int offset) {
@@ -192,14 +179,12 @@ public class BdhcLoaderHGSS {
     public static float dataToCoordZ(byte[] data, int offset) {
         short fractionalPart = (short) dataToUnsignedShort(data, offset);
         short decimalPart = dataToSignedShort(data, offset + 2);
-        float value = (float) (-decimalPart - (fractionalPart & 0xFFFF) / 65536f); //TODO: Do not use minus sign?
+        //TODO: Do not use minus sign?
         //System.out.println("dec: " + decimalPart + " frac: " + (fractionalPart & 0xFFFF) + " value: " + value);
-        return value;
+        return -decimalPart - (fractionalPart & 0xFFFF) / 65536f;
     }
 
     public static float round(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
+        return BdhcLoaderDP.round(d, decimalPlace);
     }
 }

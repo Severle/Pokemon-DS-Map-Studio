@@ -32,7 +32,7 @@ public class Stripe {
 
     }
 
-    private class IndexAndPlate implements Comparable {
+    private static class IndexAndPlate implements Comparable<IndexAndPlate> {
         public Plate plate;
         public int index;
 
@@ -42,8 +42,8 @@ public class Stripe {
         }
 
         @Override
-        public int compareTo(Object o) {
-            return Integer.compare(plate.x, ((IndexAndPlate) o).plate.x);
+        public int compareTo(IndexAndPlate o) {
+            return Integer.compare(plate.x, o.plate.x);
         }
     }
 

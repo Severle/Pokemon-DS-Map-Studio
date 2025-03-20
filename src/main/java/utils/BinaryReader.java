@@ -1,8 +1,6 @@
 
 package utils;
 
-import nitroreader.shared.ByteReader;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,12 +11,13 @@ import java.nio.ByteOrder;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
 public class BinaryReader {
 
-    private FileInputStream fis;
+    private final FileInputStream fis;
 
     public BinaryReader(String path) throws FileNotFoundException {
-        fis = new FileInputStream(new File(path));
+        fis = new FileInputStream(path);
     }
 
     public BinaryReader(File file) throws FileNotFoundException {
@@ -48,7 +47,7 @@ public class BinaryReader {
     public long readUInt32() throws IOException {
         byte[] data = new byte[4];
         fis.read(data);
-        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt() & 0xFFFFFFFF;
+        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
     }
 
     public byte[] readBytes(int size) throws IOException {
@@ -60,15 +59,15 @@ public class BinaryReader {
         return data;
     }
 
-    public static int readInt8(byte[] fullData, int offset) throws Exception {
+    public static int readInt8(byte[] fullData, int offset) {
         return fullData[offset];
     }
 
-    public static long readInt16(byte[] fullData, int offset) throws Exception {
+    public static long readInt16(byte[] fullData, int offset) {
         return (fullData[offset + 1] << 8) | fullData[offset];
     }
 
-    public static long readInt32(byte[] fullData, int offset) throws Exception {
+    public static long readInt32(byte[] fullData, int offset) {
         return (fullData[offset + 3] << 8) | (fullData[offset + 2] << 8) | (fullData[offset + 1] << 8) | fullData[offset];
     }
 
@@ -83,20 +82,19 @@ public class BinaryReader {
     public static long readUInt32(byte[] fullData, int offset) throws Exception {
         byte[] data = new byte[4];
         System.arraycopy(fullData, offset, data, 0, 4);
-        return (long) (ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt() & 0xFFFFFFFFL);
+        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt() & 0xFFFFFFFFL;
     }
 
     public static float readFI32(byte[] fullData, int offset) throws Exception {
         return (float) readInt16(fullData, offset + 2) + readUInt16(fullData, offset) / 65535f;
     }
 
-    public static String readString(byte[] fullData, int offset, int size) throws Exception {
-        byte[] data = new byte[size];
-        System.arraycopy(fullData, offset, data, 0, size);
+    public static String readString(byte[] fullData, int offset, int size) {
+        byte[] data = readBytes(fullData, offset, size);
         return new String(data);
     }
 
-    public static byte[] readBytes(byte[] fullData, int offset, int size) throws Exception {
+    public static byte[] readBytes(byte[] fullData, int offset, int size) {
         byte[] data = new byte[size];
         System.arraycopy(fullData, offset, data, 0, size);
         return data;

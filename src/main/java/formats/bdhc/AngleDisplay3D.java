@@ -7,6 +7,7 @@ import java.awt.*;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class AngleDisplay3D extends JPanel {
     private BdhcHandler bdhcHandler;
 
@@ -82,13 +83,6 @@ public class AngleDisplay3D extends JPanel {
                 g.drawLine(lineOffset + x1, lineOffset + y1, lineOffset + x2, lineOffset + y2);
             }
 
-
-            /*
-            int x = (int) (Math.cos(angle) * radius);
-            int y = (int) (Math.sin(angle) * radius);
-            int lineOffset = size / 2;
-            g.setColor(Color.blue);
-            g.drawLine(lineOffset - x, lineOffset - y, lineOffset + x, lineOffset + y);*/
 
             int circleOffset = size / 2 - radius;
             g.setColor(Color.black);

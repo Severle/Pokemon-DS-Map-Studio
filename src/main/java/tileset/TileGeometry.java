@@ -4,6 +4,7 @@ package tileset;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class TileGeometry {
 
     public int materialID;

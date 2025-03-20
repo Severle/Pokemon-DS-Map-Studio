@@ -50,16 +50,13 @@ public class AngleDisplay extends JPanel {
             g2.setStroke(new BasicStroke(2));
             if (frontView) {
                 g.setColor(Color.red);
-                g.drawLine(size / 2, size / 2, size, size / 2);
-                g.setColor(Color.blue);
-                g.drawLine(size / 2, size / 2, size / 2, 0);
             } else {
                 g.setColor(Color.green);
                 //g.drawLine(size / 2, size / 2, size, size / 2);
-                g.drawLine(size / 2, size / 2, size, size / 2);
-                g.setColor(Color.blue);
-                g.drawLine(size / 2, size / 2, size / 2, 0);
             }
+            g.drawLine(size / 2, size / 2, size, size / 2);
+            g.setColor(Color.blue);
+            g.drawLine(size / 2, size / 2, size / 2, 0);
 
             int circleOffset = size / 2 - radius;
             g.setColor(Color.black);

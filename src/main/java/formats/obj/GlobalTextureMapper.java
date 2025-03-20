@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import tileset.Face;
 import tileset.Tile;
-import tileset.TileGeometryCompresser;
-import tileset.TileGeometryDecompresser;
+import tileset.TileGeometryCompressor;
+import tileset.TileGeometryDecompressor;
 
 /**
  * @author Trifindo
@@ -14,13 +14,13 @@ import tileset.TileGeometryDecompresser;
 public class GlobalTextureMapper {
 
     public static void applyGlobalTextureMapping(Tile tile, int col, int row) {
-        float[] tCoordsTri = TileGeometryDecompresser.decompressObjData(tile.getFIndTriObj(), tile.getTextureCoordsObj(), 2, 3);
-        float[] tCoordsQuad = TileGeometryDecompresser.decompressObjData(tile.getFIndQuadObj(), tile.getTextureCoordsObj(), 2, 4);
+        float[] tCoordsTri = TileGeometryDecompressor.decompressObjData(tile.getFIndTriObj(), tile.getTextureCoordsObj(), 2, 3);
+        float[] tCoordsQuad = TileGeometryDecompressor.decompressObjData(tile.getFIndQuadObj(), tile.getTextureCoordsObj(), 2, 4);
 
         applyGlobalTextureMapping(tCoordsTri, tile.getFIndTriObj(), tile.getVertexCoordsObj(), tile.getGlobalTextureScale(), col, row);
         applyGlobalTextureMapping(tCoordsQuad, tile.getFIndQuadObj(), tile.getVertexCoordsObj(), tile.getGlobalTextureScale(), col, row);
 
-        TileGeometryCompresser.CompressedObjData compressedData = TileGeometryCompresser.compressObjData(tCoordsTri, tCoordsQuad, 2);
+        TileGeometryCompressor.CompressedObjData compressedData = TileGeometryCompressor.compressObjData(tCoordsTri, tCoordsQuad, 2);
 
         for (int i = 0; i < tile.getFIndTriObj().size(); i++) {
             tile.getFIndTriObj().get(i).tInd = compressedData.triIndices[i];

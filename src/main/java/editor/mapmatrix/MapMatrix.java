@@ -2,7 +2,7 @@
 package editor.mapmatrix;
 
 import com.jogamp.common.nio.Buffers;
-import formats.backsound.Backsound;
+import formats.backsound.BackSound;
 import formats.bdhc.Bdhc;
 import formats.bdhc.BdhcLoaderDP;
 import formats.bdhc.BdhcLoaderHGSS;
@@ -17,7 +17,6 @@ import editor.game.Game;
 import editor.grid.MapGrid;
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
-import formats.mapbin.MapBinHGSS;
 import formats.obj.ObjWriter;
 
 import java.awt.BasicStroke;
@@ -355,7 +354,7 @@ public class MapMatrix {
         int game = handler.getGameIndex();
         for (HashMap.Entry<Point, MapData> mapEntry : matrix.entrySet()) {
             String path = getFilePathWithCoords(matrix, new File(filePath).getParent(),
-                    new File(filePath).getName(), mapEntry.getKey(), Backsound.fileExtension);
+                    new File(filePath).getName(), mapEntry.getKey(), BackSound.fileExtension);
             if (game == Game.HEART_GOLD || game == Game.SOUL_SILVER) {
                 mapEntry.getValue().getBacksound().writeToFile(path);
             }
@@ -489,23 +488,23 @@ public class MapMatrix {
         if (matrix.size() == 1) {//OLD MAP TYPE
             HashMap.Entry<Point, MapData> mapEntry = matrix.entrySet().iterator().next();
             try {
-                String backsoundPath = getFilePathWithCoords(matrix, folderPath, mapFileName, mapEntry.getKey(), Backsound.fileExtension);
+                String backsoundPath = getFilePathWithCoords(matrix, folderPath, mapFileName, mapEntry.getKey(), BackSound.fileExtension);
                 loadBacksound(backsoundPath, mapEntry.getValue(), game);
             } catch (Exception ex) {
                 try {
-                    String backsoundPath = getFilePath(folderPath, mapFileName, Backsound.fileExtension);
+                    String backsoundPath = getFilePath(folderPath, mapFileName, BackSound.fileExtension);
                     loadBacksound(backsoundPath, mapEntry.getValue(), game);
                 } catch (Exception ex2) {
-                    mapEntry.getValue().setBacksound(new Backsound());
+                    mapEntry.getValue().setBacksound(new BackSound());
                 }
             }
         } else {
             for (HashMap.Entry<Point, MapData> mapEntry : matrix.entrySet()) {
                 try {
-                    String backsoundPath = getFilePathWithCoords(matrix, folderPath, mapFileName, mapEntry.getKey(), Backsound.fileExtension);
+                    String backsoundPath = getFilePathWithCoords(matrix, folderPath, mapFileName, mapEntry.getKey(), BackSound.fileExtension);
                     loadBacksound(backsoundPath, mapEntry.getValue(), game);
                 } catch (Exception ex) {
-                    mapEntry.getValue().setBacksound(new Backsound());
+                    mapEntry.getValue().setBacksound(new BackSound());
 
                 }
             }
@@ -518,9 +517,9 @@ public class MapMatrix {
 
     private static void loadBacksound(String path, MapData mapData, int game) throws Exception {
         if (game == Game.HEART_GOLD || game == Game.SOUL_SILVER) {
-            mapData.setBacksound(new Backsound(path));
+            mapData.setBacksound(new BackSound(path));
         } else {
-            mapData.setBacksound(new Backsound());
+            mapData.setBacksound(new BackSound());
         }
     }
 
@@ -777,7 +776,7 @@ public class MapMatrix {
             removeUnusedMapFiles(folderPath, Bdhc.fileExtension);
             removeUnusedMapFiles(folderPath, Collisions.fileExtension);
             removeUnusedMapFiles(folderPath, BuildFile.fileExtension);
-            removeUnusedMapFiles(folderPath, Backsound.fileExtension);
+            removeUnusedMapFiles(folderPath, BackSound.fileExtension);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

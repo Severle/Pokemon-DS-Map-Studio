@@ -1,9 +1,12 @@
 package math.vec;
 
+import lombok.extern.log4j.Log4j2;
 import math.mat.Mat3f;
 
 import java.nio.FloatBuffer;
 
+@Log4j2
+@SuppressWarnings({"unused", "SpellCheckingInspection", "GrazieInspection"})
 public class Vec3f {
 
     public float x, y, z;
@@ -79,6 +82,7 @@ public class Vec3f {
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Vec3f clone() {
         return new Vec3f(this);
     }
@@ -110,10 +114,7 @@ public class Vec3f {
         if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y)) {
             return false;
         }
-        if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
-            return false;
-        }
-        return true;
+        return Float.floatToIntBits(this.z) == Float.floatToIntBits(other.z);
     }
 
     @Override
@@ -125,7 +126,7 @@ public class Vec3f {
      * Prints the coordinates of the Vec3f
      */
     public void print() {
-        System.out.println(toString());
+        log.debug(this.toString());
     }
 
     /**
@@ -134,7 +135,7 @@ public class Vec3f {
      * @param name the name of the vector
      */
     public void print(String name) {
-        System.out.println(name + ": " + toString());
+        log.debug("{}: {}", name, toString());
     }
 
     /**
@@ -571,6 +572,7 @@ public class Vec3f {
      * @param src input matrix
      * @return this output vector storing the operation result
      */
+    @SuppressWarnings("UnusedReturnValue")
     public Vec3f mul(Mat3f src) {
         mul(src, this.clone(), this);
         return this;
@@ -797,6 +799,7 @@ public class Vec3f {
      *
      * @return this vector of angles in degrees
      */
+    @SuppressWarnings("UnusedReturnValue")
     public Vec3f toDegrees() {
         toDegrees(this, this);
         return this;
@@ -1117,7 +1120,7 @@ public class Vec3f {
      * Checks if all the coordinates of the vector are finite.
      *
      * @param src vector to be evaluated
-     * @return
+     * @return 是否为finite
      */
     public static boolean isFinite(Vec3f src){
         if(!Float.isFinite(src.x)){
@@ -1126,16 +1129,13 @@ public class Vec3f {
         if(!Float.isFinite(src.y)){
             return false;
         }
-        if(!Float.isFinite(src.z)){
-            return false;
-        }
-        return true;
+        return Float.isFinite(src.z);
     }
 
     /**
      * Checks if all the coordinates of this vector are finite.
      *
-     * @return
+     * @return 是否为finite
      */
     public boolean isFinite(){
         return isFinite(this);

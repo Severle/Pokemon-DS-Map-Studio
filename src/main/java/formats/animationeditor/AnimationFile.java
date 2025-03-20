@@ -1,29 +1,28 @@
 
 package formats.animationeditor;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import utils.BinaryReader;
 import utils.BinaryWriter;
 import utils.Utils;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
 public class AnimationFile {
 
-    private ArrayList<Animation> animations = new ArrayList<>();
+    private final ArrayList<Animation> animations;
 
-    public AnimationFile(String path) throws FileNotFoundException, IOException,
+    public AnimationFile(String path) throws IOException,
             NullPointerException {
         BinaryReader br = new BinaryReader(path);
 
         int numAnimations = (int) br.readUInt32();
         animations = new ArrayList<>(numAnimations);
         for (int i = 0; i < numAnimations; i++) {
-            String name = Utils.removeLastOcurrences(br.readString(16), '\u0000');
+            String name = Utils.removeLastOccurrences(br.readString(16), '\u0000');
             int[] frames = new int[Animation.maxNumFrames];
             int[] delays = new int[Animation.maxNumFrames];
             for (int j = 0; j < Animation.maxNumFrames; j++) {
@@ -36,14 +35,13 @@ public class AnimationFile {
         br.close();
     }
 
-    public void saveAnimationFile(String path) throws FileNotFoundException, IOException {
+    public void saveAnimationFile(String path) throws IOException {
         BinaryWriter bw = new BinaryWriter(path);
 
         int numAnimations = animations.size();
         bw.writeUInt32(numAnimations);
 
-        for (int i = 0; i < animations.size(); i++) {
-            Animation animation = animations.get(i);
+        for (Animation animation : animations) {
             bw.writeString(animation.getName(), Animation.maxNameSize, (byte) 0);
             for (int j = 0; j < Animation.maxNumFrames; j++) {
                 bw.writeUInt8(animation.getFrame(j));

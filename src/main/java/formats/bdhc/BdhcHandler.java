@@ -2,18 +2,21 @@
 package formats.bdhc;
 
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class BdhcHandler {
 
     private MapEditorHandler handler;
     //private Bdhc bdhc;
-    private int indexSelected = 0;
-    private BdhcEditorDialog dialog;
+    private       int              indexSelected;
+    @Getter
+    private final BdhcEditorDialog dialog;
 
     public BdhcHandler(BdhcEditorDialog dialog) {
         this.dialog = dialog;
@@ -23,7 +26,6 @@ public class BdhcHandler {
 
     public void init(MapEditorHandler handler) {
         this.handler = handler;
-        //this.bdhc = handler.getBdhc();
     }
 
     public Bdhc getBdhc() {
@@ -62,9 +64,5 @@ public class BdhcHandler {
 
     public ArrayList<Plate> getPlates() {
         return handler.getBdhc().getPlates();
-    }
-
-    public BdhcEditorDialog getDialog() {
-        return dialog;
     }
 }

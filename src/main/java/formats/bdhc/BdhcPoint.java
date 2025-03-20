@@ -4,6 +4,7 @@ package formats.bdhc;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class BdhcPoint {
     public int x, y;
     public float z;
@@ -41,10 +42,7 @@ public class BdhcPoint {
         if (this.y != other.y) {
             return false;
         }
-        if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
-            return false;
-        }
-        return true;
+        return Float.floatToIntBits(this.z) == Float.floatToIntBits(other.z);
     }
 
 

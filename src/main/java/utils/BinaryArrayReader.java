@@ -1,6 +1,5 @@
 package utils;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -8,13 +7,13 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 
 
-
+@SuppressWarnings("unused")
 public class BinaryArrayReader {
 
-    private byte[] buf;
-    private int pos = 0;
-    private int mark = 0;
-    private int offset;
+    private final byte[] buf;
+    private       int    pos  = 0;
+    private       int    mark = 0;
+    private       int    offset;
 
     public BinaryArrayReader(String path) throws IOException {
         buf = Files.readAllBytes(new File(path).toPath());
@@ -27,12 +26,14 @@ public class BinaryArrayReader {
         this.mark = offset;
     }
 
-    private int read() { return (pos < buf.length) ? (buf[pos++] & 0xff) : -1;}
+    private int read() {
+        return (pos < buf.length) ? (buf[pos++] & 0xff) : -1;
+    }
 
-    private int read(byte b[], int off, int len) {
+    private int read(byte[] b, int len) {
         if (b == null) {
             throw new NullPointerException();
-        } else if (off < 0 || len < 0 || len > b.length - off) {
+        } else if (len < 0 || len > b.length) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -40,36 +41,36 @@ public class BinaryArrayReader {
             return -1;
         }
 
-        System.arraycopy(buf, pos, b, off, len);
+        System.arraycopy(buf, pos, b, 0, len);
         pos += len;
         return len;
     }
 
-    private int read(byte[] b){
-        return read(b, 0,b.length);
+    private int read(byte[] b) {
+        return read(b, b.length);
     }
 
-    public void mark(){
+    public void mark() {
         mark = pos;
     }
 
-    public void reset(){
+    public void reset() {
         pos = mark;
     }
 
-    public void jumpRel(int relOffset){
+    public void jumpRel(int relOffset) {
         pos = offset + relOffset;
     }
 
-    public void jumpAbs(int offset){
+    public void jumpAbs(int offset) {
         pos = offset;
     }
 
-    public void skip(int n){
+    public void skip(int n) {
         pos += n;
     }
 
-    public String readString(int size) throws Exception {
+    public String readString(int size) {
         byte[] data = new byte[size];
         read(data);
         return new String(data);
@@ -88,7 +89,7 @@ public class BinaryArrayReader {
     public long readUInt32() throws IOException {
         byte[] data = new byte[4];
         read(data);
-        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt() & 0xFFFFFFFF;
+        return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
     }
 
 
@@ -98,13 +99,13 @@ public class BinaryArrayReader {
         return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
     }
 
-    public float readFX32(){
+    public float readFX32() {
         return (float) readInt32() / 0x1000;
     }
 
     public byte[] readBytes(int size) throws IOException {
-        byte[] data = new byte[size];
-        int result = read(data);
+        byte[] data   = new byte[size];
+        int    result = read(data);
         if (result == -1) {
             throw new IOException();
         }

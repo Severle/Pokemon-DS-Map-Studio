@@ -114,7 +114,7 @@ public class ModelAnimation implements NamedFile {
     private static String getAnimationName(byte[] data) throws Exception {
         long nameOffset = BinaryReader.readUInt32(data, 16);
         String name = BinaryReader.readString(data, (int) (32 + nameOffset), 16);
-        return Utils.removeLastOcurrences(name, '\u0000');
+        return Utils.removeLastOccurrences(name, '\u0000');
     }
 
     private static int getAnimationType(byte[] data) throws Exception {

@@ -21,7 +21,7 @@ public class AnimationFramesDisplay extends JPanel {
     private final Color cellBorderColor = Color.gray;
     private final Color highlihgtColor = Color.red;
 
-    private BufferedImage backImg;
+    private final BufferedImage backImg;
 
     /**
      * Creates new form AnimationFramesDisplay
@@ -98,7 +98,7 @@ public class AnimationFramesDisplay extends JPanel {
 
         drawTextBox(g, cellIndex * cellSize, 0, String.valueOf(cellIndex));
 
-        drawLabel(g, cellIndex * cellSize, cellSize, "Delay: " + String.valueOf(delay));
+        drawLabel(g, cellIndex * cellSize, cellSize, "Delay: " + delay);
 
         drawLabel(g, cellIndex * cellSize, cellSize + labelSize, frameName);
     }
@@ -141,6 +141,7 @@ public class AnimationFramesDisplay extends JPanel {
     }
 
 
+    @SuppressWarnings("DuplicatedCode")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 

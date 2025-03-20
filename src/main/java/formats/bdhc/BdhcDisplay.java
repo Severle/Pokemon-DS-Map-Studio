@@ -2,15 +2,18 @@ package formats.bdhc;
 
 import editor.handler.MapEditorHandler;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import javax.swing.*;
-import javax.swing.GroupLayout;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class BdhcDisplay extends JPanel {
     private MapEditorHandler handler;
     private BufferedImage mapImage;
@@ -35,8 +38,6 @@ public class BdhcDisplay extends JPanel {
     private int partHovering = -1;
     private int indexPlateHovering = -1;
     private int partSelected = -1;
-    //private int indexPlateSelected = 0;
-    //private int lastIndexPlateSelected = -1;
     private boolean dragging = false;
     private int lastPlateX, lastPlateY;
     private int lastPlateWidth, lastPlateHeight;
@@ -47,6 +48,7 @@ public class BdhcDisplay extends JPanel {
         setPreferredSize(new Dimension(width, height));
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void formMouseDragged(MouseEvent evt) {
         int x = getFixedMouseX(evt);
         int y = getFixedMouseY(evt);
@@ -88,6 +90,7 @@ public class BdhcDisplay extends JPanel {
         }
     }
 
+    @SuppressWarnings("MagicConstant")
     private void formMouseMoved(MouseEvent evt) {
         int x = getFixedMouseX(evt);
         int y = getFixedMouseY(evt);
@@ -186,6 +189,7 @@ public class BdhcDisplay extends JPanel {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void drawPlates(Graphics g, Bdhc bdhc) {
 
         for (int i = 0; i < bdhc.getPlates().size(); i++) {
@@ -193,21 +197,6 @@ public class BdhcDisplay extends JPanel {
             fillPlate(g, bdhc.getPlate(i));
             drawPlateIndex(g, bdhc.getPlate(i), i);
         }
-        /*
-        for (int i = 0; i < bdhcHandler.getSelectedPlateIndex(); i++) {
-            g.setColor(bdhc.getPlate(i).getColor());
-            fillPlate(g, bdhc.getPlate(i));
-            drawPlateIndex(g, bdhc.getPlate(i), i);
-        }
-        g.setColor(Plate.selectedColor);
-        fillPlate(g, bdhcHandler.getSelectedPlate());
-        drawPlateIndex(g, bdhcHandler.getSelectedPlate(), bdhcHandler.getSelectedPlateIndex());
-        for (int i = bdhcHandler.getSelectedPlateIndex() + 1; i < bdhc.getPlates().size(); i++) {
-            g.setColor(bdhc.getPlate(i).getColor());
-            fillPlate(g, bdhc.getPlate(i));
-            drawPlateIndex(g, bdhc.getPlate(i), i);
-        }
-         */
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
         for (int i = 0; i < bdhc.getPlates().size(); i++) {
@@ -219,6 +208,7 @@ public class BdhcDisplay extends JPanel {
         drawPlateBorder(g, bdhcHandler.getSelectedPlate());
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public void updatePlate(Plate p, int c, int r, int width, int height) {
         int xMin = -16;
         int xMax = 16;
@@ -321,6 +311,7 @@ public class BdhcDisplay extends JPanel {
                 String.valueOf(index), p.x * tileSize + 4, p.y * tileSize + 12);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void drawGrid(Graphics g) {
         for (int i = 0; i < width; i++) {
             g.drawLine(i * tileSize, 0, i * tileSize, height);
@@ -345,6 +336,7 @@ public class BdhcDisplay extends JPanel {
         return (int) (evt.getY() * ((float) height / getHeight()));
     }
 
+    @SuppressWarnings({"DuplicatedCode", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 

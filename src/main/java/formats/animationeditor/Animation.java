@@ -1,6 +1,9 @@
 
 package formats.animationeditor;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Trifindo
  */
@@ -9,9 +12,11 @@ public class Animation {
     public static final int maxNameSize = 16;
     public static final int maxNumFrames = 18;
 
-    private String name;
-    private int[] frames;
-    private int[] delays;
+    @Setter
+    @Getter
+    private       String name;
+    private final int[]  frames;
+    private final int[]  delays;
 
     public Animation(String name, int[] frames, int[] delays) {
         this.name = name;
@@ -57,14 +62,7 @@ public class Animation {
         this.frames[index] = Math.min(Math.max(value, 0), 254);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addFrame(int frameIndex, int delay) {
         int size = size();
         if (size < frames.length) {

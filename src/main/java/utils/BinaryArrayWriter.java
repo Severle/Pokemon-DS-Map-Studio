@@ -1,14 +1,11 @@
 package utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 public class BinaryArrayWriter {
 
-    private byte[] buf;
-    private int pos;
-    private int mark;
-    private int offset;
+    private final byte[] buf;
+    private       int    pos;
+    private       int mark;
+    private final int offset;
 
     public BinaryArrayWriter(byte[] buf, int offset) {
         this.buf = buf;
@@ -23,20 +20,12 @@ public class BinaryArrayWriter {
     }
 
     public void writeUInt16(int value) throws Exception {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(2);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putShort((short) (value & 0xffffL));
-        byte[] array = byteBuffer.array();
-        System.arraycopy(array, 0, buf, pos, 2);
+        BinaryWriter.writeUInt16(buf, pos, value);
         pos += 2;
     }
 
     public void writeUInt32(long value) throws Exception {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byteBuffer.putInt((int) (value & 0xffffffffL));
-        byte[] array = byteBuffer.array();
-        System.arraycopy(array, 0, buf, pos, 4);
+        BinaryWriter.writeUInt32(buf, pos, value);
         pos += 4;
     }
 

@@ -1,40 +1,37 @@
 
 package tileset;
 
+import lombok.Getter;
+
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@Getter
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class Tile2 {
 
     //Tileset
-    private Tileset tileset;
+    private final Tileset tileset;
 
     //Tile properties
     public static int maxTileSize = 6;
-    private int width;
-    private int height;
-    private boolean xTileable;
-    private boolean yTileable;
-    private boolean uTileable;
-    private boolean vTileable;
-    private boolean globalTexMapping;
-    private float globalTexScale;
-    private float xOffset;
-    private float yOffset;
+    private final int width;
+    private final int height;
+    private final boolean xTileable;
+    private final boolean yTileable;
+    private final boolean uTileable;
+    private final boolean vTileable;
+    private final boolean globalTexMapping;
+    private final float globalTexScale;
+    private final float xOffset;
+    private final float yOffset;
 
     //Path and OBJ file name
-    private String folderPath;
-    private String objFilename;
+    private final String folderPath;
+    private final String objFilename;
 
     //Thumbnail image
     private BufferedImage thumbnail;
@@ -49,9 +46,7 @@ public class Tile2 {
                  int width, int height, boolean xTileable, boolean yTileable,
                  boolean uTileable, boolean vTileable,
                  boolean globalTexMapping, float globalTexScale,
-                 float xOffset, float yOffset)
-            throws IOException, TextureNotFoundException,
-            NormalsNotFoundException {
+                 float xOffset, float yOffset) {
 
         this.tileset = tileset;
 
@@ -73,6 +68,4 @@ public class Tile2 {
 
         //loadFromObj(folderPath, objFilename);
     }
-
-
 }

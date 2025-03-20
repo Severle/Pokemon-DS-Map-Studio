@@ -43,7 +43,7 @@ public class NsbtxTexture {
         System.arraycopy(nsbtxData, textureDataOffset + offsetTextureData, data, 0, dataSize);
 
         //Read texture name
-        name = Utils.removeLastOcurrences(new String(nsbtxData, offsetTextureName, 16), '\u0000');
+        name = Utils.removeLastOccurrences(new String(nsbtxData, offsetTextureName, 16), '\u0000');
     }
 
     public NsbtxTexture(String name, int colorFormat, boolean isTransparent,

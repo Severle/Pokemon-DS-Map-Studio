@@ -20,6 +20,7 @@ import java.io.IOException;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused", "DuplicatedCode", "SpellCheckingInspection"})
 public class AnimationEditorDialog extends JDialog {
     private MapEditorHandler handler;
     private AnimationHandler animHandler;
@@ -32,8 +33,8 @@ public class AnimationEditorDialog extends JDialog {
     private static final Color editingColor = new Color(255, 185, 185);
     private static final Color rightColor = new Color(200, 255, 200);
 
-    private Utils.MutableBoolean jtfAnimNameEnabled = new Utils.MutableBoolean(true);
-    private boolean animationListEnabled = true;
+    private final Utils.MutableBoolean jtfAnimNameEnabled   = new Utils.MutableBoolean(true);
+    private       boolean              animationListEnabled = true;
     private boolean textureListEnabled = true;
 
     public AnimationEditorDialog(Window owner) {
@@ -176,7 +177,7 @@ public class AnimationEditorDialog extends JDialog {
     public void updateViewAnimationListNames(int indexSelected) {
         if (animHandler.getAnimationFile() != null) {
             animationListEnabled = false;
-            DefaultListModel demoList = new DefaultListModel();
+            DefaultListModel<String> demoList = new DefaultListModel<>();
             for (int i = 0; i < animHandler.getAnimationFile().size(); i++) {
                 String name = animHandler.getAnimationFile().getAnimation(i).getName();
                 demoList.addElement(name);
@@ -196,7 +197,7 @@ public class AnimationEditorDialog extends JDialog {
     public void updateViewTextureNames(int indexSelected) {
         if (animHandler.getNsbtx() != null) {
             textureListEnabled = false;
-            DefaultListModel demoList = new DefaultListModel();
+            DefaultListModel<String> demoList = new DefaultListModel<>();
             for (int i = 0; i < animHandler.getNsbtx().getTextures().size(); i++) {
                 String name = animHandler.getNsbtx().getTexture(i).getName();
                 demoList.addElement(name);
@@ -367,6 +368,7 @@ public class AnimationEditorDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings({"UnnecessaryUnicodeEscape", "Convert2MethodRef", "Convert2Diamond", "FieldMayBeFinal"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();
