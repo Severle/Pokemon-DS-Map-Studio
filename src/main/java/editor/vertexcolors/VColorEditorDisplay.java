@@ -1,38 +1,7 @@
 
 package editor.vertexcolors;
 
-import static com.jogamp.opengl.GL.GL_ALWAYS;
-import static com.jogamp.opengl.GL.GL_BLEND;
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_CULL_FACE;
-import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_DEPTH_TEST;
-import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
-import static com.jogamp.opengl.GL.GL_GREATER;
-import static com.jogamp.opengl.GL.GL_LEQUAL;
-import static com.jogamp.opengl.GL.GL_LESS;
-import static com.jogamp.opengl.GL.GL_LINES;
-import static com.jogamp.opengl.GL.GL_NEAREST;
-import static com.jogamp.opengl.GL.GL_NOTEQUAL;
-import static com.jogamp.opengl.GL.GL_ONE_MINUS_DST_ALPHA;
-import static com.jogamp.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
-import static com.jogamp.opengl.GL.GL_POINTS;
-import static com.jogamp.opengl.GL.GL_REPEAT;
-import static com.jogamp.opengl.GL.GL_SRC_ALPHA;
-import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
-import static com.jogamp.opengl.GL.GL_TEXTURE_MAG_FILTER;
-import static com.jogamp.opengl.GL.GL_TEXTURE_MIN_FILTER;
-import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_S;
-import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_T;
-import static com.jogamp.opengl.GL.GL_TRIANGLES;
-
 import com.jogamp.opengl.GL2;
-
-import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
-import static com.jogamp.opengl.GL2GL3.GL_FILL;
-import static com.jogamp.opengl.GL2GL3.GL_LINE;
-
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLEventListener;
@@ -43,34 +12,31 @@ import editor.tileseteditor.TilesetEditorHandler;
 import geometry.Generator;
 import graphicslib3D.Matrix3D;
 import graphicslib3D.Point3D;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.util.ArrayList;
-import javax.swing.SwingUtilities;
-
+import lombok.Getter;
+import lombok.Setter;
 import tileset.Tile;
 import utils.Utils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+import static com.jogamp.opengl.GL.*;
+import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
+import static com.jogamp.opengl.GL2ES3.GL_QUADS;
+import static com.jogamp.opengl.GL2GL3.GL_FILL;
+import static com.jogamp.opengl.GL2GL3.GL_LINE;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class VColorEditorDisplay extends GLJPanel implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     //Map Editor Handler
     private MapEditorHandler handler;
+    @Getter
     private TilesetEditorHandler tsetHandler;
     private VColorEditorDialog dialog;
 
@@ -92,8 +58,8 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     private boolean drawGridEnabled = true;
 
     //Mouse Events
-    private boolean dragging = false;
-    private int lastMouseX, lastMouseY;
+    private final boolean dragging = false;
+    private       int     lastMouseX, lastMouseY;
 
     // Update Display
     private boolean updateRequested = false;
@@ -101,7 +67,8 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     //Display Mode
     private boolean wireframeEnabled = true;
     private boolean backfaceCullingEnabled = false;
-    private boolean drawTextures = true;
+    @Setter
+    private boolean drawTextures           = true;
 
     //Points
     private ArrayList<Point3D> points;
@@ -121,8 +88,8 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     public static final int POLYGON_SELECTION_MODE = 1;
     public static final int COLOR_GRAB_MODE = 2;
     private int selectionMode = BRUSH_MODE;
-    private final int faceSelectionRadius = 7;
-    private final int colorGrabRadius = 7;
+    private static final int faceSelectionRadius = 7;
+    private static final int colorGrabRadius = 7;
 
     private FaceSelection faceSelected;
 
@@ -130,7 +97,7 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     private float[] fCoordsQuad;
 
     //Color grab
-    private Cursor colorGrabCursor;
+    private final Cursor colorGrabCursor;
 
     public VColorEditorDisplay() {
         //Add listeners
@@ -367,11 +334,7 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (orthoEnabled) {
-                orthoEnabled = false;
-            } else {
-                orthoEnabled = true;
-            }
+            orthoEnabled = !orthoEnabled;
             repaint();
         }
 
@@ -390,9 +353,9 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     public void mouseWheelMoved(MouseWheelEvent e) {
         int wheelRotation = e.getWheelRotation();
         if (wheelRotation > 0) {
-            cameraZ *= 1.1;
+            cameraZ *= 1.1F;
         } else {
-            cameraZ /= 1.1;
+            cameraZ /= 1.1F;
         }
         repaint();
     }
@@ -401,13 +364,6 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        /*
-        if (points != null) {
-            for (Point3D point : points) {
-                g.setColor(Color.blue);
-                g.drawRect((int) point.getX(), (int) point.getY(), 3, 3);
-            }
-        }*/
         Graphics2D g2 = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(
                 RenderingHints.KEY_ANTIALIASING,
@@ -424,7 +380,8 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
             g.drawOval(mouseX - brushRadius, mouseY - brushRadius, brushRadius * 2, brushRadius * 2);
         } else if (selectionMode == POLYGON_SELECTION_MODE) {
             g.drawOval(mouseX - brushRadius, mouseY - brushRadius, brushRadius * 2, brushRadius * 2);
-        } else if (selectionMode == COLOR_GRAB_MODE) {
+        } else //noinspection StatementWithEmptyBody
+            if (selectionMode == COLOR_GRAB_MODE) {
             //g.drawOval(mouseX - colorGrabRadius, mouseY - colorGrabRadius, colorGrabRadius * 2, colorGrabRadius * 2);
         }
 
@@ -630,16 +587,6 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
                 end = tile.getVCoordsTri().length / (3 * vPerPolygon);
             }
 
-            /*
-            int mode;
-            if (usePoints) {
-                gl.glEnable(GL2.GL_PROGRAM_POINT_SIZE_EXT);
-                gl.glPointSize(4);
-                mode = GL2.GL_POINTS;
-
-            } else {
-                mode = GL2.GL_TRIANGLES;
-            }*/
             gl.glBegin(GL_TRIANGLES);
             for (int i = start; i < end; i++) {
                 for (int j = 0; j < vPerPolygon; j++) {
@@ -770,6 +717,7 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void drawPoints(GL2 gl, float[] pointCoords, int pointSize) {
         final int coordsPerPoint = 3;
         if (pointCoords.length > 0) {
@@ -905,14 +853,6 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
 
-        /*
-        gl.glDisable(GL_DEPTH_TEST);
-       
-        gl.glColor3f(0.7f, 0.7f, 0.7f);
-        
-        drawPoints(gl, fCoordsTri, 3);
-        drawPoints(gl, fCoordsQuad, 3);
-         */
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_ALWAYS);
 
@@ -1035,8 +975,8 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
         for (int i = 0; i < vertexArray.length / 3; i++) {
             Point3D vertex = new Point3D(vertexArray[i * 3], vertexArray[i * 3 + 1], vertexArray[i * 3 + 2]);
             vertex = vertex.mult(transformationMatrix);
-            newVertexArray[i * 3] = (float) (((float) vertex.getX() / vertex.getW()) * screenWidth / 2 + screenWidth / 2);
-            newVertexArray[i * 3 + 1] = (float) (-(float) vertex.getY() / vertex.getW() * screenHeight / 2 + screenHeight / 2);
+            newVertexArray[i * 3] = (float) (((float) vertex.getX() / vertex.getW()) * screenWidth / 2 + (double) screenWidth / 2);
+            newVertexArray[i * 3 + 1] = (float) (-(float) vertex.getY() / vertex.getW() * screenHeight / 2 + (double) screenHeight / 2);
             newVertexArray[i * 3 + 2] = (float) ((float) vertex.getZ() / vertex.getW());
         }
         return newVertexArray;
@@ -1166,9 +1106,7 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
                     coordsMean[k] += vCoords[c] / vPerFace;
                 }
             }
-            for (int j = 0; j < coordsPerVertex; j++) {
-                fCoords[i * coordsPerVertex + j] = coordsMean[j];
-            }
+            System.arraycopy(coordsMean, 0, fCoords, i * 3, coordsPerVertex);
         }
         return fCoords;
     }
@@ -1182,27 +1120,8 @@ public class VColorEditorDisplay extends GLJPanel implements GLEventListener, Mo
         }
     }
 
-    public void setDrawTextures(boolean drawTextures) {
-        this.drawTextures = drawTextures;
-    }
+    private record FaceSelection(int faceIndex, boolean isQuad) {
 
-    private class FaceSelection {
-
-        private int faceIndex;
-        private boolean isQuad;
-
-        public FaceSelection(int faceIndex, boolean isQuad) {
-            this.faceIndex = faceIndex;
-            this.isQuad = isQuad;
-        }
-
-        public int getFaceIndex() {
-            return faceIndex;
-        }
-
-        public boolean isQuad() {
-            return isQuad;
-        }
     }
 
     public void setBrushSize(int size) {

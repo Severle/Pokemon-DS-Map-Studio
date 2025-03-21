@@ -69,9 +69,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -80,6 +78,7 @@ import java.util.prefs.Preferences;
  */
 @SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 @Log4j2
+@Getter
 public class MainFrame extends JFrame {
     MapEditorHandler handler;
     public static Preferences         preferences = Preferences.userNodeForPackage(MainFrame.class);
@@ -1923,6 +1922,7 @@ public class MainFrame extends JFrame {
     @SuppressWarnings({"DataFlowIssue", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        ResourceBundle bundle = ResourceBundle.getBundle("lang.appStudio");
         jmMainMenu = new JMenuBar();
         jmFile = new JMenu();
         jmiNewMap = new JMenuItem();
@@ -2069,14 +2069,14 @@ public class MainFrame extends JFrame {
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Pokemon DS Map Studio");
+        setTitle(bundle.getString("MainFrame.title"));
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 formWindowClosing(e);
             }
         });
-        Container contentPane = getContentPane();
+        var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
             "insets 0,hidemode 3,gap 5 5",
             // columns
@@ -2091,12 +2091,12 @@ public class MainFrame extends JFrame {
 
             //======== jmFile ========
             {
-                jmFile.setText("File");
+                jmFile.setText(bundle.getString("MainFrame.menu.file.name"));
                 jmFile.setMnemonic('F');
 
                 //---- jmiNewMap ----
                 jmiNewMap.setIcon(new ImageIcon(getClass().getResource("/icons/newMapIcon_s.png")));
-                jmiNewMap.setText("New Map...");
+                jmiNewMap.setText(bundle.getString("MainFrame.menu.file.new-map.name"));
                 jmiNewMap.setMnemonic('N');
                 jmiNewMap.addActionListener(e -> jmiNewMapActionPerformed(e));
                 jmFile.add(jmiNewMap);
@@ -2104,20 +2104,20 @@ public class MainFrame extends JFrame {
 
                 //---- jmiOpenMap ----
                 jmiOpenMap.setIcon(new ImageIcon(getClass().getResource("/icons/openMapIcon_s.png")));
-                jmiOpenMap.setText("Open Map...");
+                jmiOpenMap.setText(bundle.getString("MainFrame.menu.file.open-map.name"));
                 jmiOpenMap.setMnemonic('O');
                 jmiOpenMap.addActionListener(e -> jmiOpenMapActionPerformed(e));
                 jmFile.add(jmiOpenMap);
 
                 //======== jmiOpenRecentMap ========
                 {
-                    jmiOpenRecentMap.setText("Open Recent Map...");
+                    jmiOpenRecentMap.setText(bundle.getString("MainFrame.menu.file.open-recent-map.name"));
                     jmiOpenRecentMap.setIcon(new ImageIcon(getClass().getResource("/icons/openRecentMapIcon_s.png")));
                     jmiOpenRecentMap.setMnemonic('R');
                     jmiOpenRecentMap.addSeparator();
 
                     //---- jmiClearHistory ----
-                    jmiClearHistory.setText("Clear History");
+                    jmiClearHistory.setText(bundle.getString("MainFrame.menu.file.open-recent-map.clear-history"));
                     jmiClearHistory.setMnemonic('H');
                     jmiClearHistory.addActionListener(e -> jmiClearHistoryActionPerformed(e));
                     jmiOpenRecentMap.add(jmiClearHistory);
@@ -2127,14 +2127,14 @@ public class MainFrame extends JFrame {
 
                 //---- jmiSaveMap ----
                 jmiSaveMap.setIcon(new ImageIcon(getClass().getResource("/icons/saveMapIconSmall.png")));
-                jmiSaveMap.setText("Save Map...");
+                jmiSaveMap.setText(bundle.getString("MainFrame.menu.file.save-map.name"));
                 jmiSaveMap.setMnemonic('S');
                 jmiSaveMap.addActionListener(e -> jmiSaveMapActionPerformed(e));
                 jmFile.add(jmiSaveMap);
 
                 //---- jmiSaveMapAs ----
                 jmiSaveMapAs.setIcon(new ImageIcon(getClass().getResource("/icons/saveMapIconSmall.png")));
-                jmiSaveMapAs.setText("Save Map as...");
+                jmiSaveMapAs.setText(bundle.getString("MainFrame.menu.file.save-map-as.name"));
                 jmiSaveMapAs.setMnemonic('A');
                 jmiSaveMapAs.addActionListener(e -> jmiSaveMapAsActionPerformed(e));
                 jmFile.add(jmiSaveMapAs);
@@ -2142,7 +2142,7 @@ public class MainFrame extends JFrame {
 
                 //---- jmiAddMaps ----
                 jmiAddMaps.setIcon(new ImageIcon(getClass().getResource("/icons/AddMapIconSmall.png")));
-                jmiAddMaps.setText("Add Maps...");
+                jmiAddMaps.setText(bundle.getString("MainFrame.menu.file.add-maps.name"));
                 jmiAddMaps.setMnemonic('D');
                 jmiAddMaps.addActionListener(e -> jmiAddMapsActionPerformed(e));
                 jmFile.add(jmiAddMaps);
@@ -2150,44 +2150,44 @@ public class MainFrame extends JFrame {
 
                 //---- jmiExportObjWithText ----
                 jmiExportObjWithText.setIcon(new ImageIcon(getClass().getResource("/icons/ExportIcon.png")));
-                jmiExportObjWithText.setText("Export Map as OBJ with textures...");
+                jmiExportObjWithText.setText(bundle.getString("MainFrame.menu.file.export-map-obj.name"));
                 jmiExportObjWithText.addActionListener(e -> jmiExportObjWithTextActionPerformed(e));
                 jmFile.add(jmiExportObjWithText);
 
                 //---- jmiExportMapAsImd ----
                 jmiExportMapAsImd.setIcon(new ImageIcon(getClass().getResource("/icons/ExportIcon.png")));
-                jmiExportMapAsImd.setText("Export Map as IMD...");
+                jmiExportMapAsImd.setText(bundle.getString("MainFrame.menu.file.export-map-imd.name"));
                 jmiExportMapAsImd.addActionListener(e -> jmiExportMapAsImdActionPerformed(e));
                 jmFile.add(jmiExportMapAsImd);
 
                 //---- jmiExportMapAsNsb ----
                 jmiExportMapAsNsb.setIcon(new ImageIcon(getClass().getResource("/icons/ExportIcon.png")));
-                jmiExportMapAsNsb.setText("Export Map as NSBMD...");
+                jmiExportMapAsNsb.setText(bundle.getString("MainFrame.menu.file.export-map-nsbmd.name"));
                 jmiExportMapAsNsb.addActionListener(e -> jmiExportMapAsNsbActionPerformed(e));
                 jmFile.add(jmiExportMapAsNsb);
 
                 //---- jmiExportMapBtx ----
                 jmiExportMapBtx.setIcon(new ImageIcon(getClass().getResource("/icons/ExportIcon.png")));
-                jmiExportMapBtx.setText("Export Map's NSBTX...");
+                jmiExportMapBtx.setText(bundle.getString("MainFrame.menu.file.export-map-nsbtx.name"));
                 jmiExportMapBtx.addActionListener(e -> jmiExportMapBtxActionPerformed(e));
                 jmFile.add(jmiExportMapBtx);
                 jmFile.addSeparator();
 
                 //---- jmiImportTileset ----
                 jmiImportTileset.setIcon(new ImageIcon(getClass().getResource("/icons/ImportTileIcon.png")));
-                jmiImportTileset.setText("Import Tileset...");
+                jmiImportTileset.setText(bundle.getString("MainFrame.menu.file.import-tileset.name"));
                 jmiImportTileset.addActionListener(e -> jmiImportTilesetActionPerformed(e));
                 jmFile.add(jmiImportTileset);
 
                 //---- jmiExportTileset ----
                 jmiExportTileset.setIcon(new ImageIcon(getClass().getResource("/icons/ExportIcon.png")));
-                jmiExportTileset.setText("Export Tileset...");
+                jmiExportTileset.setText(bundle.getString("MainFrame.menu.file.export-tileset.name"));
                 jmiExportTileset.addActionListener(e -> jmiExportTilesetActionPerformed(e));
                 jmFile.add(jmiExportTileset);
 
                 //---- jmiExportAllTiles ----
                 jmiExportAllTiles.setIcon(new ImageIcon(getClass().getResource("/icons/ExportIcon.png")));
-                jmiExportAllTiles.setText("Export All Tiles as OBJ...");
+                jmiExportAllTiles.setText(bundle.getString("MainFrame.menu.file.export-all-tiles-obj.name"));
                 jmiExportAllTiles.addActionListener(e -> jmiExportAllTilesActionPerformed(e));
                 jmFile.add(jmiExportAllTiles);
             }
@@ -2195,19 +2195,19 @@ public class MainFrame extends JFrame {
 
             //======== jmEdit ========
             {
-                jmEdit.setText("Edit");
+                jmEdit.setText(bundle.getString("MainFrame.menu.edit.name"));
                 jmEdit.setMnemonic('E');
 
                 //---- jmiUndo ----
                 jmiUndo.setIcon(new ImageIcon(getClass().getResource("/icons/undoIconSmall.png")));
-                jmiUndo.setText("Undo");
+                jmiUndo.setText(bundle.getString("MainFrame.menu.edit.undo.name"));
                 jmiUndo.setMnemonic('U');
                 jmiUndo.addActionListener(e -> jmiUndoActionPerformed(e));
                 jmEdit.add(jmiUndo);
 
                 //---- jmiRedo ----
                 jmiRedo.setIcon(new ImageIcon(getClass().getResource("/icons/redoIconSmall.png")));
-                jmiRedo.setText("Redo");
+                jmiRedo.setText(bundle.getString("MainFrame.menu.edit.redo.name"));
                 jmiRedo.setMnemonic('R');
                 jmiRedo.addActionListener(e -> jmiRedoActionPerformed(e));
                 jmEdit.add(jmiRedo);
@@ -2215,13 +2215,13 @@ public class MainFrame extends JFrame {
 
                 //---- jmiClearLayer ----
                 jmiClearLayer.setIcon(new ImageIcon(getClass().getResource("/icons/RemoveIcon.png")));
-                jmiClearLayer.setText("Clear Layer");
+                jmiClearLayer.setText(bundle.getString("MainFrame.menu.edit.clear-layer.name"));
                 jmiClearLayer.setMnemonic('L');
                 jmiClearLayer.addActionListener(e -> jmiClearLayerActionPerformed(e));
                 jmEdit.add(jmiClearLayer);
 
                 //---- jmiClearAllLayers ----
-                jmiClearAllLayers.setText("Clear All Layers");
+                jmiClearAllLayers.setText(bundle.getString("MainFrame.menu.edit.clear-all-layer.name"));
                 jmiClearAllLayers.setEnabled(false);
                 jmiClearAllLayers.addActionListener(e -> jmiClearAllLayersActionPerformed(e));
                 jmEdit.add(jmiClearAllLayers);
@@ -2229,35 +2229,35 @@ public class MainFrame extends JFrame {
 
                 //---- jmiCopyLayer ----
                 jmiCopyLayer.setIcon(new ImageIcon(getClass().getResource("/icons/copyIcon.png")));
-                jmiCopyLayer.setText("Copy Layer");
+                jmiCopyLayer.setText(bundle.getString("MainFrame.menu.edit.copy-layer.name"));
                 jmiCopyLayer.setMnemonic('C');
                 jmiCopyLayer.addActionListener(e -> jmiCopyLayerActionPerformed(e));
                 jmEdit.add(jmiCopyLayer);
 
                 //---- jmiPasteLayer ----
                 jmiPasteLayer.setIcon(new ImageIcon(getClass().getResource("/icons/pasteIcon.png")));
-                jmiPasteLayer.setText("Paste Layer");
+                jmiPasteLayer.setText(bundle.getString("MainFrame.menu.edit.paste-layer.name"));
                 jmiPasteLayer.setMnemonic('P');
                 jmiPasteLayer.addActionListener(e -> jmiPasteLayerActionPerformed(e));
                 jmEdit.add(jmiPasteLayer);
 
                 //---- jmiPasteLayerTiles ----
                 jmiPasteLayerTiles.setIcon(new ImageIcon(getClass().getResource("/icons/pasteTileIcon.png")));
-                jmiPasteLayerTiles.setText("Paste Layer Tiles");
+                jmiPasteLayerTiles.setText(bundle.getString("MainFrame.menu.edit.paste-layer-tiles.name"));
                 jmiPasteLayerTiles.setMnemonic('T');
                 jmiPasteLayerTiles.addActionListener(e -> jmiPasteLayerTilesActionPerformed(e));
                 jmEdit.add(jmiPasteLayerTiles);
 
                 //---- jmiPasteLayerHeights ----
                 jmiPasteLayerHeights.setIcon(new ImageIcon(getClass().getResource("/icons/pasteHeightIcon.png")));
-                jmiPasteLayerHeights.setText("Paste Layer Heights");
+                jmiPasteLayerHeights.setText(bundle.getString("MainFrame.menu.edit.paste-layer-heights.name"));
                 jmiPasteLayerHeights.setMnemonic('H');
                 jmiPasteLayerHeights.addActionListener(e -> jmiPasteLayerHeightsActionPerformed(e));
                 jmEdit.add(jmiPasteLayerHeights);
                 jmEdit.addSeparator();
 
                 //---- menuItem1 ----
-                menuItem1.setText("Settings");
+                menuItem1.setText(bundle.getString("MainFrame.menu.edit.settings.name"));
                 menuItem1.setIcon(new ImageIcon(getClass().getResource("/icons/settingsIconSmall.png")));
                 menuItem1.setMnemonic('S');
                 menuItem1.addActionListener(e -> menuItem1ActionPerformed(e));
@@ -2267,43 +2267,43 @@ public class MainFrame extends JFrame {
 
             //======== jmView ========
             {
-                jmView.setText("View");
+                jmView.setText(bundle.getString("MainFrame.menu.view.name"));
                 jmView.setMnemonic('V');
 
                 //---- jmi3dView ----
-                jmi3dView.setText("3D View");
+                jmi3dView.setText(bundle.getString("MainFrame.menu.view.3d-view.name"));
                 jmi3dView.setMnemonic('3');
                 jmi3dView.addActionListener(e -> jmi3dViewActionPerformed(e));
                 jmView.add(jmi3dView);
 
                 //---- jmiTopView ----
-                jmiTopView.setText("Top View");
+                jmiTopView.setText(bundle.getString("MainFrame.menu.view.top-view.name"));
                 jmiTopView.setMnemonic('T');
                 jmiTopView.addActionListener(e -> jmiTopViewActionPerformed(e));
                 jmView.add(jmiTopView);
 
                 //---- jmiHeightView ----
-                jmiHeightView.setText("Height View");
+                jmiHeightView.setText(bundle.getString("MainFrame.menu.view.height-view.name"));
                 jmiHeightView.setMnemonic('H');
                 jmiHeightView.addActionListener(e -> jmiHeightViewActionPerformed(e));
                 jmView.add(jmiHeightView);
                 jmView.addSeparator();
 
                 //---- jmiToggleGrid ----
-                jmiToggleGrid.setText("Toggle Grid");
+                jmiToggleGrid.setText(bundle.getString("MainFrame.menu.view.toggle-grid.name"));
                 jmiToggleGrid.setMnemonic('G');
                 jmiToggleGrid.addActionListener(e -> jmiToggleGridActionPerformed(e));
                 jmView.add(jmiToggleGrid);
                 jmView.addSeparator();
 
                 //---- jmiLoadBackImg ----
-                jmiLoadBackImg.setText("Open Background Image");
+                jmiLoadBackImg.setText(bundle.getString("MainFrame.menu.view.open-bg-img.name"));
                 jmiLoadBackImg.setMnemonic('O');
                 jmiLoadBackImg.addActionListener(e -> jmiLoadBackImgActionPerformed(e));
                 jmView.add(jmiLoadBackImg);
 
                 //---- jcbUseBackImage ----
-                jcbUseBackImage.setText("Use Background Image");
+                jcbUseBackImage.setText(bundle.getString("MainFrame.menu.view.use-bg-img.name"));
                 jcbUseBackImage.addActionListener(e -> jcbUseBackImageActionPerformed(e));
                 jmView.add(jcbUseBackImage);
             }
@@ -2311,46 +2311,46 @@ public class MainFrame extends JFrame {
 
             //======== jmTools ========
             {
-                jmTools.setText("Tools");
+                jmTools.setText(bundle.getString("MainFrame.menu.tools.name"));
                 jmTools.setMnemonic('T');
 
                 //---- jmiTilesetEditor ----
-                jmiTilesetEditor.setText("Tileset Editor");
+                jmiTilesetEditor.setText(bundle.getString("MainFrame.menu.tools.tileset-editor.name"));
                 jmiTilesetEditor.setMnemonic('T');
                 jmiTilesetEditor.addActionListener(e -> jmiTilesetEditorActionPerformed(e));
                 jmTools.add(jmiTilesetEditor);
 
                 //---- jmiCollisionEditor ----
-                jmiCollisionEditor.setText("Collision Editor");
+                jmiCollisionEditor.setText(bundle.getString("MainFrame.menu.tools.collision-editor.name"));
                 jmiCollisionEditor.setMnemonic('C');
                 jmiCollisionEditor.addActionListener(e -> jmiCollisionEditorActionPerformed(e));
                 jmTools.add(jmiCollisionEditor);
 
                 //---- jmiBdhcEditor ----
-                jmiBdhcEditor.setText("Terrain Editor");
+                jmiBdhcEditor.setText(bundle.getString("MainFrame.menu.tools.terrain-editor.name"));
                 jmiBdhcEditor.setMnemonic('B');
                 jmiBdhcEditor.addActionListener(e -> jmiBdhcEditorActionPerformed(e));
                 jmTools.add(jmiBdhcEditor);
 
                 //---- jmiBDHCAM ----
-                jmiBDHCAM.setText("Camera Editor");
+                jmiBDHCAM.setText(bundle.getString("MainFrame.tools.camera-editor.name"));
                 jmiBDHCAM.addActionListener(e -> jmiBDHCAMActionPerformed(e));
                 jmTools.add(jmiBDHCAM);
 
                 //---- jmiNsbtxEditor ----
-                jmiNsbtxEditor.setText("NSBTX Editor");
+                jmiNsbtxEditor.setText(bundle.getString("MainFrame.menu.tools.nsbts-editor.name"));
                 jmiNsbtxEditor.setMnemonic('N');
                 jmiNsbtxEditor.addActionListener(e -> jmiNsbtxEditorActionPerformed(e));
                 jmTools.add(jmiNsbtxEditor);
 
                 //---- jMenuItem1 ----
-                jMenuItem1.setText("Building Editor");
+                jMenuItem1.setText(bundle.getString("MainFrame.menu.tools.building-editor.name"));
                 jMenuItem1.setMnemonic('U');
                 jMenuItem1.addActionListener(e -> jMenuItem1ActionPerformed(e));
                 jmTools.add(jMenuItem1);
 
                 //---- jmiAnimationEditor ----
-                jmiAnimationEditor.setText("Animation Editor");
+                jmiAnimationEditor.setText(bundle.getString("MainFrame.menu.tools.animation-editor.name"));
                 jmiAnimationEditor.setMnemonic('A');
                 jmiAnimationEditor.addActionListener(e -> jmiAnimationEditorActionPerformed(e));
                 jmTools.add(jmiAnimationEditor);
@@ -2359,17 +2359,17 @@ public class MainFrame extends JFrame {
 
             //======== jmHelp ========
             {
-                jmHelp.setText("Help");
+                jmHelp.setText(bundle.getString("MainFrame.menu.help.name"));
                 jmHelp.setMnemonic('H');
 
                 //---- jmiKeyboardInfo ----
-                jmiKeyboardInfo.setText("Keyboard Shortcuts");
+                jmiKeyboardInfo.setText(bundle.getString("MainFrame.menu.help.keyboard-shortcut.name"));
                 jmiKeyboardInfo.setMnemonic('K');
                 jmiKeyboardInfo.addActionListener(e -> jmiKeyboardInfoActionPerformed(e));
                 jmHelp.add(jmiKeyboardInfo);
 
                 //---- jmiAbout ----
-                jmiAbout.setText("About");
+                jmiAbout.setText(bundle.getString("MainFrame.menu.help.about.name"));
                 jmiAbout.setMnemonic('A');
                 jmiAbout.addActionListener(e -> jmiAboutActionPerformed(e));
                 jmHelp.add(jmiAbout);
@@ -2389,7 +2389,7 @@ public class MainFrame extends JFrame {
 
             //---- jbNewMap ----
             jbNewMap.setIcon(new ImageIcon(getClass().getResource("/icons/newMapIcon.png")));
-            jbNewMap.setToolTipText("New Map");
+            jbNewMap.setToolTipText(bundle.getString("MainFrame.menu.file.new-map.name"));
             jbNewMap.setBorderPainted(false);
             jbNewMap.setFocusable(false);
             jbNewMap.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -2403,7 +2403,7 @@ public class MainFrame extends JFrame {
 
             //---- jbOpenMap ----
             jbOpenMap.setIcon(new ImageIcon(getClass().getResource("/icons/openMapIcon.png")));
-            jbOpenMap.setToolTipText("Open Map");
+            jbOpenMap.setToolTipText(bundle.getString("MainFrame.menu.file.open-map.name"));
             jbOpenMap.setFocusable(false);
             jbOpenMap.setHorizontalTextPosition(SwingConstants.CENTER);
             jbOpenMap.setMaximumSize(new Dimension(38, 38));
@@ -2416,7 +2416,7 @@ public class MainFrame extends JFrame {
 
             //---- jbSaveMap ----
             jbSaveMap.setIcon(new ImageIcon(getClass().getResource("/icons/saveMapIcon.png")));
-            jbSaveMap.setToolTipText("Save Map");
+            jbSaveMap.setToolTipText(bundle.getString("MainFrame.menu.file.save-map.name"));
             jbSaveMap.setFocusable(false);
             jbSaveMap.setHorizontalTextPosition(SwingConstants.CENTER);
             jbSaveMap.setMaximumSize(new Dimension(38, 38));
@@ -2429,7 +2429,7 @@ public class MainFrame extends JFrame {
 
             //---- jbAddMaps ----
             jbAddMaps.setIcon(new ImageIcon(getClass().getResource("/icons/importMapIcon.png")));
-            jbAddMaps.setToolTipText("Add Maps");
+            jbAddMaps.setToolTipText(bundle.getString("MainFrame.menu.file.add-maps.name"));
             jbAddMaps.setFocusable(false);
             jbAddMaps.setHorizontalTextPosition(SwingConstants.CENTER);
             jbAddMaps.setMaximumSize(new Dimension(38, 38));
@@ -2443,7 +2443,7 @@ public class MainFrame extends JFrame {
 
             //---- jbUndo ----
             jbUndo.setIcon(new ImageIcon(getClass().getResource("/icons/undoIcon.png")));
-            jbUndo.setToolTipText("Undo (Ctrl+Z)");
+            jbUndo.setToolTipText(bundle.getString("MainFrame.menu.edit.undo.name"));
             jbUndo.setDisabledIcon(new ImageIcon(getClass().getResource("/icons/undoDisabledIcon.png")));
             jbUndo.setEnabled(false);
             jbUndo.setFocusable(false);
@@ -2458,7 +2458,7 @@ public class MainFrame extends JFrame {
 
             //---- jbRedo ----
             jbRedo.setIcon(new ImageIcon(getClass().getResource("/icons/redoIcon.png")));
-            jbRedo.setToolTipText("Redo (Ctrl+Y)");
+            jbRedo.setToolTipText(bundle.getString("MainFrame.menu.edit.redo.name"));
             jbRedo.setDisabledIcon(new ImageIcon(getClass().getResource("/icons/redoDisabledIcon.png")));
             jbRedo.setEnabled(false);
             jbRedo.setFocusable(false);
@@ -2474,7 +2474,7 @@ public class MainFrame extends JFrame {
 
             //---- jbExportObj ----
             jbExportObj.setIcon(new ImageIcon(getClass().getResource("/icons/exportObjIcon.png")));
-            jbExportObj.setToolTipText("Export Map as OBJ with Textures");
+            jbExportObj.setToolTipText(bundle.getString("MainFrame.menu.file.export-map-obj.name"));
             jbExportObj.setFocusable(false);
             jbExportObj.setHorizontalTextPosition(SwingConstants.CENTER);
             jbExportObj.setMaximumSize(new Dimension(38, 38));
@@ -2487,7 +2487,7 @@ public class MainFrame extends JFrame {
 
             //---- jbExportImd ----
             jbExportImd.setIcon(new ImageIcon(getClass().getResource("/icons/exportImdIcon.png")));
-            jbExportImd.setToolTipText("Export Map as IMD");
+            jbExportImd.setToolTipText(bundle.getString("MainFrame.menu.file.export-map-imd.name"));
             jbExportImd.setFocusable(false);
             jbExportImd.setHorizontalTextPosition(SwingConstants.CENTER);
             jbExportImd.setMaximumSize(new Dimension(38, 38));
@@ -2500,7 +2500,7 @@ public class MainFrame extends JFrame {
 
             //---- jbExportNsb ----
             jbExportNsb.setIcon(new ImageIcon(getClass().getResource("/icons/exportNsbIcon.png")));
-            jbExportNsb.setToolTipText("Export Map as NSBMD");
+            jbExportNsb.setToolTipText(bundle.getString("MainFrame.menu.file.export-map-nsbmd.name"));
             jbExportNsb.setFocusable(false);
             jbExportNsb.setHorizontalTextPosition(SwingConstants.CENTER);
             jbExportNsb.setMaximumSize(new Dimension(38, 38));
@@ -2513,7 +2513,7 @@ public class MainFrame extends JFrame {
 
             //---- jbExportBin ----
             jbExportBin.setIcon(new ImageIcon(getClass().getResource("/icons/exportBinIcon.png")));
-            jbExportBin.setToolTipText("Export Map as BIN");
+            jbExportBin.setToolTipText(bundle.getString("MainFrame.menu.file.export-map-bin.name"));
             jbExportBin.setFocusable(false);
             jbExportBin.setHorizontalTextPosition(SwingConstants.CENTER);
             jbExportBin.setMaximumSize(new Dimension(38, 38));
@@ -2527,7 +2527,7 @@ public class MainFrame extends JFrame {
 
             //---- jbExportNsb1 ----
             jbExportNsb1.setIcon(new ImageIcon(getClass().getResource("/icons/exportBtxIcon.png")));
-            jbExportNsb1.setToolTipText("Export Map NSBTX");
+            jbExportNsb1.setToolTipText(bundle.getString("MainFrame.menu.file.export-map-nsbtx.name"));
             jbExportNsb1.setFocusable(false);
             jbExportNsb1.setHorizontalTextPosition(SwingConstants.CENTER);
             jbExportNsb1.setMaximumSize(new Dimension(38, 38));
@@ -2540,7 +2540,7 @@ public class MainFrame extends JFrame {
 
             //---- jbExportNsb2 ----
             jbExportNsb2.setIcon(new ImageIcon(getClass().getResource("/icons/exportAreasIcon.png")));
-            jbExportNsb2.setToolTipText("Export Area NSBTX");
+            jbExportNsb2.setToolTipText(bundle.getString("MainFrame.menu.file.export-area-nsbtx"));
             jbExportNsb2.setFocusable(false);
             jbExportNsb2.setHorizontalTextPosition(SwingConstants.CENTER);
             jbExportNsb2.setMaximumSize(new Dimension(38, 38));
@@ -2554,7 +2554,7 @@ public class MainFrame extends JFrame {
 
             //---- jbTilelistEditor ----
             jbTilelistEditor.setIcon(new ImageIcon(getClass().getResource("/icons/tilelistEditorIcon.png")));
-            jbTilelistEditor.setToolTipText("Tile List Editor");
+            jbTilelistEditor.setToolTipText(bundle.getString("MainFrame.menu.tools.tileset-editor.name"));
             jbTilelistEditor.setFocusable(false);
             jbTilelistEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbTilelistEditor.setMaximumSize(new Dimension(38, 38));
@@ -2567,7 +2567,7 @@ public class MainFrame extends JFrame {
 
             //---- jbCollisionsEditor ----
             jbCollisionsEditor.setIcon(new ImageIcon(getClass().getResource("/icons/collisionEditorIcon.png")));
-            jbCollisionsEditor.setToolTipText("Collisions Editor");
+            jbCollisionsEditor.setToolTipText(bundle.getString("MainFrame.menu.tools.collision-editor.name"));
             jbCollisionsEditor.setFocusable(false);
             jbCollisionsEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbCollisionsEditor.setMaximumSize(new Dimension(38, 38));
@@ -2580,7 +2580,7 @@ public class MainFrame extends JFrame {
 
             //---- jbBdhcEditor ----
             jbBdhcEditor.setIcon(new ImageIcon(getClass().getResource("/icons/bdhcEditorIcon.png")));
-            jbBdhcEditor.setToolTipText("Terrain Editor");
+            jbBdhcEditor.setToolTipText(bundle.getString("MainFrame.menu.tools.terrain-editor.name"));
             jbBdhcEditor.setFocusable(false);
             jbBdhcEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbBdhcEditor.setMaximumSize(new Dimension(38, 38));
@@ -2593,7 +2593,7 @@ public class MainFrame extends JFrame {
 
             //---- jbBdhcamEditor ----
             jbBdhcamEditor.setIcon(new ImageIcon(getClass().getResource("/icons/bdhcamEditorIcon.png")));
-            jbBdhcamEditor.setToolTipText("Bdhcam Editor");
+            jbBdhcamEditor.setToolTipText(bundle.getString("MainFrame.tools.camera-editor.name"));
             jbBdhcamEditor.setFocusable(false);
             jbBdhcamEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbBdhcamEditor.setMaximumSize(new Dimension(38, 38));
@@ -2606,7 +2606,7 @@ public class MainFrame extends JFrame {
 
             //---- jbBacksoundEditor ----
             jbBacksoundEditor.setIcon(new ImageIcon(getClass().getResource("/icons/backsoundEditorIcon.png")));
-            jbBacksoundEditor.setToolTipText("Backsound Editor");
+            jbBacksoundEditor.setToolTipText(bundle.getString("MainFrame.menu.tools.back-sound-editor"));
             jbBacksoundEditor.setFocusable(false);
             jbBacksoundEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbBacksoundEditor.setMaximumSize(new Dimension(38, 38));
@@ -2619,7 +2619,7 @@ public class MainFrame extends JFrame {
 
             //---- jbNsbtxEditor1 ----
             jbNsbtxEditor1.setIcon(new ImageIcon(getClass().getResource("/icons/nsbtxEditorIcon.png")));
-            jbNsbtxEditor1.setToolTipText("NSBTX Editor");
+            jbNsbtxEditor1.setToolTipText(bundle.getString("MainFrame.menu.tools.nsbts-editor.name"));
             jbNsbtxEditor1.setFocusable(false);
             jbNsbtxEditor1.setHorizontalTextPosition(SwingConstants.CENTER);
             jbNsbtxEditor1.setMaximumSize(new Dimension(38, 38));
@@ -2632,7 +2632,7 @@ public class MainFrame extends JFrame {
 
             //---- jbBuildingEditor ----
             jbBuildingEditor.setIcon(new ImageIcon(getClass().getResource("/icons/buildingEditorIcon.png")));
-            jbBuildingEditor.setToolTipText("Building Editor");
+            jbBuildingEditor.setToolTipText(bundle.getString("MainFrame.menu.tools.building-editor.name"));
             jbBuildingEditor.setFocusable(false);
             jbBuildingEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbBuildingEditor.setMaximumSize(new Dimension(38, 38));
@@ -2645,7 +2645,7 @@ public class MainFrame extends JFrame {
 
             //---- jbAnimationEditor ----
             jbAnimationEditor.setIcon(new ImageIcon(getClass().getResource("/icons/animationEditorIcon.png")));
-            jbAnimationEditor.setToolTipText("Animation Editor");
+            jbAnimationEditor.setToolTipText(bundle.getString("MainFrame.menu.tools.animation-editor.name"));
             jbAnimationEditor.setFocusable(false);
             jbAnimationEditor.setHorizontalTextPosition(SwingConstants.CENTER);
             jbAnimationEditor.setMaximumSize(new Dimension(38, 38));
@@ -2662,12 +2662,13 @@ public class MainFrame extends JFrame {
             jbSettings.setMinimumSize(new Dimension(38, 38));
             jbSettings.setPreferredSize(new Dimension(38, 38));
             jbSettings.setIcon(new ImageIcon(getClass().getResource("/icons/settingsIcon.png")));
+            jbSettings.setToolTipText(bundle.getString("MainFrame.menu.edit.settings.name"));
             jbSettings.addActionListener(e -> jbSettingsActionPerformed(e));
             jtMainToolbar.add(jbSettings);
 
             //---- jbKeboardInfo ----
             jbKeboardInfo.setIcon(new ImageIcon(getClass().getResource("/icons/keyboardInfoIcon.png")));
-            jbKeboardInfo.setToolTipText("Keyboard Shortcuts");
+            jbKeboardInfo.setToolTipText(bundle.getString("MainFrame.menu.help.keyboard-shortcut.name"));
             jbKeboardInfo.setFocusable(false);
             jbKeboardInfo.setHorizontalTextPosition(SwingConstants.CENTER);
             jbKeboardInfo.setMaximumSize(new Dimension(38, 38));
@@ -2680,7 +2681,7 @@ public class MainFrame extends JFrame {
 
             //---- jbHelp ----
             jbHelp.setIcon(new ImageIcon(getClass().getResource("/icons/helpIcon.png")));
-            jbHelp.setToolTipText("Help");
+            jbHelp.setToolTipText(bundle.getString("MainFrame.menu.help.name"));
             jbHelp.setFocusable(false);
             jbHelp.setHorizontalTextPosition(SwingConstants.CENTER);
             jbHelp.setMaximumSize(new Dimension(38, 38));
@@ -2702,7 +2703,7 @@ public class MainFrame extends JFrame {
             ((GridBagLayout)jpGameInfo.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
 
             //---- jlGame ----
-            jlGame.setText("Map for: ");
+            jlGame.setText(bundle.getString("MainFrame.toolbar.map-for.name"));
             jpGameInfo.add(jlGame, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets(0, 0, 5, 5), 0, 0));
@@ -2752,7 +2753,7 @@ public class MainFrame extends JFrame {
 
                 //======== jpLayer ========
                 {
-                    jpLayer.setBorder(new TitledBorder(null, "Layer", TitledBorder.CENTER, TitledBorder.ABOVE_TOP, null, new Color(204, 102, 0)));
+                    jpLayer.setBorder(new TitledBorder(null, bundle.getString("MainFrame.layer-area.title"), TitledBorder.CENTER, TitledBorder.ABOVE_TOP, null, new Color(0xcc6600)));
 
                     //======== thumbnailLayerSelector ========
                     {
@@ -2796,7 +2797,7 @@ public class MainFrame extends JFrame {
 
                     //======== mapDisplay ========
                     {
-                        mapDisplay.setBorder(new LineBorder(new Color(102, 102, 102)));
+                        mapDisplay.setBorder(new LineBorder(new Color(0x666666)));
                         mapDisplay.setMaximumSize(new Dimension(544, 544));
 
                         GroupLayout mapDisplayLayout = new GroupLayout(mapDisplay);
@@ -2853,7 +2854,7 @@ public class MainFrame extends JFrame {
 
                 //======== jpTileList ========
                 {
-                    jpTileList.setBorder(new TitledBorder(null, "Tile List", TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
+                    jpTileList.setBorder(new TitledBorder(null, bundle.getString("MainFrame.tile-list-area.title"), TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
 
                     //======== jscTileList ========
                     {
@@ -2901,7 +2902,7 @@ public class MainFrame extends JFrame {
 
                 //======== jpSmartDrawing ========
                 {
-                    jpSmartDrawing.setBorder(new TitledBorder(null, "Smart Drawing", TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
+                    jpSmartDrawing.setBorder(new TitledBorder(null, bundle.getString("MainFrame.smart-drawing-area.title"), TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
 
                     //======== jscSmartDrawing ========
                     {
@@ -2946,7 +2947,7 @@ public class MainFrame extends JFrame {
 
                     //======== jpView ========
                     {
-                        jpView.setBorder(new TitledBorder(null, "View", TitledBorder.CENTER, TitledBorder.ABOVE_TOP));
+                        jpView.setBorder(new TitledBorder(null, bundle.getString("MainFrame.view-area.title"), TitledBorder.CENTER, TitledBorder.ABOVE_TOP));
 
                         //======== jtView ========
                         {
@@ -2956,7 +2957,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbView3D ----
                             jtbView3D.setIcon(new ImageIcon(getClass().getResource("/icons/3DViewIcon.png")));
-                            jtbView3D.setToolTipText("3D View");
+                            jtbView3D.setToolTipText(bundle.getString("MainFrame.view-area.3d-view.name"));
                             jtbView3D.setFocusable(false);
                             jtbView3D.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbView3D.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -2966,7 +2967,7 @@ public class MainFrame extends JFrame {
                             //---- jtbViewOrtho ----
                             jtbViewOrtho.setIcon(new ImageIcon(getClass().getResource("/icons/topViewIcon.png")));
                             jtbViewOrtho.setSelected(true);
-                            jtbViewOrtho.setToolTipText("Top View");
+                            jtbViewOrtho.setToolTipText(bundle.getString("MainFrame.view-area.top-view.name"));
                             jtbViewOrtho.setFocusable(false);
                             jtbViewOrtho.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbViewOrtho.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -2975,7 +2976,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbViewHeight ----
                             jtbViewHeight.setIcon(new ImageIcon(getClass().getResource("/icons/heightViewIcon.png")));
-                            jtbViewHeight.setToolTipText("Height View");
+                            jtbViewHeight.setToolTipText(bundle.getString("MainFrame.view-area.height-view.name"));
                             jtbViewHeight.setFocusable(false);
                             jtbViewHeight.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbViewHeight.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -2986,7 +2987,7 @@ public class MainFrame extends JFrame {
                             //---- jtbViewGrid ----
                             jtbViewGrid.setIcon(new ImageIcon(getClass().getResource("/icons/gridViewIcon.png")));
                             jtbViewGrid.setSelected(true);
-                            jtbViewGrid.setToolTipText("Grid");
+                            jtbViewGrid.setToolTipText(bundle.getString("MainFrame.view-area.grid.name"));
                             jtbViewGrid.setFocusable(false);
                             jtbViewGrid.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbViewGrid.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -2995,7 +2996,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbViewWireframe ----
                             jtbViewWireframe.setIcon(new ImageIcon(getClass().getResource("/icons/wireViewIcon.png")));
-                            jtbViewWireframe.setToolTipText("Wireframe");
+                            jtbViewWireframe.setToolTipText(bundle.getString("MainFrame.view-area.wireframe.name"));
                             jtbViewWireframe.setFocusable(false);
                             jtbViewWireframe.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbViewWireframe.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3018,7 +3019,7 @@ public class MainFrame extends JFrame {
 
                     //======== jpTools ========
                     {
-                        jpTools.setBorder(new TitledBorder(null, "Tools", TitledBorder.CENTER, TitledBorder.ABOVE_TOP));
+                        jpTools.setBorder(new TitledBorder(null, bundle.getString("MainFrame.tools-area.title"), TitledBorder.CENTER, TitledBorder.ABOVE_TOP));
 
                         //======== jtTools ========
                         {
@@ -3029,7 +3030,7 @@ public class MainFrame extends JFrame {
                             //---- jtbModeEdit ----
                             jtbModeEdit.setIcon(new ImageIcon(getClass().getResource("/icons/CursorIcon.png")));
                             jtbModeEdit.setSelected(true);
-                            jtbModeEdit.setToolTipText("Select Mode");
+                            jtbModeEdit.setToolTipText(bundle.getString("MainFrame.tools-area.select-mode.name"));
                             jtbModeEdit.setFocusable(false);
                             jtbModeEdit.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbModeEdit.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3038,7 +3039,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbModeClear ----
                             jtbModeClear.setIcon(new ImageIcon(getClass().getResource("/icons/ClearTileIcon.png")));
-                            jtbModeClear.setToolTipText("Clear Mode");
+                            jtbModeClear.setToolTipText(bundle.getString("MainFrame.tools-area.clear-mode.name"));
                             jtbModeClear.setFocusable(false);
                             jtbModeClear.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbModeClear.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3047,7 +3048,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbModeSmartPaint ----
                             jtbModeSmartPaint.setIcon(new ImageIcon(getClass().getResource("/icons/SmartGridIcon.png")));
-                            jtbModeSmartPaint.setToolTipText("Smart Drawing");
+                            jtbModeSmartPaint.setToolTipText(bundle.getString("MainFrame.tools-area.smart-drawing.name"));
                             jtbModeSmartPaint.setFocusable(false);
                             jtbModeSmartPaint.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbModeSmartPaint.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3056,7 +3057,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbModeInvSmartPaint ----
                             jtbModeInvSmartPaint.setIcon(new ImageIcon(getClass().getResource("/icons/SmartGridInvertedIcon.png")));
-                            jtbModeInvSmartPaint.setToolTipText("Smart Drawing Inverted");
+                            jtbModeInvSmartPaint.setToolTipText(bundle.getString("MainFrame.tools-area.smart-drawing-inverted.name"));
                             jtbModeInvSmartPaint.setFocusable(false);
                             jtbModeInvSmartPaint.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbModeInvSmartPaint.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3066,7 +3067,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbModeMove ----
                             jtbModeMove.setIcon(new ImageIcon(getClass().getResource("/icons/MoveIcon.png")));
-                            jtbModeMove.setToolTipText("Move Camera");
+                            jtbModeMove.setToolTipText(bundle.getString("MainFrame.tools-area.move-camera.name"));
                             jtbModeMove.setFocusable(false);
                             jtbModeMove.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbModeMove.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3075,7 +3076,7 @@ public class MainFrame extends JFrame {
 
                             //---- jtbModeZoom ----
                             jtbModeZoom.setIcon(new ImageIcon(getClass().getResource("/icons/ZoomIcon.png")));
-                            jtbModeZoom.setToolTipText("Zoom Camera");
+                            jtbModeZoom.setToolTipText(bundle.getString("MainFrame.tools-area.zoom-camera.name"));
                             jtbModeZoom.setFocusable(false);
                             jtbModeZoom.setHorizontalTextPosition(SwingConstants.CENTER);
                             jtbModeZoom.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3084,7 +3085,7 @@ public class MainFrame extends JFrame {
 
                             //---- jbFitCameraToMap ----
                             jbFitCameraToMap.setIcon(new ImageIcon(getClass().getResource("/icons/fitMapIcon.png")));
-                            jbFitCameraToMap.setToolTipText("Fit Camera in Selected Map");
+                            jbFitCameraToMap.setToolTipText(bundle.getString("MainFrame.tools-area.fit-camera-in-selected-map.name"));
                             jbFitCameraToMap.setFocusable(false);
                             jbFitCameraToMap.setHorizontalTextPosition(SwingConstants.CENTER);
                             jbFitCameraToMap.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -3164,7 +3165,7 @@ public class MainFrame extends JFrame {
                                     ((GridBagLayout)jpArea.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 
                                     //---- jlArea ----
-                                    jlArea.setText("Area:");
+                                    jlArea.setText(bundle.getString("MainFrame.right-area.matrix.area.name"));
                                     jpArea.add(jlArea, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                                         new Insets(0, 0, 0, 5), 0, 0));
@@ -3181,7 +3182,7 @@ public class MainFrame extends JFrame {
 
                                     //======== jPanelAreaColor ========
                                     {
-                                        jPanelAreaColor.setBackground(new Color(51, 102, 255));
+                                        jPanelAreaColor.setBackground(new Color(0x3366ff));
                                         jPanelAreaColor.setBorder(new BevelBorder(BevelBorder.RAISED));
                                         jPanelAreaColor.setPreferredSize(new Dimension(30, 30));
 
@@ -3204,7 +3205,7 @@ public class MainFrame extends JFrame {
 
                                 //======== jpMoveMap ========
                                 {
-                                    jpMoveMap.setBorder(new TitledBorder(null, "Move Map", TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
+                                    jpMoveMap.setBorder(new TitledBorder(null, bundle.getString("MainFrame.right-area.matrix.move-map.name"), TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
                                     jpMoveMap.setMaximumSize(new Dimension(110, 110));
                                     jpMoveMap.setMinimumSize(null);
                                     jpMoveMap.setPreferredSize(null);
@@ -3222,7 +3223,7 @@ public class MainFrame extends JFrame {
 
                             //======== jpTileSelected ========
                             {
-                                jpTileSelected.setBorder(new TitledBorder("Tile Selected:"));
+                                jpTileSelected.setBorder(new TitledBorder(bundle.getString("MainFrame.right-area.matrix.tile-selected.name")));
                                 jpTileSelected.setLayout(new BoxLayout(jpTileSelected, BoxLayout.Y_AXIS));
 
                                 //======== tileDisplay ========
@@ -3238,7 +3239,7 @@ public class MainFrame extends JFrame {
                                     );
                                     tileDisplayLayout.setVerticalGroup(
                                         tileDisplayLayout.createParallelGroup()
-                                            .addGap(0, 219, Short.MAX_VALUE)
+                                            .addGap(0, 237, Short.MAX_VALUE)
                                     );
                                 }
                                 jpTileSelected.add(tileDisplay);
@@ -3247,7 +3248,7 @@ public class MainFrame extends JFrame {
                         }
                         jPanelMatrixInfo.add(jspMatrix);
                     }
-                    jtRightPanel.addTab("Matrix", jPanelMatrixInfo);
+                    jtRightPanel.addTab(bundle.getString("MainFrame.right-area.matrix.tab-name"), jPanelMatrixInfo);
 
                     //======== jPanelMapTools ========
                     {
@@ -3265,7 +3266,7 @@ public class MainFrame extends JFrame {
 
                         //======== jpHeightMapAlpha ========
                         {
-                            jpHeightMapAlpha.setBorder(new TitledBorder(null, "Height Map Alpha", TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
+                            jpHeightMapAlpha.setBorder(new TitledBorder(null, bundle.getString("MainFrame.right-area.map-tools.height-map-alphaa.name"), TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
 
                             //---- jsHeightMapAlpha ----
                             jsHeightMapAlpha.setValue(99);
@@ -3276,7 +3277,7 @@ public class MainFrame extends JFrame {
                             jpHeightMapAlpha.setLayout(jpHeightMapAlphaLayout);
                             jpHeightMapAlphaLayout.setHorizontalGroup(
                                 jpHeightMapAlphaLayout.createParallelGroup()
-                                    .addComponent(jsHeightMapAlpha, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                                    .addComponent(jsHeightMapAlpha, GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                             );
                             jpHeightMapAlphaLayout.setVerticalGroup(
                                 jpHeightMapAlphaLayout.createParallelGroup()
@@ -3287,7 +3288,7 @@ public class MainFrame extends JFrame {
 
                         //======== jpBackImageAlpha ========
                         {
-                            jpBackImageAlpha.setBorder(new TitledBorder(null, "Back Image Alpha", TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
+                            jpBackImageAlpha.setBorder(new TitledBorder(null, bundle.getString("MainFrame.right-area.map-tools.back-image-alpha.name"), TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
 
                             //---- jsBackImageAlpha ----
                             jsBackImageAlpha.setFocusable(false);
@@ -3308,7 +3309,7 @@ public class MainFrame extends JFrame {
 
                         //======== jpMoveLayer ========
                         {
-                            jpMoveLayer.setBorder(new TitledBorder(null, "Move Layer", TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
+                            jpMoveLayer.setBorder(new TitledBorder(null, bundle.getString("MainFrame.right-area.map-tools.move-layer.name"), TitledBorder.LEADING, TitledBorder.ABOVE_TOP));
                             jpMoveLayer.setLayout(new MigLayout(
                                 "insets 0,hidemode 3,gap 0 0",
                                 // columns
@@ -3331,28 +3332,28 @@ public class MainFrame extends JFrame {
                                     "[fill]"));
 
                                 //---- jbMoveMapUp ----
-                                jbMoveMapUp.setForeground(new Color(0, 153, 0));
+                                jbMoveMapUp.setForeground(new Color(0x009900));
                                 jbMoveMapUp.setFocusable(false);
                                 jbMoveMapUp.setIcon(new ImageIcon(getClass().getResource("/icons/upGreenIcon.png")));
                                 jbMoveMapUp.addActionListener(e -> jbMoveMapUpActionPerformed(e));
                                 jpDirectionalPad.add(jbMoveMapUp, "cell 1 0");
 
                                 //---- jbMoveMapLeft ----
-                                jbMoveMapLeft.setForeground(new Color(204, 0, 0));
+                                jbMoveMapLeft.setForeground(new Color(0xcc0000));
                                 jbMoveMapLeft.setFocusable(false);
                                 jbMoveMapLeft.setIcon(new ImageIcon(getClass().getResource("/icons/leftRedIcon.png")));
                                 jbMoveMapLeft.addActionListener(e -> jbMoveMapLeftActionPerformed(e));
                                 jpDirectionalPad.add(jbMoveMapLeft, "cell 0 1");
 
                                 //---- jbMoveMapRight ----
-                                jbMoveMapRight.setForeground(new Color(204, 0, 0));
+                                jbMoveMapRight.setForeground(new Color(0xcc0000));
                                 jbMoveMapRight.setFocusable(false);
                                 jbMoveMapRight.setIcon(new ImageIcon(getClass().getResource("/icons/rightRedIcon.png")));
                                 jbMoveMapRight.addActionListener(e -> jbMoveMapRightActionPerformed(e));
                                 jpDirectionalPad.add(jbMoveMapRight, "cell 2 1");
 
                                 //---- jbMoveMapDown ----
-                                jbMoveMapDown.setForeground(new Color(0, 153, 0));
+                                jbMoveMapDown.setForeground(new Color(0x009900));
                                 jbMoveMapDown.setToolTipText("");
                                 jbMoveMapDown.setFocusable(false);
                                 jbMoveMapDown.setIcon(new ImageIcon(getClass().getResource("/icons/downGreenIcon.png")));
@@ -3385,23 +3386,23 @@ public class MainFrame extends JFrame {
 
                         //---- jcbRealTimePolyGrouping ----
                         jcbRealTimePolyGrouping.setSelected(true);
-                        jcbRealTimePolyGrouping.setText("Real-Time Poly Grouping");
+                        jcbRealTimePolyGrouping.setText(bundle.getString("MainFrame.right-area.map-tools.real-time-poly-grouping.name"));
                         jcbRealTimePolyGrouping.addActionListener(e -> jcbRealTimePolyGroupingActionPerformed(e));
                         jPanelMapTools.add(jcbRealTimePolyGrouping, "cell 0 3");
 
                         //---- jcbViewAreas ----
                         jcbViewAreas.setSelected(true);
-                        jcbViewAreas.setText("View Area Contours");
+                        jcbViewAreas.setText(bundle.getString("MainFrame.right-area.map-tools.view-area-contours.name"));
                         jcbViewAreas.addActionListener(e -> jcbViewAreasActionPerformed(e));
                         jPanelMapTools.add(jcbViewAreas, "cell 0 4");
 
                         //---- jcbViewGridsBorders ----
                         jcbViewGridsBorders.setSelected(true);
-                        jcbViewGridsBorders.setText("View Grids Borders");
+                        jcbViewGridsBorders.setText(bundle.getString("MainFrame.right-area.map-tools.view-grids-borders.name"));
                         jcbViewGridsBorders.addActionListener(e -> jcbViewGridsBordersActionPerformed(e));
                         jPanelMapTools.add(jcbViewGridsBorders, "cell 0 5");
                     }
-                    jtRightPanel.addTab("Map Tools", jPanelMapTools);
+                    jtRightPanel.addTab(bundle.getString("MainFrame.right-area.map-tools.tab-name"), jPanelMapTools);
                 }
                 jpRightPanel.add(jtRightPanel);
             }
@@ -3414,12 +3415,11 @@ public class MainFrame extends JFrame {
             jpStatusBar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 8));
 
             //---- jLabel4 ----
-            jLabel4.setFont(new Font("Tahoma", Font.BOLD, 11));
-            jLabel4.setText("Selected Map Info:");
+            jLabel4.setText(bundle.getString("MainFrame.bottom-bar.selected-map-info.name"));
             jpStatusBar.add(jLabel4);
 
             //---- jLabel6 ----
-            jLabel6.setText("Coordinates:");
+            jLabel6.setText(bundle.getString("MainFrame.bottom-bar.coordinates.name"));
             jpStatusBar.add(jLabel6);
 
             //---- jlMapCoords ----
@@ -3428,7 +3428,7 @@ public class MainFrame extends JFrame {
             jpStatusBar.add(jlMapCoords);
 
             //---- jLabel2 ----
-            jLabel2.setText("# Polygons:");
+            jLabel2.setText(bundle.getString("MainFrame.bottom-bar.polygons.name"));
             jpStatusBar.add(jLabel2);
 
             //---- jlNumPolygons ----
@@ -3438,7 +3438,7 @@ public class MainFrame extends JFrame {
             jpStatusBar.add(jlNumPolygons);
 
             //---- jLabel5 ----
-            jLabel5.setText("# Materials:");
+            jLabel5.setText(bundle.getString("MainFrame.bottom-bar.materials.name"));
             jpStatusBar.add(jLabel5);
 
             //---- jlNumMaterials ----
@@ -3452,13 +3452,13 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(getOwner());
 
         //---- buttonGroupViewMode ----
-        ButtonGroup buttonGroupViewMode = new ButtonGroup();
+        var buttonGroupViewMode = new ButtonGroup();
         buttonGroupViewMode.add(jtbView3D);
         buttonGroupViewMode.add(jtbViewOrtho);
         buttonGroupViewMode.add(jtbViewHeight);
 
         //---- buttonGroupDrawMode ----
-        ButtonGroup buttonGroupDrawMode = new ButtonGroup();
+        var buttonGroupDrawMode = new ButtonGroup();
         buttonGroupDrawMode.add(jtbModeEdit);
         buttonGroupDrawMode.add(jtbModeClear);
         buttonGroupDrawMode.add(jtbModeSmartPaint);
@@ -3543,13 +3543,11 @@ public class MainFrame extends JFrame {
     private JLabel jlGameName;
     private JSplitPane jspMainWindow;
     private JPanel jpMainWindow;
-    private JPanel                 jpLayer;
-    @Getter
+    private JPanel jpLayer;
     private ThumbnailLayerSelector thumbnailLayerSelector;
-    private JPanel     mapDisplayContainer;
-    @Getter
+    private JPanel mapDisplayContainer;
     private MapDisplay mapDisplay;
-    private JPanel     jpZ;
+    private JPanel jpZ;
     private HeightSelector heightSelector;
     private JPanel jpTileList;
     private JScrollPane jscTileList;
@@ -3559,26 +3557,17 @@ public class MainFrame extends JFrame {
     private SmartGridDisplay smartGridDisplay;
     private JPanel jpButtons;
     private JPanel jpView;
-    private JToolBar      jtView;
-    @Getter
+    private JToolBar jtView;
     private JToggleButton jtbView3D;
-    @Getter
     private JToggleButton jtbViewOrtho;
-    @Getter
     private JToggleButton jtbViewHeight;
-    @Getter
     private JToggleButton jtbViewGrid;
-    @Getter
     private JToggleButton jtbViewWireframe;
-    private JPanel        jpTools;
-    private JToolBar      jtTools;
-    @Getter
+    private JPanel jpTools;
+    private JToolBar jtTools;
     private JToggleButton jtbModeEdit;
-    @Getter
     private JToggleButton jtbModeClear;
-    @Getter
     private JToggleButton jtbModeSmartPaint;
-    @Getter
     private JToggleButton jtbModeInvSmartPaint;
     private JToggleButton jtbModeMove;
     private JToggleButton jtbModeZoom;
@@ -3588,21 +3577,17 @@ public class MainFrame extends JFrame {
     private JPanel jPanelMatrixInfo;
     private JSplitPane jspMatrix;
     private JPanel jpAreaTools;
-    private JScrollPane      jScrollPaneMapMatrix;
-    @Getter
+    private JScrollPane jScrollPaneMapMatrix;
     private MapMatrixDisplay mapMatrixDisplay;
-    private JPanel           jpArea;
-    private JLabel   jlArea;
-    @Getter
+    private JPanel jpArea;
+    private JLabel jlArea;
     private JSpinner jsSelectedArea;
-    @Getter
-    private JPanel   jPanelAreaColor;
-    private JPanel   jpMoveMap;
+    private JPanel jPanelAreaColor;
+    private JPanel jpMoveMap;
     private MoveMapPanel moveMapPanel;
-    private JPanel      jpTileSelected;
-    @Getter
+    private JPanel jpTileSelected;
     private TileDisplay tileDisplay;
-    private JPanel      jPanelMapTools;
+    private JPanel jPanelMapTools;
     private JPanel jpHeightMapAlpha;
     private JSlider jsHeightMapAlpha;
     private JPanel jpBackImageAlpha;
@@ -3617,7 +3602,6 @@ public class MainFrame extends JFrame {
     private JButton jbMoveMapUpZ;
     private JButton jbMoveMapDownZ;
     private JCheckBox jcbRealTimePolyGrouping;
-    @Getter
     private JCheckBox jcbViewAreas;
     private JCheckBox jcbViewGridsBorders;
     private JPanel jpStatusBar;

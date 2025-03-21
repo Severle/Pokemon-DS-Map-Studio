@@ -3,8 +3,7 @@ package editor.game.patches;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcIO;
-import utils.BinaryArrayReader;
-import utils.BinaryReader;
+import utils.io.BinaryReader;
 import utils.Utils;
 
 import java.io.File;

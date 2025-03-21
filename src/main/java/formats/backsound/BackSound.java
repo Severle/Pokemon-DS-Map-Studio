@@ -2,8 +2,8 @@
 package formats.backsound;
 
 import lombok.Getter;
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 import utils.exceptions.WrongFormatException;
 
 import java.io.IOException;

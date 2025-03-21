@@ -1,8 +1,8 @@
 
 package editor.buildingeditor2.areadata;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 
 /**
  * @author Trifindo

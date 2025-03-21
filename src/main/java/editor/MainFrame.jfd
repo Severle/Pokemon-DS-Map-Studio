@@ -1,6 +1,9 @@
-JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+JFDML JFormDesigner: "9.0.0.0.352" Java: "21.0.6" encoding: "UTF-8"
 
 new FormModel {
+	"i18n.bundleName": "appStudio"
+	"i18n.keyPrefix": "MainFrame"
+	"i18n.bundlePackage": "lang"
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
@@ -10,7 +13,7 @@ new FormModel {
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 0
-			"title": "Pokemon DS Map Studio"
+			"title": new FormMessage( null, "MainFrame.title" )
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "formWindowClosing", true ) )
 			add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 				name: "jtMainToolbar"
@@ -23,7 +26,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbNewMap"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/newMapIcon.png" )
-					"toolTipText": "New Map"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.new-map.name" )
 					"borderPainted": false
 					"focusable": false
 					"horizontalTextPosition": 0
@@ -37,7 +40,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbOpenMap"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/openMapIcon.png" )
-					"toolTipText": "Open Map"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.open-map.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -50,7 +53,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbSaveMap"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/saveMapIcon.png" )
-					"toolTipText": "Save Map"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.save-map.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -63,7 +66,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbAddMaps"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/importMapIcon.png" )
-					"toolTipText": "Add Maps"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.add-maps.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -79,7 +82,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbUndo"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/undoIcon.png" )
-					"toolTipText": "Undo (Ctrl+Z)"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.edit.undo.name" )
 					"disabledIcon": new com.jformdesigner.model.SwingIcon( 0, "/icons/undoDisabledIcon.png" )
 					"enabled": false
 					"focusable": false
@@ -94,7 +97,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbRedo"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/redoIcon.png" )
-					"toolTipText": "Redo (Ctrl+Y)"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.edit.redo.name" )
 					"disabledIcon": new com.jformdesigner.model.SwingIcon( 0, "/icons/redoDisabledIcon.png" )
 					"enabled": false
 					"focusable": false
@@ -112,7 +115,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbExportObj"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/exportObjIcon.png" )
-					"toolTipText": "Export Map as OBJ with Textures"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.export-map-obj.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -125,7 +128,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbExportImd"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/exportImdIcon.png" )
-					"toolTipText": "Export Map as IMD"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.export-map-imd.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -138,7 +141,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbExportNsb"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/exportNsbIcon.png" )
-					"toolTipText": "Export Map as NSBMD"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.export-map-nsbmd.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": &Dimension0 new java.awt.Dimension( 38, 38 )
@@ -151,7 +154,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbExportBin"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/exportBinIcon.png" )
-					"toolTipText": "Export Map as BIN"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.export-map-bin.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": #Dimension0
@@ -167,7 +170,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbExportNsb1"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/exportBtxIcon.png" )
-					"toolTipText": "Export Map NSBTX"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.export-map-nsbtx.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -180,7 +183,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbExportNsb2"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/exportAreasIcon.png" )
-					"toolTipText": "Export Area NSBTX"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.file.export-area-nsbtx" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -196,7 +199,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbTilelistEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/tilelistEditorIcon.png" )
-					"toolTipText": "Tile List Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.tileset-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -209,7 +212,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbCollisionsEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/collisionEditorIcon.png" )
-					"toolTipText": "Collisions Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.collision-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -222,7 +225,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbBdhcEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/bdhcEditorIcon.png" )
-					"toolTipText": "Terrain Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.terrain-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -235,7 +238,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbBdhcamEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/bdhcamEditorIcon.png" )
-					"toolTipText": "Bdhcam Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.tools.camera-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": &Dimension3 new java.awt.Dimension( 38, 38 )
@@ -248,7 +251,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbBacksoundEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/backsoundEditorIcon.png" )
-					"toolTipText": "Backsound Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.back-sound-editor" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": #Dimension3
@@ -261,7 +264,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbNsbtxEditor1"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/nsbtxEditorIcon.png" )
-					"toolTipText": "NSBTX Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.nsbts-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -274,7 +277,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbBuildingEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/buildingEditorIcon.png" )
-					"toolTipText": "Building Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.building-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -287,7 +290,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbAnimationEditor"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/animationEditorIcon.png" )
-					"toolTipText": "Animation Editor"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.tools.animation-editor.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -306,12 +309,13 @@ new FormModel {
 					"minimumSize": new java.awt.Dimension( 38, 38 )
 					"preferredSize": new java.awt.Dimension( 38, 38 )
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/settingsIcon.png" )
+					"toolTipText": new FormMessage( null, "MainFrame.menu.edit.settings.name" )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jbSettingsActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbKeboardInfo"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/keyboardInfoIcon.png" )
-					"toolTipText": "Keyboard Shortcuts"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.help.keyboard-shortcut.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -324,7 +328,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "jbHelp"
 					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/helpIcon.png" )
-					"toolTipText": "Help"
+					"toolTipText": new FormMessage( null, "MainFrame.menu.help.name" )
 					"focusable": false
 					"horizontalTextPosition": 0
 					"maximumSize": new java.awt.Dimension( 38, 38 )
@@ -348,7 +352,7 @@ new FormModel {
 				name: "jpGameInfo"
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jlGame"
-					"text": "Map for: "
+					"text": new FormMessage( null, "MainFrame.toolbar.map-for.name" )
 				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jlGameIcon"
@@ -386,7 +390,7 @@ new FormModel {
 						"$verticalGroup": "par l {comp thumbnailLayerSelector:::p::p}"
 					} ) {
 						name: "jpLayer"
-						"border": new javax.swing.border.TitledBorder( null, "Layer", 2, 1, null, new java.awt.Color( 204, 102, 0, 255 ) )
+						"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.layer-area.title", 2, 1, null, new java.awt.Color( 204, 102, 0, 255 ) )
 						add( new FormContainer( "editor.layerselector.ThumbnailLayerSelector", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 							"$horizontalGroup": "par l {space :0:64:x}"
 							"$verticalGroup": "par l {space :0:512:x}"
@@ -431,7 +435,7 @@ new FormModel {
 						"$verticalGroup": "par l {seq l {comp jscTileList::::0:x, space :p:0:p}}"
 					} ) {
 						name: "jpTileList"
-						"border": new javax.swing.border.TitledBorder( null, "Tile List", 4, 1 )
+						"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.tile-list-area.title", 4, 1 )
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "jscTileList"
 							"horizontalScrollBarPolicy": 31
@@ -453,7 +457,7 @@ new FormModel {
 						"$verticalGroup": "par l {comp jscSmartDrawing::l::0:x}"
 					} ) {
 						name: "jpSmartDrawing"
-						"border": new javax.swing.border.TitledBorder( null, "Smart Drawing", 4, 1 )
+						"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.smart-drawing-area.title", 4, 1 )
 						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 							name: "jscSmartDrawing"
 							"horizontalScrollBarPolicy": 31
@@ -477,7 +481,7 @@ new FormModel {
 							"$verticalGroup": "par l {comp jtView:::p::p}"
 						} ) {
 							name: "jpView"
-							"border": new javax.swing.border.TitledBorder( null, "View", 2, 1 )
+							"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.view-area.title", 2, 1 )
 							add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 								name: "jtView"
 								"floatable": false
@@ -487,7 +491,7 @@ new FormModel {
 									name: "jtbView3D"
 									"$buttonGroup": new FormReference( "buttonGroupViewMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/3DViewIcon.png" )
-									"toolTipText": "3D View"
+									"toolTipText": new FormMessage( null, "MainFrame.view-area.3d-view.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -498,7 +502,7 @@ new FormModel {
 									"$buttonGroup": new FormReference( "buttonGroupViewMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/topViewIcon.png" )
 									"selected": true
-									"toolTipText": "Top View"
+									"toolTipText": new FormMessage( null, "MainFrame.view-area.top-view.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -508,7 +512,7 @@ new FormModel {
 									name: "jtbViewHeight"
 									"$buttonGroup": new FormReference( "buttonGroupViewMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/heightViewIcon.png" )
-									"toolTipText": "Height View"
+									"toolTipText": new FormMessage( null, "MainFrame.view-area.height-view.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -521,7 +525,7 @@ new FormModel {
 									name: "jtbViewGrid"
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/gridViewIcon.png" )
 									"selected": true
-									"toolTipText": "Grid"
+									"toolTipText": new FormMessage( null, "MainFrame.view-area.grid.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -530,7 +534,7 @@ new FormModel {
 								add( new FormComponent( "javax.swing.JToggleButton" ) {
 									name: "jtbViewWireframe"
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/wireViewIcon.png" )
-									"toolTipText": "Wireframe"
+									"toolTipText": new FormMessage( null, "MainFrame.view-area.wireframe.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -543,7 +547,7 @@ new FormModel {
 							"$verticalGroup": "par l {comp jtTools::l::0:x}"
 						} ) {
 							name: "jpTools"
-							"border": new javax.swing.border.TitledBorder( null, "Tools", 2, 1 )
+							"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.tools-area.title", 2, 1 )
 							add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 								name: "jtTools"
 								"floatable": false
@@ -554,7 +558,7 @@ new FormModel {
 									"$buttonGroup": new FormReference( "buttonGroupDrawMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/CursorIcon.png" )
 									"selected": true
-									"toolTipText": "Select Mode"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.select-mode.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -564,7 +568,7 @@ new FormModel {
 									name: "jtbModeClear"
 									"$buttonGroup": new FormReference( "buttonGroupDrawMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ClearTileIcon.png" )
-									"toolTipText": "Clear Mode"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.clear-mode.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -574,7 +578,7 @@ new FormModel {
 									name: "jtbModeSmartPaint"
 									"$buttonGroup": new FormReference( "buttonGroupDrawMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/SmartGridIcon.png" )
-									"toolTipText": "Smart Drawing"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.smart-drawing.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -584,7 +588,7 @@ new FormModel {
 									name: "jtbModeInvSmartPaint"
 									"$buttonGroup": new FormReference( "buttonGroupDrawMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/SmartGridInvertedIcon.png" )
-									"toolTipText": "Smart Drawing Inverted"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.smart-drawing-inverted.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -597,7 +601,7 @@ new FormModel {
 									name: "jtbModeMove"
 									"$buttonGroup": new FormReference( "buttonGroupDrawMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/MoveIcon.png" )
-									"toolTipText": "Move Camera"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.move-camera.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -607,7 +611,7 @@ new FormModel {
 									name: "jtbModeZoom"
 									"$buttonGroup": new FormReference( "buttonGroupDrawMode" )
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ZoomIcon.png" )
-									"toolTipText": "Zoom Camera"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.zoom-camera.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -616,7 +620,7 @@ new FormModel {
 								add( new FormComponent( "javax.swing.JButton" ) {
 									name: "jbFitCameraToMap"
 									"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/fitMapIcon.png" )
-									"toolTipText": "Fit Camera in Selected Map"
+									"toolTipText": new FormMessage( null, "MainFrame.tools-area.fit-camera-in-selected-map.name" )
 									"focusable": false
 									"horizontalTextPosition": 0
 									"verticalTextPosition": 3
@@ -673,7 +677,7 @@ new FormModel {
 										name: "jpArea"
 										add( new FormComponent( "javax.swing.JLabel" ) {
 											name: "jlArea"
-											"text": "Area:"
+											"text": new FormMessage( null, "MainFrame.right-area.matrix.area.name" )
 										}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 										add( new FormComponent( "javax.swing.JSpinner" ) {
 											name: "jsSelectedArea"
@@ -703,7 +707,7 @@ new FormModel {
 									} )
 									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 										name: "jpMoveMap"
-										"border": new javax.swing.border.TitledBorder( null, "Move Map", 4, 1 )
+										"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.right-area.matrix.move-map.name", 4, 1 )
 										"maximumSize": new java.awt.Dimension( 110, 110 )
 										"minimumSize": sfield com.jformdesigner.model.FormObject NULL_VALUE
 										"preferredSize": sfield com.jformdesigner.model.FormObject NULL_VALUE
@@ -725,10 +729,10 @@ new FormModel {
 									"axis": 1
 								} ) {
 									name: "jpTileSelected"
-									"border": new javax.swing.border.TitledBorder( "Tile Selected:" )
+									"border": new javax.swing.border.TitledBorder( "i18nKey=MainFrame.right-area.matrix.tile-selected.name" )
 									add( new FormContainer( "editor.tileseteditor.TileDisplay", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 										"$horizontalGroup": "par l {space :0:0:x}"
-										"$verticalGroup": "par l {space :0:219:x}"
+										"$verticalGroup": "par l {space :0:237:x}"
 									} ) {
 										name: "tileDisplay"
 										"focusable": false
@@ -739,7 +743,7 @@ new FormModel {
 								} )
 							} )
 						}, new FormLayoutConstraints( null ) {
-							"title": "Matrix"
+							"title": new FormMessage( null, "MainFrame.right-area.matrix.tab-name" )
 						} )
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 							"$layoutConstraints": "insets 5,hidemode 3,gap 5 5"
@@ -748,11 +752,11 @@ new FormModel {
 						} ) {
 							name: "jPanelMapTools"
 							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-								"$horizontalGroup": "par l {comp jsHeightMapAlpha::::318:x}"
+								"$horizontalGroup": "par l {comp jsHeightMapAlpha::::268:x}"
 								"$verticalGroup": "par l {comp jsHeightMapAlpha:::p::p}"
 							} ) {
 								name: "jpHeightMapAlpha"
-								"border": new javax.swing.border.TitledBorder( null, "Height Map Alpha", 4, 1 )
+								"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.right-area.map-tools.height-map-alphaa.name", 4, 1 )
 								add( new FormComponent( "javax.swing.JSlider" ) {
 									name: "jsHeightMapAlpha"
 									"value": 99
@@ -767,7 +771,7 @@ new FormModel {
 								"$verticalGroup": "par l {comp jsBackImageAlpha::l:p::p}"
 							} ) {
 								name: "jpBackImageAlpha"
-								"border": new javax.swing.border.TitledBorder( null, "Back Image Alpha", 4, 1 )
+								"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.right-area.map-tools.back-image-alpha.name", 4, 1 )
 								add( new FormComponent( "javax.swing.JSlider" ) {
 									name: "jsBackImageAlpha"
 									"focusable": false
@@ -782,7 +786,7 @@ new FormModel {
 								"$rowConstraints": "[center]"
 							} ) {
 								name: "jpMoveLayer"
-								"border": new javax.swing.border.TitledBorder( null, "Move Layer", 4, 1 )
+								"border": new javax.swing.border.TitledBorder( null, "i18nKey=MainFrame.right-area.map-tools.move-layer.name", 4, 1 )
 								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 									"$layoutConstraints": "insets 0,hidemode 3,gap 3 3"
 									"$columnConstraints": "[fill][fill][fill]"
@@ -858,7 +862,7 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JCheckBox" ) {
 								name: "jcbRealTimePolyGrouping"
 								"selected": true
-								"text": "Real-Time Poly Grouping"
+								"text": new FormMessage( null, "MainFrame.right-area.map-tools.real-time-poly-grouping.name" )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jcbRealTimePolyGroupingActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 3"
@@ -866,7 +870,7 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JCheckBox" ) {
 								name: "jcbViewAreas"
 								"selected": true
-								"text": "View Area Contours"
+								"text": new FormMessage( null, "MainFrame.right-area.map-tools.view-area-contours.name" )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jcbViewAreasActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 4"
@@ -874,13 +878,13 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JCheckBox" ) {
 								name: "jcbViewGridsBorders"
 								"selected": true
-								"text": "View Grids Borders"
+								"text": new FormMessage( null, "MainFrame.right-area.map-tools.view-grids-borders.name" )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jcbViewGridsBordersActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 5"
 							} )
 						}, new FormLayoutConstraints( null ) {
-							"title": "Map Tools"
+							"title": new FormMessage( null, "MainFrame.right-area.map-tools.tab-name" )
 						} )
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
@@ -897,12 +901,11 @@ new FormModel {
 				name: "jpStatusBar"
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jLabel4"
-					"font": new java.awt.Font( "Tahoma", 1, 11 )
-					"text": "Selected Map Info:"
+					"text": new FormMessage( null, "MainFrame.bottom-bar.selected-map-info.name" )
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jLabel6"
-					"text": "Coordinates:"
+					"text": new FormMessage( null, "MainFrame.bottom-bar.coordinates.name" )
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jlMapCoords"
@@ -911,7 +914,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jLabel2"
-					"text": "# Polygons:"
+					"text": new FormMessage( null, "MainFrame.bottom-bar.polygons.name" )
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jlNumPolygons"
@@ -921,7 +924,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jLabel5"
-					"text": "# Materials:"
+					"text": new FormMessage( null, "MainFrame.bottom-bar.materials.name" )
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "jlNumMaterials"
@@ -936,12 +939,12 @@ new FormModel {
 				name: "jmMainMenu"
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "jmFile"
-					"text": "File"
+					"text": new FormMessage( null, "MainFrame.menu.file.name" )
 					"mnemonic": 70
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiNewMap"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/newMapIcon_s.png" )
-						"text": "New Map..."
+						"text": new FormMessage( null, "MainFrame.menu.file.new-map.name" )
 						"mnemonic": 78
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiNewMapActionPerformed", true ) )
 					} )
@@ -951,13 +954,13 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiOpenMap"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/openMapIcon_s.png" )
-						"text": "Open Map..."
+						"text": new FormMessage( null, "MainFrame.menu.file.open-map.name" )
 						"mnemonic": 79
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiOpenMapActionPerformed", true ) )
 					} )
 					add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 						name: "jmiOpenRecentMap"
-						"text": "Open Recent Map..."
+						"text": new FormMessage( null, "MainFrame.menu.file.open-recent-map.name" )
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/openRecentMapIcon_s.png" )
 						"mnemonic": 82
 						add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
@@ -965,7 +968,7 @@ new FormModel {
 						} )
 						add( new FormComponent( "javax.swing.JMenuItem" ) {
 							name: "jmiClearHistory"
-							"text": "Clear History"
+							"text": new FormMessage( null, "MainFrame.menu.file.open-recent-map.clear-history" )
 							"mnemonic": 72
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiClearHistoryActionPerformed", true ) )
 						} )
@@ -976,14 +979,14 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiSaveMap"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/saveMapIconSmall.png" )
-						"text": "Save Map..."
+						"text": new FormMessage( null, "MainFrame.menu.file.save-map.name" )
 						"mnemonic": 83
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiSaveMapActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiSaveMapAs"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/saveMapIconSmall.png" )
-						"text": "Save Map as..."
+						"text": new FormMessage( null, "MainFrame.menu.file.save-map-as.name" )
 						"mnemonic": 65
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiSaveMapAsActionPerformed", true ) )
 					} )
@@ -993,7 +996,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiAddMaps"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/AddMapIconSmall.png" )
-						"text": "Add Maps..."
+						"text": new FormMessage( null, "MainFrame.menu.file.add-maps.name" )
 						"mnemonic": 68
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiAddMapsActionPerformed", true ) )
 					} )
@@ -1003,25 +1006,25 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiExportObjWithText"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ExportIcon.png" )
-						"text": "Export Map as OBJ with textures..."
+						"text": new FormMessage( null, "MainFrame.menu.file.export-map-obj.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiExportObjWithTextActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiExportMapAsImd"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ExportIcon.png" )
-						"text": "Export Map as IMD..."
+						"text": new FormMessage( null, "MainFrame.menu.file.export-map-imd.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiExportMapAsImdActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiExportMapAsNsb"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ExportIcon.png" )
-						"text": "Export Map as NSBMD..."
+						"text": new FormMessage( null, "MainFrame.menu.file.export-map-nsbmd.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiExportMapAsNsbActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiExportMapBtx"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ExportIcon.png" )
-						"text": "Export Map's NSBTX..."
+						"text": new FormMessage( null, "MainFrame.menu.file.export-map-nsbtx.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiExportMapBtxActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
@@ -1030,37 +1033,37 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiImportTileset"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ImportTileIcon.png" )
-						"text": "Import Tileset..."
+						"text": new FormMessage( null, "MainFrame.menu.file.import-tileset.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiImportTilesetActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiExportTileset"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ExportIcon.png" )
-						"text": "Export Tileset..."
+						"text": new FormMessage( null, "MainFrame.menu.file.export-tileset.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiExportTilesetActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiExportAllTiles"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/ExportIcon.png" )
-						"text": "Export All Tiles as OBJ..."
+						"text": new FormMessage( null, "MainFrame.menu.file.export-all-tiles-obj.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiExportAllTilesActionPerformed", true ) )
 					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "jmEdit"
-					"text": "Edit"
+					"text": new FormMessage( null, "MainFrame.menu.edit.name" )
 					"mnemonic": 69
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiUndo"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/undoIconSmall.png" )
-						"text": "Undo"
+						"text": new FormMessage( null, "MainFrame.menu.edit.undo.name" )
 						"mnemonic": 85
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiUndoActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiRedo"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/redoIconSmall.png" )
-						"text": "Redo"
+						"text": new FormMessage( null, "MainFrame.menu.edit.redo.name" )
 						"mnemonic": 82
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiRedoActionPerformed", true ) )
 					} )
@@ -1070,13 +1073,13 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiClearLayer"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/RemoveIcon.png" )
-						"text": "Clear Layer"
+						"text": new FormMessage( null, "MainFrame.menu.edit.clear-layer.name" )
 						"mnemonic": 76
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiClearLayerActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiClearAllLayers"
-						"text": "Clear All Layers"
+						"text": new FormMessage( null, "MainFrame.menu.edit.clear-all-layer.name" )
 						"enabled": false
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiClearAllLayersActionPerformed", true ) )
 					} )
@@ -1086,28 +1089,28 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiCopyLayer"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/copyIcon.png" )
-						"text": "Copy Layer"
+						"text": new FormMessage( null, "MainFrame.menu.edit.copy-layer.name" )
 						"mnemonic": 67
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiCopyLayerActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiPasteLayer"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/pasteIcon.png" )
-						"text": "Paste Layer"
+						"text": new FormMessage( null, "MainFrame.menu.edit.paste-layer.name" )
 						"mnemonic": 80
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiPasteLayerActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiPasteLayerTiles"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/pasteTileIcon.png" )
-						"text": "Paste Layer Tiles"
+						"text": new FormMessage( null, "MainFrame.menu.edit.paste-layer-tiles.name" )
 						"mnemonic": 84
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiPasteLayerTilesActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiPasteLayerHeights"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/pasteHeightIcon.png" )
-						"text": "Paste Layer Heights"
+						"text": new FormMessage( null, "MainFrame.menu.edit.paste-layer-heights.name" )
 						"mnemonic": 72
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiPasteLayerHeightsActionPerformed", true ) )
 					} )
@@ -1116,7 +1119,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem1"
-						"text": "Settings"
+						"text": new FormMessage( null, "MainFrame.menu.edit.settings.name" )
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/settingsIconSmall.png" )
 						"mnemonic": 83
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem1ActionPerformed", true ) )
@@ -1124,23 +1127,23 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "jmView"
-					"text": "View"
+					"text": new FormMessage( null, "MainFrame.menu.view.name" )
 					"mnemonic": 86
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmi3dView"
-						"text": "3D View"
+						"text": new FormMessage( null, "MainFrame.menu.view.3d-view.name" )
 						"mnemonic": 51
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmi3dViewActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiTopView"
-						"text": "Top View"
+						"text": new FormMessage( null, "MainFrame.menu.view.top-view.name" )
 						"mnemonic": 84
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiTopViewActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiHeightView"
-						"text": "Height View"
+						"text": new FormMessage( null, "MainFrame.menu.view.height-view.name" )
 						"mnemonic": 72
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiHeightViewActionPerformed", true ) )
 					} )
@@ -1149,7 +1152,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiToggleGrid"
-						"text": "Toggle Grid"
+						"text": new FormMessage( null, "MainFrame.menu.view.toggle-grid.name" )
 						"mnemonic": 71
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiToggleGridActionPerformed", true ) )
 					} )
@@ -1158,75 +1161,75 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiLoadBackImg"
-						"text": "Open Background Image"
+						"text": new FormMessage( null, "MainFrame.menu.view.open-bg-img.name" )
 						"mnemonic": 79
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiLoadBackImgActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
 						name: "jcbUseBackImage"
-						"text": "Use Background Image"
+						"text": new FormMessage( null, "MainFrame.menu.view.use-bg-img.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jcbUseBackImageActionPerformed", true ) )
 					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "jmTools"
-					"text": "Tools"
+					"text": new FormMessage( null, "MainFrame.menu.tools.name" )
 					"mnemonic": 84
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiTilesetEditor"
-						"text": "Tileset Editor"
+						"text": new FormMessage( null, "MainFrame.menu.tools.tileset-editor.name" )
 						"mnemonic": 84
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiTilesetEditorActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiCollisionEditor"
-						"text": "Collision Editor"
+						"text": new FormMessage( null, "MainFrame.menu.tools.collision-editor.name" )
 						"mnemonic": 67
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiCollisionEditorActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiBdhcEditor"
-						"text": "Terrain Editor"
+						"text": new FormMessage( null, "MainFrame.menu.tools.terrain-editor.name" )
 						"mnemonic": 66
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiBdhcEditorActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiBDHCAM"
-						"text": "Camera Editor"
+						"text": new FormMessage( null, "MainFrame.tools.camera-editor.name" )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiBDHCAMActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiNsbtxEditor"
-						"text": "NSBTX Editor"
+						"text": new FormMessage( null, "MainFrame.menu.tools.nsbts-editor.name" )
 						"mnemonic": 78
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiNsbtxEditorActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jMenuItem1"
-						"text": "Building Editor"
+						"text": new FormMessage( null, "MainFrame.menu.tools.building-editor.name" )
 						"mnemonic": 85
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jMenuItem1ActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiAnimationEditor"
-						"text": "Animation Editor"
+						"text": new FormMessage( null, "MainFrame.menu.tools.animation-editor.name" )
 						"mnemonic": 65
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiAnimationEditorActionPerformed", true ) )
 					} )
 				} )
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "jmHelp"
-					"text": "Help"
+					"text": new FormMessage( null, "MainFrame.menu.help.name" )
 					"mnemonic": 72
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiKeyboardInfo"
-						"text": "Keyboard Shortcuts"
+						"text": new FormMessage( null, "MainFrame.menu.help.keyboard-shortcut.name" )
 						"mnemonic": 75
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiKeyboardInfoActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "jmiAbout"
-						"text": "About"
+						"text": new FormMessage( null, "MainFrame.menu.help.about.name" )
 						"mnemonic": 65
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jmiAboutActionPerformed", true ) )
 					} )

@@ -2,7 +2,7 @@
 package formats.collisions;
 
 import lombok.Getter;
-import utils.BinaryBufferWriter;
+import utils.io.BinaryBufferWriter;
 
 import java.io.File;
 import java.io.IOException;

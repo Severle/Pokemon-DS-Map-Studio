@@ -3,8 +3,8 @@ package editor.buildingeditor2.areabuild;
 
 import java.util.ArrayList;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 
 /**
  * @author Trifindo

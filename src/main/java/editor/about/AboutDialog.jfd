@@ -1,16 +1,19 @@
-JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+JFDML JFormDesigner: "9.0.0.0.352" Java: "21.0.6" encoding: "UTF-8"
 
 new FormModel {
+	"i18n.bundlePackage": "lang"
+	"i18n.bundleName": "appAbout"
+	"i18n.keyPrefix": "AboutDialog"
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 			"$layoutConstraints": "insets 5,hidemode 3,gap 5 5"
 			"$columnConstraints": "[fill][grow,fill]"
-			"$rowConstraints": "[fill][fill][fill][grow,fill][80][49]"
+			"$rowConstraints": "[fill][fill][][][fill][grow,fill][80][49]"
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 2
-			"title": "About"
+			"title": new FormMessage( null, "AboutDialog.this.title" )
 			"modal": true
 			"$sizePolicy": 1
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -29,20 +32,27 @@ new FormModel {
 				"value": "cell 0 1 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "j1"
+				"text": new FormMessage( null, "AboutDialog.cn-author" )
+				"horizontalAlignment": 0
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 3 2 1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "jlWebsite"
-				"text": "<html><body><a href=\"https://github.com/Trifindo/Pokemon-DS-Map-Studio\">Official website</a></body></html>"
+				"text": new FormMessage( null, "AboutDialog.official-website" )
 				"horizontalAlignment": 0
 				"cursor": new java.awt.Cursor( 12 )
 				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "jlWebsiteClick", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 2 2 1"
+				"value": "cell 0 4 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "klTrifindo"
 				"horizontalAlignment": 0
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/trifindo.gif" )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 3"
+				"value": "cell 0 5"
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "jScrollPane1"
@@ -51,13 +61,13 @@ new FormModel {
 					"editable": false
 					"columns": 20
 					"rows": 5
-					"text": "Pokemon DS Map Studio is a tool for creating NDS Pokémon maps, designed to be used alongside SDSME, DSPRE or similar.\n\nIt doesn't require 3D modeling knowledge. Rather, it provides a tilemap-like interface that is automatically converted to a 3D model. Please note that this tool DOES NOT allow modification of maps from official games."
+					"text": new FormMessage( null, "AboutDialog.jtDescription.text" )
 					"lineWrap": true
 					"font": new com.jformdesigner.model.SwingFont( "TextArea.font" )
 					"wrapStyleWord": true
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 3"
+				"value": "cell 1 5"
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "panel2"
@@ -65,12 +75,12 @@ new FormModel {
 					name: "jlCredits"
 					"foreground": new com.jformdesigner.model.SwingColor( "Label.foreground" )
 					"text": "<html>\n<table>\t\n\t<tr><th><p style=\"color:#F07903\";>JackHack96</p></th><th><p style=\"color:#333FFF\";>Mikelan98</p></th><th><p style=\"color:#898989\";>Jay</p></th><th><p style=\"color:#CE0D0D\";>BagBoy</p></th></tr>\n\t<tr><th><p style=\"color:#F00303\";>Driox</p></th><th><p style=\"color:#AD7F36\";>Jiboule</p></th><th><p style=\"color:#3B41A06\";>Brom</p></th><th><p style=\"color:#FF960B\";>Gonhex</p></th></tr>\n\t<tr><th><p style=\"color:#2F9B0F\";>Nextworld</p></th><th><p style=\"color:#603294\";>AdAstra</p></th><th><p style=\"color:#328D94\";>Monkeyboy0</p></th><th><p style=\"color:#B3AF2E\";>turtleisaac</p></th></tr>\n\t<tr><th><p style=\"color:#7AB006\";>René</p></th><th><p style=\"color:#7AB0F6\";>Silast</p></th> </tr>\n</table>\n</html>"
-					"border": new javax.swing.border.TitledBorder( "Credits" )
+					"border": new javax.swing.border.TitledBorder( "i18nKey=AboutDialog.credits" )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 4"
+				"value": "cell 1 6"
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 				name: "panel1"
@@ -80,7 +90,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jbOkClick", true ) )
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 5 2 1"
+				"value": "cell 0 7 2 1"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"size": new java.awt.Dimension( 635, 425 )

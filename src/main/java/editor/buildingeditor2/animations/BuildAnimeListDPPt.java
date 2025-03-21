@@ -7,8 +7,8 @@ import formats.narc2.NarcFolder;
 
 import java.util.ArrayList;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 
 /**
  * @author Trifindo

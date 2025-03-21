@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 
 /**
  * @author Trifindo

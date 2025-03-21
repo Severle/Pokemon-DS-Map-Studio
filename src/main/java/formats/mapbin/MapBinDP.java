@@ -3,7 +3,7 @@ package formats.mapbin;
 import editor.buildingeditor2.buildfile.BuildFile;
 import formats.bdhc.Bdhc;
 import formats.collisions.Collisions;
-import utils.BinaryWriter;
+import utils.io.BinaryWriter;
 import utils.Utils;
 
 import java.io.File;

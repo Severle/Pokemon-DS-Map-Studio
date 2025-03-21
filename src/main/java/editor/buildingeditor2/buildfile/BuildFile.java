@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 import utils.Utils;
 
 /**

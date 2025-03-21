@@ -1,8 +1,8 @@
 package formats.collisions.bw;
 
 import editor.game.Game;
-import utils.BinaryArrayReader;
-import utils.BinaryArrayWriter;
+import utils.io.BinaryArrayReader;
+import utils.io.BinaryArrayWriter;
 import utils.Utils;
 
 import java.io.File;

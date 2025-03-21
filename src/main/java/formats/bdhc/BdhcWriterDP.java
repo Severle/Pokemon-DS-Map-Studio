@@ -1,7 +1,7 @@
 
 package formats.bdhc;
 
-import utils.BinaryBufferWriter;
+import utils.io.BinaryBufferWriter;
 
 import java.awt.*;
 import java.io.File;

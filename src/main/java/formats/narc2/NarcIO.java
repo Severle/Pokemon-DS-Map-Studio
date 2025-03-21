@@ -2,8 +2,8 @@
 package formats.narc2;
 
 import lombok.extern.log4j.Log4j2;
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 import utils.Utils.MutableInt;
 import utils.Utils.MutableLong;
 import utils.exceptions.WrongFormatException;

@@ -1,52 +1,47 @@
 package editor.vertexcolors;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
 import editor.handler.MapEditorHandler;
 import editor.tileseteditor.TilesetEditorHandler;
+import lombok.Getter;
+import net.miginfocom.swing.MigLayout;
+import utils.Utils.MutableBoolean;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-
-import net.miginfocom.swing.*;
-
-import utils.Utils.MutableBoolean;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode", "unused", "FieldCanBeLocal"})
 public class VColorEditorDialog extends JDialog {
 
-    private MapEditorHandler handler;
+    @Getter
+    private MapEditorHandler     handler;
     private TilesetEditorHandler tsetHandler;
 
-    private MutableBoolean jtfRedEnabled = new MutableBoolean(true);
-    private MutableBoolean jtfGreenEnabled = new MutableBoolean(true);
-    private MutableBoolean jtfBlueEnabled = new MutableBoolean(true);
+    private final MutableBoolean jtfRedEnabled   = new MutableBoolean(true);
+    private final MutableBoolean jtfGreenEnabled = new MutableBoolean(true);
+    private final MutableBoolean jtfBlueEnabled  = new MutableBoolean(true);
 
-    private String allVertexModeDescription = "Use left click for painting vertices. "
+    private final String allVertexModeDescription = "Use left click for painting vertices. "
             + "Use mouse wheel for rotating the model. ";
-    private String perFaceModeDescription = "Use right click for selecting a face. "
+    private final String perFaceModeDescription   = "Use right click for selecting a face. "
             + "Use left click for painting the vertices of the selected face. "
             + "Use the mouse wheel for rotating the model. ";
-    private String grabColorModeDescription = "Use left click for selecting the vertex and taking its color. "
+    private final String grabColorModeDescription = "Use left click for selecting the vertex and taking its color. "
             + "Use the mouse wheel for rotating the model. ";
 
     public VColorEditorDialog(Window owner) {
@@ -216,7 +211,7 @@ public class VColorEditorDialog extends JDialog {
 
     private void addListenersToJTextField(JTextField jtf, MutableBoolean enabled) {
         ((AbstractDocument) jtf.getDocument()).setDocumentFilter(new DocumentFilter() {
-            Pattern regEx = Pattern.compile("\\d*");
+            final Pattern regEx = Pattern.compile("\\d*");
 
             @Override
             public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
@@ -259,11 +254,7 @@ public class VColorEditorDialog extends JDialog {
             }
         });
 
-        jtf.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                fixJTextFieldValue(jtf, enabled);
-            }
-        });
+        jtf.addActionListener(event -> fixJTextFieldValue(jtf, enabled));
 
         jtf.addFocusListener(new java.awt.event.FocusListener() {
             @Override
@@ -278,6 +269,7 @@ public class VColorEditorDialog extends JDialog {
         });
     }
 
+    @SuppressWarnings({"DataFlowIssue", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         vColorEditorDisplay1 = new VColorEditorDisplay();
@@ -682,5 +674,6 @@ public class VColorEditorDialog extends JDialog {
     private JPanel jPanel6;
     private JScrollPane jScrollPane1;
     private JTextArea jtaModeDescription;
+
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

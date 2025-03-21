@@ -1,8 +1,8 @@
 
 package formats.animationeditor;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 import utils.Utils;
 
 import java.io.IOException;

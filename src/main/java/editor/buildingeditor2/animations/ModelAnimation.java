@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import utils.BinaryReader;
+import utils.io.BinaryReader;
 import utils.Utils;
 
 /**

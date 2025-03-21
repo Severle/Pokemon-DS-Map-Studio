@@ -1,8 +1,8 @@
 package formats.bdhcam;
 
 import formats.bdhcam.camplate.*;
-import utils.BinaryArrayReader;
-import utils.BinaryReader;
+import utils.io.BinaryArrayReader;
+import utils.io.BinaryReader;
 
 import java.io.File;
 import java.nio.file.Files;

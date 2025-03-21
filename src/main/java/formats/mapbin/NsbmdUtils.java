@@ -1,7 +1,7 @@
 package formats.mapbin;
 
-import utils.BinaryReader;
-import utils.BinaryWriter;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class NsbmdUtils {

@@ -1,26 +1,23 @@
 package editor.vertexcolors;
 
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SameParameterValue", "FieldCanBeLocal", "DuplicatedCode"})
 public class ColorBrightnessPanel extends JPanel {
 
     private static final int width = 13;
     private static final int height = 101;
     private static final int circleSize = 6;
-    private static final int margin = 6;
-    private BufferedImage colorGradientImg;
+    private static final int           margin = 6;
+    private final        BufferedImage colorGradientImg;
 
     private final int currentX = width / 2;
     private int currentY = 0;
@@ -38,8 +35,8 @@ public class ColorBrightnessPanel extends JPanel {
 
         if (y < 0) {
             currentY = 0;
-        } else if (y > height) {
-            y = height;
+        } else //noinspection StatementWithEmptyBody
+            if (y > height) {
         } else {
             currentY = y;
         }
@@ -51,8 +48,8 @@ public class ColorBrightnessPanel extends JPanel {
 
         if (y < 0) {
             currentY = 0;
-        } else if (y > height) {
-            y = height;
+        } else //noinspection StatementWithEmptyBody
+            if (y > height) {
         } else {
             currentY = y;
         }
@@ -152,12 +149,12 @@ public class ColorBrightnessPanel extends JPanel {
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup()
-                        .addGap(0, 400, Short.MAX_VALUE)
+            layout.createParallelGroup()
+                .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup()
-                        .addGap(0, 300, Short.MAX_VALUE)
+            layout.createParallelGroup()
+                .addGap(0, 300, Short.MAX_VALUE)
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
