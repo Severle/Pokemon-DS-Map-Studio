@@ -1,6 +1,7 @@
 
 package formats.dae;
 
+import lombok.extern.log4j.Log4j2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,6 +17,7 @@ import java.io.IOException;
 /**
  * @author Trifindo
  */
+@Log4j2
 @SuppressWarnings("unused")
 public class DaeReader {
 
@@ -27,25 +29,23 @@ public class DaeReader {
         Document doc = dBuilder.parse(stocks);
         doc.getDocumentElement().normalize();
 
-        System.out.println("root of xml file " + doc.getDocumentElement().getNodeName());
+        log.debug("root of xml file {}", doc.getDocumentElement().getNodeName());
         NodeList nodes = doc.getElementsByTagName("library_images");
 
-        System.out.println("==========================");
-        System.out.println("length: " + nodes.getLength());
+        log.debug("==========================");
+        log.debug("length: {}", nodes.getLength());
 
         for (int i = 0; i < nodes.getLength(); i++) {
             for (int j = 0; j < nodes.item(i).getChildNodes().getLength(); j++) {
 
                 Node n = nodes.item(i).getChildNodes().item(j);
                 //n.getChildNodes()
-                System.out.println(i + " " + j + ": " + n.getNodeName() + " "
-                        + n.getLocalName() + " " + n.getNamespaceURI() + " "
-                        + n.getTextContent() + " " + n.getNodeValue());
+                log.debug("{} {}: {} {} {} {} {}", i, j, n.getNodeName(), n.getLocalName(), n.getNamespaceURI(), n.getTextContent(), n.getNodeValue());
             }
 
-            //System.out.println(nodes.item(i).getNodeName());
+            //log.debug(nodes.item(i).getNodeName());
         }
-        System.out.println("==========================");
+        log.debug("==========================");
 
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
@@ -55,7 +55,7 @@ public class DaeReader {
             }
         }
 
-        System.out.println("Loaded");
+        log.debug("Loaded");
 
     }
 

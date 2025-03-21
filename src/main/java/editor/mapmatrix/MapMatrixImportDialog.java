@@ -1,23 +1,21 @@
 package editor.mapmatrix;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
+import lombok.extern.log4j.Log4j2;
 
-import java.awt.Point;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class MapMatrixImportDialog extends JDialog {
 
     private MapEditorHandler handler;
@@ -55,9 +53,10 @@ public class MapMatrixImportDialog extends JDialog {
     private void jbImportActionPerformed(ActionEvent e) {
         if (isNewMapOverlapingWithMap()) {
             int returnValue = JOptionPane.showConfirmDialog(this,
-                    "The new map is overlapping with the current map.\n"
-                            + "The maps that are overlapping will be removed.\n"
-                            + "Do you want to continue?",
+                    """
+                            The new map is overlapping with the current map.
+                            The maps that are overlapping will be removed.
+                            Do you want to continue?""",
                     "Maps overlapping",
                     JOptionPane.YES_NO_OPTION);
             if (returnValue == JOptionPane.YES_OPTION) {
@@ -84,6 +83,7 @@ public class MapMatrixImportDialog extends JDialog {
         mapImportDisplay1.updateSize();
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private boolean isNewMapOverlapingWithMap() {
         Point pos = mapImportDisplay1.getNewMapPos();
         for (Point p : maps.keySet()) {
@@ -105,7 +105,7 @@ public class MapMatrixImportDialog extends JDialog {
             try {
                 handler.getMainFrame().updateViewAllMapData();
             } catch (Exception ex2) {
-                ex2.printStackTrace();
+                log.warn(ex2);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
@@ -115,6 +115,7 @@ public class MapMatrixImportDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

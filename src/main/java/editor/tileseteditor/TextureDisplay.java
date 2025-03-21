@@ -1,26 +1,24 @@
 package editor.tileseteditor;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
+import lombok.extern.log4j.Log4j2;
 import tileset.Tile;
 import tileset.Tileset;
 import utils.Utils;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection"})
+@Log4j2
 public class TextureDisplay extends JPanel {
 
     private TilesetEditorHandler tileHandler;
@@ -38,7 +36,7 @@ public class TextureDisplay extends JPanel {
         try {
             reloadIcon = Utils.loadImageAsResource("/icons/reloadIcon.png");
         } catch (IOException | IllegalArgumentException ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
@@ -95,8 +93,6 @@ public class TextureDisplay extends JPanel {
                 BufferedImage img = tile.getTileset().getTextureImg((tile.getTextureIDs().get(tileHandler.getTextureIdIndexSelected())));
                 int x = size / 2 - img.getWidth() / 2;
                 int y = size / 2 - img.getHeight() / 2;
-                //int x = getWidth() / 2 - img.getWidth() / 2;
-                //int y = getHeight() / 2 - img.getHeight() / 2;
 
                 g.drawImage(img, x, y, null);
             }

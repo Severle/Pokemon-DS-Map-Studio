@@ -4,15 +4,18 @@ package editor.buildingeditor2.areadata;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class AreaDataListHGSS {
 
-    private ArrayList<AreaDataHGSS> areaDatas;
+    private final ArrayList<AreaDataHGSS> areaDatas;
 
     public AreaDataListHGSS(Narc narc) throws Exception {
         final int numFiles = narc.root().getFiles().size();
@@ -30,10 +33,6 @@ public class AreaDataListHGSS {
         }
         root.setFiles(files);
         return new Narc(root);
-    }
-
-    public ArrayList<AreaDataHGSS> getAreaDatas() {
-        return areaDatas;
     }
 
 }

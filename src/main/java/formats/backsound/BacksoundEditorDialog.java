@@ -1,5 +1,7 @@
 package formats.backsound;
 
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import utils.exceptions.WrongFormatException;
 import editor.handler.MapEditorHandler;
 import utils.sound.SoundPlayer;
@@ -23,6 +25,9 @@ import java.io.IOException;
 /**
  * @author Trifindo, JackHack96
  */
+@Getter
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class BacksoundEditorDialog extends JDialog {
     private MapEditorHandler handler;
     private BacksoundHandler backsoundHandler;
@@ -79,7 +84,7 @@ public class BacksoundEditorDialog extends JDialog {
     }
 
     private void jbRemovePlateActionPerformed(ActionEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             backsoundHandler.removeSelectedSoundplate();
             updateView();
             repaint();
@@ -87,7 +92,7 @@ public class BacksoundEditorDialog extends JDialog {
     }
 
     private void jcbSoundTypeActionPerformed(ActionEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             backsoundHandler.getSelectedSoundplate().setSoundCode(jcbSoundType.getSelectedIndex());
             updateViewSoundType();
             backsoundDisplay.repaint();
@@ -95,7 +100,7 @@ public class BacksoundEditorDialog extends JDialog {
     }
 
     private void jsVolumeStateChanged(ChangeEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             backsoundHandler.getSelectedSoundplate().setVolume(jsVolume.getValue());
             updateViewVolume();
             backsoundDisplay.repaint();
@@ -103,7 +108,7 @@ public class BacksoundEditorDialog extends JDialog {
     }
 
     private void jbPlayPauseActionPerformed(ActionEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             if (soundPlayer.isAlive()) {
                 soundPlayer.stopPlayer();
             } else {
@@ -143,7 +148,7 @@ public class BacksoundEditorDialog extends JDialog {
         updateViewSoundType();
         updateViewVolume();
 
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             jsVolume.setEnabled(true);
             jcbSoundType.setEnabled(true);
             jbPlayPause.setEnabled(true);
@@ -155,7 +160,7 @@ public class BacksoundEditorDialog extends JDialog {
     }
 
     private void updateViewSoundType() {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             jcbSoundTypeEnabled = false;
             int index = Math.max(0, Math.min(backsoundHandler.getSelectedSoundplate().soundCode, 15));
             jcbSoundType.setSelectedIndex(index);
@@ -164,7 +169,7 @@ public class BacksoundEditorDialog extends JDialog {
     }
 
     private void updateViewVolume() {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             jsVolumeEnabled = false;
             int volume = Math.max(0, Math.min(backsoundHandler.getSelectedSoundplate().volume, 2));
             jsVolume.setValue(volume);
@@ -174,7 +179,7 @@ public class BacksoundEditorDialog extends JDialog {
 
     private void updateViewPlateNames() {
         plateListEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < backsoundHandler.getSoundplates().size(); i++) {
             String name = "Soundplate " + i;
             demoList.addElement(name);
@@ -234,6 +239,7 @@ public class BacksoundEditorDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode", "Convert2Diamond", "DataFlowIssue"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         panel2 = new JPanel();

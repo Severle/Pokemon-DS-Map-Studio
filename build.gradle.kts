@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
 }
 
+val mainClassName = "Main"
 val log4j = "2.24.3"
 
 dependencies {
@@ -37,7 +38,7 @@ dependencies {
 }
 
 application {
-    mainClass = "editor.MainFrame"
+    mainClass = mainClassName
 }
 
 tasks.compileJava {
@@ -53,7 +54,7 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
-        attributes("Main-Class" to "editor.MainFrame")
+        attributes("Main-Class" to mainClassName)
     }
 
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })

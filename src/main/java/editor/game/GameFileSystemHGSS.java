@@ -1,11 +1,13 @@
 
 package editor.game;
 
-import java.io.File;
+import lombok.Getter;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class GameFileSystemHGSS extends GameFileSystem {
 
     private final String buildModelPath;//
@@ -36,50 +38,6 @@ public class GameFileSystemHGSS extends GameFileSystem {
         buildModelRoomAnimeListPath = getPath(new String[]{"data", "a", "1", "0", "8"});
 
         mapAnimationsPath = getPath(new String[]{"data", "a", "1", "4", "0"});
-    }
-
-    public String getAreaDataPath() {
-        return areaDataPath;
-    }
-
-    public String getAreaBuildModelPath() {
-        return areaBuildModelPath;
-    }
-
-    public String getAreaBuildTilesetPath() {
-        return areaBuildTilesetPath;
-    }
-
-    public String getBuildModelPath() {
-        return buildModelPath;
-    }
-
-    public String getBuildModelMatshpPath() {
-        return buildModelMatshpPath;
-    }
-
-    public String getBuildModelAnimePath() {
-        return buildModelAnimePath;
-    }
-
-    public String getBuildModelAnimeListPath() {
-        return buildModelAnimeListPath;
-    }
-
-    public String getBuildModelRoomAnimeListPath() {
-        return buildModelRoomAnimeListPath;
-    }
-
-    public String getBuildModelRoomMatshpPath() {
-        return buildModelRoomMatshpPath;
-    }
-
-    public String getBuildModelRoomPath() {
-        return buildModelRoomPath;
-    }
-
-    public String getMapAnimationsPath() {
-        return mapAnimationsPath;
     }
 
 

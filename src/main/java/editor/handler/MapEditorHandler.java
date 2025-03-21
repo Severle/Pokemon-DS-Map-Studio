@@ -1,93 +1,121 @@
 
 package editor.handler;
 
-import editor.mapmatrix.MapMatrix;
-import editor.grid.MapGrid;
 import editor.MainFrame;
-import formats.backsound.BackSound;
-import formats.bdhc.Bdhc;
 import editor.bordermap.BorderMapsGrid;
 import editor.buildingeditor2.buildfile.BuildFile;
-import formats.bdhcam.Bdhcam;
-import formats.collisions.Collisions;
 import editor.game.Game;
+import editor.grid.MapGrid;
+import editor.mapmatrix.MapMatrix;
 import editor.smartdrawing.SmartGrid;
 import editor.state.MapLayerState;
 import editor.state.StateHandler;
-
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
-
+import formats.backsound.BackSound;
+import formats.bdhc.Bdhc;
+import formats.bdhcam.Bdhcam;
+import formats.collisions.Collisions;
+import lombok.Getter;
+import lombok.Setter;
 import tileset.Tile;
 import tileset.Tileset;
 import utils.Utils;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
+
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "ExtractMethodRecommender"})
 public class MapEditorHandler {
 
     //Version name
     public static final String versionName = "Pokemon DS Map Studio 2.2";
 
     //Main frame
-    private MainFrame mainFrame;
+    @Getter
+    private final MainFrame mainFrame;
 
     //Game
-    private Game game;
+    @Getter
+    private final Game game;
 
     //Working directory
+    @Setter
+    @Getter
     private String lastTilesetDirectoryUsed = null;
-    private String lastMapDirectoryUsed = null;
-    private String lastBdhcDirectoryUsed = null;
+    @Setter
+    @Getter
+    private String lastMapDirectoryUsed        = null;
+    @Setter
+    @Getter
+    private String lastBdhcDirectoryUsed       = null;
+    @Setter
+    @Getter
     private String lastCollisionsDirectoryUsed = null;
-    private String lastNsbtxDirectoryUsed = null;
-    private String lastTileObjDirectoryUsed = null;
+    @Setter
+    @Getter
+    private String lastNsbtxDirectoryUsed       = null;
+    @Setter
+    @Getter
+    private String lastTileObjDirectoryUsed     = null;
     private String lastBuildEditorDirectoryUsed = null;
 
     //Tileset
     private Tileset tset;
 
     //Tile selector
+    @Setter
     private int indexTileSelected = 0;
 
     //Height map
     public static final int minHeight = -15;
     public static final int maxHeight = 15;
-    public static final int numHeights = maxHeight - minHeight + 1;
-    private int[] heights = new int[numHeights];
-    private final Color[] heightColors = new Color[numHeights];
-    private int heightIndexSelected = 15;
-    private BufferedImage[] heightImages = new BufferedImage[numHeights];
+    public static final int     numHeights   = maxHeight - minHeight + 1;
+    @Getter
+    private final       int[]   heights      = new int[numHeights];
+    @SuppressWarnings("MismatchedReadAndWriteOfArray")
+    private final Color[]         heightColors        = new Color[numHeights];
+    @Getter
+    private       int             heightIndexSelected = 15;
+    private       BufferedImage[] heightImages        = new BufferedImage[numHeights];
 
     //Smart grid
+    @Getter
+    @Setter
     private int smartGridIndexSelected = 0;
 
     //Layers
     public boolean[] renderLayers = new boolean[MapGrid.numLayers];
 
     //Border Maps
-    private Tileset borderMapTileset;
+    private Tileset        borderMapTileset;
+    @Setter
+    @Getter
     private BorderMapsGrid borderMapsGrid = new BorderMapsGrid();
 
     //Map Data
+    @Getter
     private MapMatrix mapMatrix;
-    private Point mapSelected = new Point(0, 0);
-    private int activeLayer = 0;
-    private int[][] tileLayerCopy = null;
+    @Getter
+    private Point     mapSelected = new Point(0, 0);
+    private int     activeLayer     = 0;
+    @Getter
+    private int[][] tileLayerCopy   = null;
+    @Getter
     private int[][] heightLayerCopy = null;
 
     //Map State Hanlder
+    @Setter
+    @Getter
     private StateHandler mapStateHandler = new StateHandler();
-    private boolean layerChanged = false;
+    @Setter
+    @Getter
+    private boolean      layerChanged    = false;
 
+    @Setter
     private boolean realTimePostProcessing = true;
 
     public MapEditorHandler(MainFrame frame) {
@@ -101,9 +129,7 @@ public class MapEditorHandler {
         mapMatrix = new MapMatrix(this);
 
         //Active layer
-        for (int i = 0; i < renderLayers.length; i++) {
-            renderLayers[i] = true;
-        }
+        Arrays.fill(renderLayers, true);
 
     }
 
@@ -117,10 +143,6 @@ public class MapEditorHandler {
 
     public MapData getCurrentMap() {
         return mapMatrix.getMapAndCreate(mapSelected);
-    }
-
-    public MainFrame getMainFrame() {
-        return mainFrame;
     }
 
     public void incrementTileSelected(int delta) {
@@ -145,10 +167,6 @@ public class MapEditorHandler {
         return heightImages[maxHeight - value];
     }
 
-    public int[] getHeights() {
-        return heights;
-    }
-
     public int getNumHeights() {
         return numHeights;
     }
@@ -159,10 +177,6 @@ public class MapEditorHandler {
 
     public int getHeightSelected() {
         return heights[heightIndexSelected];
-    }
-
-    public int getHeightIndexSelected() {
-        return heightIndexSelected;
     }
 
     public void setHeightSelected(int value) {
@@ -189,10 +203,6 @@ public class MapEditorHandler {
 
     public Color getHeightColorByIndex(int index) {
         return heightColors[index];
-    }
-
-    public void setIndexTileSelected(int index) {
-        this.indexTileSelected = index;
     }
 
     public int getTileIndexSelected() {
@@ -228,56 +238,8 @@ public class MapEditorHandler {
         return tset.getSmartGridArray().get(index);
     }
 
-    public String getLastTilesetDirectoryUsed() {
-        return lastTilesetDirectoryUsed;
-    }
-
-    public String getLastMapDirectoryUsed() {
-        return lastMapDirectoryUsed;
-    }
-
-    public String getLastBdhcDirectoryUsed() {
-        return lastBdhcDirectoryUsed;
-    }
-
-    public String getLastCollisionsDirectoryUsed() {
-        return lastCollisionsDirectoryUsed;
-    }
-
-    public String getLastNsbtxDirectoryUsed() {
-        return lastNsbtxDirectoryUsed;
-    }
-
-    public String getLastTileObjDirectoryUsed() {
-        return lastTileObjDirectoryUsed;
-    }
-
     public String getLastBuildDirectoryUsed() {
         return lastBuildEditorDirectoryUsed;
-    }
-
-    public void setLastTilesetDirectoryUsed(String lastDirectoryUsed) {
-        this.lastTilesetDirectoryUsed = lastDirectoryUsed;
-    }
-
-    public void setLastMapDirectoryUsed(String lastDirectoryUsed) {
-        this.lastMapDirectoryUsed = lastDirectoryUsed;
-    }
-
-    public void setLastBdhcDirectoryUsed(String lastDirectoryUsed) {
-        this.lastBdhcDirectoryUsed = lastDirectoryUsed;
-    }
-
-    public void setLastCollisionsDirectoryUsed(String lastDirectoryUsed) {
-        this.lastCollisionsDirectoryUsed = lastDirectoryUsed;
-    }
-
-    public void setLastNsbtxDirectoryUsed(String lastDirectoryUsed) {
-        this.lastNsbtxDirectoryUsed = lastDirectoryUsed;
-    }
-
-    public void setLastTileObjDirectoryUsed(String lastDirectoryUsed) {
-        this.lastTileObjDirectoryUsed = lastDirectoryUsed;
     }
 
     public void setLastBuildDirectoryUsed(String lastDirectoryUsed) {
@@ -294,17 +256,15 @@ public class MapEditorHandler {
 
     public void setActiveTileLayer(int index) {
         MapGrid grid = getCurrentMap().getGrid();
-        if (index >= 0 && index < grid.numLayers) {
+        if (index >= 0 && index < MapGrid.numLayers) {
             activeLayer = index;
         }
     }
 
     public void setOnlyActiveTileLayer(int index) {
         MapGrid grid = getCurrentMap().getGrid();
-        if (index >= 0 && index < grid.numLayers) {
-            for (int i = 0; i < grid.numLayers; i++) {
-                renderLayers[i] = false;
-            }
+        if (index >= 0 && index < MapGrid.numLayers) {
+            Arrays.fill(renderLayers, false);
             renderLayers[index] = true;
             activeLayer = index;
             mainFrame.repaintMapDisplay();
@@ -313,7 +273,7 @@ public class MapEditorHandler {
 
     public boolean isLayerTheOnlyActive(int index) {
         MapGrid grid = getCurrentMap().getGrid();
-        for(int i = 0; i < grid.numLayers; i++){
+        for(int i = 0; i < MapGrid.numLayers; i++){
             if(renderLayers[i] && i != index){
                 return false;
             }
@@ -323,9 +283,7 @@ public class MapEditorHandler {
 
     public void setLayersEnabled(boolean enabled) {
         MapGrid grid = getCurrentMap().getGrid();
-        for(int i = 0; i< grid.numLayers; i++){
-            renderLayers[i] = enabled;
-        }
+        Arrays.fill(renderLayers, enabled);
     }
 
     public int[][] getTileLayer(int index) {
@@ -342,14 +300,6 @@ public class MapEditorHandler {
 
     public SmartGrid getSmartGridSelected() {
         return tset.getSmartGridArray().get(smartGridIndexSelected);
-    }
-
-    public void setSmartGridIndexSelected(int index) {
-        smartGridIndexSelected = index;
-    }
-
-    public int getSmartGridIndexSelected() {
-        return smartGridIndexSelected;
     }
 
     public void invertLayerState(int index) {
@@ -417,14 +367,6 @@ public class MapEditorHandler {
         return game.gameSelected;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-    public StateHandler getMapStateHandler() {
-        return mapStateHandler;
-    }
-
     public void addMapState(MapLayerState state) {
         mapStateHandler.addState(state);
         mainFrame.getUndoButton().setEnabled(true);
@@ -433,18 +375,6 @@ public class MapEditorHandler {
 
     public void resetMapStateHandler() {
         mapStateHandler = new StateHandler();
-    }
-
-    public void setMapStateHandler(StateHandler mapStateHandler) {
-        this.mapStateHandler = mapStateHandler;
-    }
-
-    public boolean isLayerChanged() {
-        return layerChanged;
-    }
-
-    public void setLayerChanged(boolean layerChanged) {
-        this.layerChanged = layerChanged;
     }
 
     public void moveSelectedSmartGridUp() {
@@ -464,7 +394,7 @@ public class MapEditorHandler {
     public boolean mapHasVertexColors() {
         //Get indices of tiles used in map
         MapGrid grid = getGrid();
-        TreeSet<Integer> tileIndicesInGrid = new TreeSet();
+        TreeSet<Integer> tileIndicesInGrid = new TreeSet<>();
         for (int i = 0; i < grid.tileLayers.length; i++) {
             for (int j = 0; j < grid.tileLayers[i].length; j++) {
                 for (int k = 0; k < grid.tileLayers[i][j].length; k++) {
@@ -477,12 +407,10 @@ public class MapEditorHandler {
         }
 
         //Get indices of materials used in tiles
-        TreeSet<Integer> materialIndicesInGrid = new TreeSet();
+        TreeSet<Integer> materialIndicesInGrid = new TreeSet<>();
         for (Integer tileIndex : tileIndicesInGrid) {
             Tile tile = tset.get(tileIndex);
-            for (Integer materialIndex : tile.getTextureIDs()) {
-                materialIndicesInGrid.add(materialIndex);
-            }
+            materialIndicesInGrid.addAll(tile.getTextureIDs());
         }
 
         //Check if materials in map use vertex colors
@@ -517,14 +445,6 @@ public class MapEditorHandler {
         return borderMapTileset;
     }
 
-    public BorderMapsGrid getBorderMapsGrid() {
-        return borderMapsGrid;
-    }
-
-    public void setBorderMapsGrid(BorderMapsGrid borderMapsGrid) {
-        this.borderMapsGrid = borderMapsGrid;
-    }
-
     public String getVersionName() {
         return versionName;
     }
@@ -539,10 +459,6 @@ public class MapEditorHandler {
 
     public void setBuildings(BuildFile buildings) {
         this.getCurrentMap().setBuildings(buildings);
-    }
-
-    public MapMatrix getMapMatrix() {
-        return mapMatrix;
     }
 
     public void setMapSelected(Point mapCoords, boolean updateScrollbars) {
@@ -573,15 +489,11 @@ public class MapEditorHandler {
     }
 
     public boolean mapExists(Point mapCoords) {
-        return mapMatrix.getMatrix().keySet().contains(mapCoords);
+        return mapMatrix.getMatrix().containsKey(mapCoords);
     }
 
-    public boolean mapSelectedExists() {
-        return mapExists(mapSelected);
-    }
-
-    public Point getMapSelected() {
-        return mapSelected;
+    public boolean mapSelectedNotExists() {
+        return !mapExists(mapSelected);
     }
 
     public MapData getMapData() {
@@ -595,10 +507,6 @@ public class MapEditorHandler {
 
     public boolean useRealTimePostProcessing() {
         return realTimePostProcessing;
-    }
-
-    public void setRealTimePostProcessing(boolean enabled) {
-        this.realTimePostProcessing = enabled;
     }
 
     public void clearLayer(int index) {
@@ -678,14 +586,6 @@ public class MapEditorHandler {
         if (heightLayerCopy != null) {
             getGrid().heightLayers[index] = getGrid().cloneLayer(heightLayerCopy);
         }
-    }
-
-    public int[][] getTileLayerCopy() {
-        return tileLayerCopy;
-    }
-
-    public int[][] getHeightLayerCopy() {
-        return heightLayerCopy;
     }
 
     public void clearCopyLayer() {

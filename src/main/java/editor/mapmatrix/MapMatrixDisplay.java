@@ -1,33 +1,21 @@
 package editor.mapmatrix;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
-import editor.grid.MapGrid;
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class MapMatrixDisplay extends JPanel {
 
     private MapEditorHandler handler;
@@ -37,7 +25,8 @@ public class MapMatrixDisplay extends JPanel {
     private Dimension matrixSize;
     private Point matrixMin = new Point();
 
-    private float scale = 0.5f;
+    @Getter
+    private final float scale = 0.5f;
 
     public MapMatrixDisplay() {
         initComponents();
@@ -46,8 +35,6 @@ public class MapMatrixDisplay extends JPanel {
     private void formMousePressed(MouseEvent evt) {
         int x = evt.getX();
         int y = evt.getY();
-        //int mapX = Math.floorDiv((int) Math.floor(x * scale), MapData.mapThumbnailSize);
-        //int mapY = Math.floorDiv((int) Math.floor(y * scale), MapData.mapThumbnailSize);
         int mapX = Math.floorDiv(x, (int) (MapData.mapThumbnailSize * scale));
         int mapY = Math.floorDiv(y, (int) (MapData.mapThumbnailSize * scale));
         Point mapCoords = new Point(mapX + matrixMin.x, mapY + matrixMin.y);
@@ -60,13 +47,10 @@ public class MapMatrixDisplay extends JPanel {
 
                 if (!mapCoords.equals(handler.getMapSelected())) {
                     handler.setMapSelected(mapCoords, false);
-                    handler.getMainFrame().getMapDisplay().setCameraAtMap(mapCoords);
 
-                    handler.getMainFrame().getMapDisplay().repaint();
-                } else {
-                    handler.getMainFrame().getMapDisplay().setCameraAtMap(mapCoords);
-                    handler.getMainFrame().getMapDisplay().repaint();
                 }
+                handler.getMainFrame().getMapDisplay().setCameraAtMap(mapCoords);
+                handler.getMainFrame().getMapDisplay().repaint();
 
                 repaint();
             }
@@ -81,14 +65,12 @@ public class MapMatrixDisplay extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        //g.setColor(Color.darkGray);
-        //g.fillRect(0, 0, getWidth(), getHeight());
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform transform = g2d.getTransform();
 
         g2d.setRenderingHints(new RenderingHints(
                 RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR));//RenderingHints.VALUE_INTERPOLATION_BILINEAR));
+                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR));
 
         g2d.scale(scale, scale);
 
@@ -137,10 +119,6 @@ public class MapMatrixDisplay extends JPanel {
                 (int) (matrixSize.width * MapData.mapThumbnailSize * scale),
                 (int) (matrixSize.height * MapData.mapThumbnailSize * scale)));
         //this.revalidate();
-    }
-
-    public float getScale() {
-        return scale;
     }
 
     private void initComponents() {

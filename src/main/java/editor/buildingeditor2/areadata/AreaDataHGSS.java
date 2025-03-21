@@ -1,24 +1,18 @@
 
 package editor.buildingeditor2.areadata;
 
+import lombok.Getter;
+import lombok.Setter;
 import utils.io.BinaryReader;
 import utils.io.BinaryWriter;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
+@Setter
+@Getter
 public class AreaDataHGSS {
-
-    /*
-    public static final Map<Integer, String> namesDynamicTexType = new HashMap<Integer, String>() {
-        {
-            put((Integer) 65535, "No Dynamic Textures");
-            put((Integer) 0, "Outdoor Dynamic Textures");
-            put((Integer) 1, "Other Dynamic Textures");
-        }
-    };
-    public static final Map<String, Integer> namesDynamicTexTypeSwap = namesDynamicTexType.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-    */
 
     private int buildingTilesetID;
     private int mapTilesetID;
@@ -30,8 +24,8 @@ public class AreaDataHGSS {
         buildingTilesetID = (int) BinaryReader.readUInt16(data, 0);
         mapTilesetID = (int) BinaryReader.readUInt16(data, 2);
         dynamicTexType = (int) BinaryReader.readUInt16(data, 4);
-        areaType = (int) BinaryReader.readUInt8(data, 6);
-        lightType = (int) BinaryReader.readUInt8(data, 7);
+        areaType = BinaryReader.readUInt8(data, 6);
+        lightType = BinaryReader.readUInt8(data, 7);
 
     }
 
@@ -53,52 +47,12 @@ public class AreaDataHGSS {
         return data;
     }
 
-    public int getBuildingTilesetID() {
-        return buildingTilesetID;
-    }
-
-    public void setBuildingTilesetID(int buildingTilesetID) {
-        this.buildingTilesetID = buildingTilesetID;
-    }
-
-    public int getMapTilesetID() {
-        return mapTilesetID;
-    }
-
-    public void setMapTilesetID(int mapTilesetID) {
-        this.mapTilesetID = mapTilesetID;
-    }
-
     public int getUnknown1() {
         return dynamicTexType;
     }
 
     public void setUnknown1(int unknown1) {
         this.dynamicTexType = unknown1;
-    }
-
-    public int getAreaType() {
-        return areaType;
-    }
-
-    public void setAreaType(int unknown2) {
-        this.areaType = unknown2;
-    }
-
-    public int getDynamicTexType() {
-        return dynamicTexType;
-    }
-
-    public int getLightType() {
-        return lightType;
-    }
-
-    public void setDynamicTexType(int dynamicTexType) {
-        this.dynamicTexType = dynamicTexType;
-    }
-
-    public void setLightType(int lightType) {
-        this.lightType = lightType;
     }
 
 }

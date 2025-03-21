@@ -4,6 +4,7 @@ package editor.buildingeditor2.tileset;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class BuildTilesetList {
 
-    private ArrayList<BuildTileset> tilesets;
+    private final ArrayList<BuildTileset> tilesets;
 
     public BuildTilesetList(Narc narc) {
         final int numTilesets = narc.root().getFiles().size();
@@ -31,10 +34,6 @@ public class BuildTilesetList {
         }
         root.setFiles(files);
         return new Narc(root);
-    }
-
-    public ArrayList<BuildTileset> getTilesets() {
-        return tilesets;
     }
 
     public void saveTileset(int index, String path) throws IOException {

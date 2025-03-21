@@ -1,24 +1,24 @@
 package editor.tileseteditor;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.JOptionPane;
-
+import lombok.extern.log4j.Log4j2;
 import tileset.Tile;
 import tileset.Tileset;
 import utils.Utils;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection"})
+@Log4j2
 public class TextureDisplayMaterial extends JPanel {
 
     private TilesetEditorHandler tileHandler;
@@ -36,7 +36,7 @@ public class TextureDisplayMaterial extends JPanel {
         try {
             reloadIcon = Utils.loadImageAsResource("/icons/reloadIcon.png");
         } catch (IOException | IllegalArgumentException ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 

@@ -1,5 +1,6 @@
 package utils.io;
 
+@SuppressWarnings("ALL")
 public class BinaryArrayWriter {
 
     private final byte[] buf;

@@ -1,5 +1,7 @@
 package editor.game.patches;
 
+import formats.collisions.CollisionTypes;
+import lombok.extern.log4j.Log4j2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -13,12 +15,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+@Log4j2
+@SuppressWarnings({"unused", "FieldCanBeLocal", "SpellCheckingInspection"})
 public class GamePatch {
 
-    private List<MultiFilePatch> patches;
+    private final List<MultiFilePatch> patches;
 
     public GamePatch(String path) throws IOException, SAXException, ParserConfigurationException {
         List<MultiFilePatch> multiFilePatches = new ArrayList<>();
@@ -28,23 +32,23 @@ public class GamePatch {
         Document document = builder.parse(new File(path));
 
         Element root = document.getDocumentElement();
-        root.getAttributes();
+        var ignored = root.getAttributes();
 
         List<Node> patchNodes = getSubnodes(root);
         for(Node gamePatch : patchNodes){
-            String gameCode = getSubnode(gamePatch, "GameCode").getTextContent();
+            String gameCode = Objects.requireNonNull(getSubnode(gamePatch, "GameCode")).getTextContent();
 
             List<Node> filePatchNodes = getSubnodes(gamePatch, "FilePatch");
             List<FilePatch> patches = new ArrayList<>(filePatchNodes.size());
             for(Node filePatchNode : filePatchNodes){
-                String filePath = getSubnode(filePatchNode, "FilePath").getTextContent();
-                int dataOffset = Integer.parseInt(getSubnode(filePatchNode, "DataOffset").getTextContent(), 16);
-                byte[] oldData = hexStringToByteArray(getSubnode(filePatchNode, "OldData").getTextContent());
-                byte[] newData = hexStringToByteArray(getSubnode(filePatchNode, "NewData").getTextContent());
+                String filePath = Objects.requireNonNull(getSubnode(filePatchNode, "FilePath")).getTextContent();
+                int dataOffset = Integer.parseInt(Objects.requireNonNull(getSubnode(filePatchNode, "DataOffset")).getTextContent(), 16);
+                byte[] oldData = hexStringToByteArray(Objects.requireNonNull(getSubnode(filePatchNode, "OldData")).getTextContent());
+                byte[] newData = hexStringToByteArray(Objects.requireNonNull(getSubnode(filePatchNode, "NewData")).getTextContent());
 
                 FilePatch filePatch = new FilePatch(filePath, dataOffset, oldData, newData);
                 patches.add(filePatch);
-                System.out.println("Donete");
+                log.debug("Donete");
             }
 
             MultiFilePatch multiFilePatch = new MultiFilePatch(gameCode, patches);
@@ -52,18 +56,12 @@ public class GamePatch {
         }
         this.patches = multiFilePatches;
 
-        System.out.println("Done reading!");
+        log.debug("Done reading!");
     }
 
     public static byte[] hexStringToByteArray(String s) {
         s = s.replaceAll(" ", "");
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
+        return CollisionTypes.hexStringToByteArray(s);
     }
 
     private static byte[] textBytesToByteArray(String textBytes){
@@ -72,8 +70,7 @@ public class GamePatch {
         for(String s : splitString){
             try {
                 bytes.add(Byte.parseByte(s));
-            }catch(NumberFormatException ex){
-
+            } catch (NumberFormatException ignored){
             }
         }
         return Utils.toArray(bytes);
@@ -92,6 +89,7 @@ public class GamePatch {
         return null;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static List<Node> getSubnodes(Node node, String name){
         List<Node> nodes = new ArrayList<>();
         NodeList nodeList = node.getChildNodes();

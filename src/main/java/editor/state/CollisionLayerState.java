@@ -2,15 +2,17 @@
 package editor.state;
 
 import formats.collisions.CollisionHandler;
+import lombok.Getter;
 
 /**
  * @author Trifindo
  */
 public class CollisionLayerState extends State {
 
-    private CollisionHandler collisionHandler;
-    private int layerIndex;
-    private byte[][] layer;
+    private final CollisionHandler collisionHandler;
+    @Getter
+    private final int              layerIndex;
+    private final byte[][]         layer;
 
     public CollisionLayerState(String name, CollisionHandler collisionHandler) {
         super(name);
@@ -23,10 +25,6 @@ public class CollisionLayerState extends State {
     @Override
     public void revertState() {
         collisionHandler.setLayer(layerIndex, layer);
-    }
-
-    public int getLayerIndex() {
-        return layerIndex;
     }
 
 

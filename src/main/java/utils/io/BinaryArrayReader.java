@@ -76,7 +76,7 @@ public class BinaryArrayReader {
         return new String(data);
     }
 
-    public int readUInt8() throws Exception {
+    public int readUInt8() {
         return read() & 0xFF;
     }
 

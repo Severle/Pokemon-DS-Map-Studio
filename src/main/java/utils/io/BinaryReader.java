@@ -71,7 +71,7 @@ public class BinaryReader {
         return (fullData[offset + 3] << 8) | (fullData[offset + 2] << 8) | (fullData[offset + 1] << 8) | fullData[offset];
     }
 
-    public static int readUInt8(byte[] fullData, int offset) throws Exception {
+    public static int readUInt8(byte[] fullData, int offset) {
         return fullData[offset] & 0xFF;
     }
 

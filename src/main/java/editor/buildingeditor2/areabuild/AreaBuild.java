@@ -1,14 +1,16 @@
 
 package editor.buildingeditor2.areabuild;
 
-import java.util.ArrayList;
-
+import lombok.Getter;
 import utils.io.BinaryReader;
 import utils.io.BinaryWriter;
+
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@Getter
 public class AreaBuild {
 
     private ArrayList<Integer> buildingIDs;
@@ -36,10 +38,6 @@ public class AreaBuild {
             BinaryWriter.writeUInt16(data, 2 + i * 2, buildingIDs.get(i));
         }
         return data;
-    }
-
-    public ArrayList<Integer> getBuildingIDs() {
-        return buildingIDs;
     }
 
 

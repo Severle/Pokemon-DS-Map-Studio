@@ -1,6 +1,11 @@
 
 package editor.buildingeditor2.buildfile;
 
+import lombok.Getter;
+import utils.Utils;
+import utils.io.BinaryReader;
+import utils.io.BinaryWriter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,17 +13,14 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.io.BinaryReader;
-import utils.io.BinaryWriter;
-import utils.Utils;
-
 /**
  * @author Trifindo
  */
+@Getter
 public class BuildFile {
 
-    public static final String fileExtension = "bld";
-    private List<Build> builds;
+    public static final String      fileExtension = "bld";
+    private final       List<Build> builds;
 
     public BuildFile() {
         builds = new ArrayList<>();
@@ -29,9 +31,9 @@ public class BuildFile {
             byte[] data = Files.readAllBytes(new File(path).toPath());
 
             int numBuilds = data.length / Build.dataSize;
-            builds = new ArrayList<Build>(numBuilds);
+            builds = new ArrayList<>(numBuilds);
 
-            for (int i = 0, offset = 0; i < numBuilds; i++) {
+            for (int i = 0, offset; i < numBuilds; i++) {
                 offset = Build.dataSize * i;
                 int buildID = (int) BinaryReader.readUInt16(data, offset);
                 offset += 4;
@@ -58,7 +60,7 @@ public class BuildFile {
     public byte[] toByteArray() throws Exception {
         byte[] data = new byte[builds.size() * Build.dataSize];
 
-        for (int i = 0, offset = 0; i < builds.size(); i++) {
+        for (int i = 0, offset; i < builds.size(); i++) {
             offset = Build.dataSize * i;
 
             Build build = builds.get(i);
@@ -91,10 +93,6 @@ public class BuildFile {
         } catch (Exception ex) {
             throw new IOException();
         }
-    }
-
-    public List<Build> getBuilds() {
-        return builds;
     }
 
 }

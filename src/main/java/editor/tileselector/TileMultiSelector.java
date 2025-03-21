@@ -1,26 +1,21 @@
 package editor.tileselector;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
-import editor.handler.MapEditorHandler;
-import editor.tileseteditor.TilesetEditorDialog;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import tileset.Tile;
 import tileset.Tileset;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "DuplicatedCode", "SpellCheckingInspection"})
 public class TileMultiSelector extends JPanel {
 
     private Tileset tileset;
@@ -69,7 +64,7 @@ public class TileMultiSelector extends JPanel {
 
         if (display != null) {
             g.drawImage(display, 0, 0, null);
-            if (boundingBoxes.size() > 0) {
+            if (!boundingBoxes.isEmpty()) {
                 g.setColor(Color.red);
 
                 for (int i = 0; i < selection.length; i++) {
@@ -79,10 +74,6 @@ public class TileMultiSelector extends JPanel {
                 }
             }
 
-            //g.setColor(Color.blue);
-            //drawTileBounds(g, lastIndex);
-
-            //System.out.println("Number of bounds: " + boundingBoxes.size());
         }
     }
 
@@ -110,7 +101,7 @@ public class TileMultiSelector extends JPanel {
             System.out.println("Num rows: " + rows);
             display = new BufferedImage(maxCols * tilePixelSize, rows * tilePixelSize, BufferedImage.TYPE_4BYTE_ABGR);
         } else {
-            display = new BufferedImage(maxCols * tilePixelSize, 1 * tilePixelSize, BufferedImage.TYPE_4BYTE_ABGR);
+            display = new BufferedImage(maxCols * tilePixelSize, tilePixelSize, BufferedImage.TYPE_4BYTE_ABGR);
         }
         paintTiles();
 
@@ -247,7 +238,7 @@ public class TileMultiSelector extends JPanel {
     }
 
     public ArrayList<Tile> getTilesSelected() {
-        ArrayList<Tile> tiles = new ArrayList();
+        ArrayList<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < selection.length; i++) {
             if (selection[i]) {
                 tiles.add(tileset.get(i));
@@ -258,8 +249,8 @@ public class TileMultiSelector extends JPanel {
 
     public int getNumTilesSelected() {
         int count = 0;
-        for (int i = 0; i < selection.length; i++) {
-            if (selection[i]) {
+        for (boolean b : selection) {
+            if (b) {
                 count++;
             }
         }

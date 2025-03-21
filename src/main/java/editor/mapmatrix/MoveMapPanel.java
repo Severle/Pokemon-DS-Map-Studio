@@ -1,19 +1,15 @@
 package editor.mapmatrix;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
 import editor.handler.MapEditorHandler;
-import editor.state.MapLayerState;
 
-import java.awt.Point;
-import net.miginfocom.swing.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class MoveMapPanel extends JPanel {
 
     private MapEditorHandler handler;
@@ -43,8 +39,6 @@ public class MoveMapPanel extends JPanel {
     }
 
     public void moveMap(Point p, Point dp) {
-        //handler.setLayerChanged(false);
-        //handler.addMapState(new MapLayerState("Map moved", handler));
 
         Point newCoords = new Point(p.x + dp.x, p.y + dp.y);
         handler.getMapMatrix().moveMap(p, newCoords);
@@ -59,6 +53,7 @@ public class MoveMapPanel extends JPanel {
 
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode", "DataFlowIssue"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         hSpacer1 = new JPanel(null);

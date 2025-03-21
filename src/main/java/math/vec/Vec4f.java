@@ -1,9 +1,12 @@
 package math.vec;
 
+import lombok.extern.log4j.Log4j2;
 import math.mat.Mat4f;
 
 import java.nio.FloatBuffer;
 
+@Log4j2
+@SuppressWarnings({"unused", "GrazieInspection", "SpellCheckingInspection"})
 public class Vec4f {
 
     public float x, y, z, w;
@@ -60,8 +63,8 @@ public class Vec4f {
     /**
      * Constructs a Vec4f using the coordiantes of a Vec3f and the w coordinate
      *
-     * @param other
-     * @param w
+     * @param other other
+     * @param w w
      */
     public Vec4f(Vec3f other, float w){
         this.x = other.x;
@@ -73,12 +76,13 @@ public class Vec4f {
     /**
      * Constructs a Vec4f using the coordiantes of a Vec3f and w of 1.0f
      *
-     * @param other
+     * @param other other
      */
     public Vec4f(Vec3f other){
         this(other, 1.0f);
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Vec4f clone() {
         return new Vec4f(this);
@@ -115,10 +119,7 @@ public class Vec4f {
         if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
             return false;
         }
-        if (Float.floatToIntBits(this.w) != Float.floatToIntBits(other.w)) {
-            return false;
-        }
-        return true;
+        return Float.floatToIntBits(this.w) == Float.floatToIntBits(other.w);
     }
 
 
@@ -132,7 +133,7 @@ public class Vec4f {
      * Prints the coordinates of the Vec4f
      */
     public void print() {
-        System.out.println(toString());
+        log.debug(toString());
     }
 
     /**
@@ -141,7 +142,7 @@ public class Vec4f {
      * @param name the name of the vector
      */
     public void print(String name) {
-        System.out.println(name + ": " + toString());
+        log.debug("{}: {}", name, toString());
     }
 
     /**

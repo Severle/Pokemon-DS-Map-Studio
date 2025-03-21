@@ -1,46 +1,59 @@
 
 package editor.buildingeditor2;
 
-import editor.buildingeditor2.buildmodel.BuildModelMatshp;
-import editor.buildingeditor2.buildmodel.BuildModelList;
 import editor.buildingeditor2.animations.BuildAnimations;
 import editor.buildingeditor2.animations.BuildAnimeListDPPt;
 import editor.buildingeditor2.areabuild.AreaBuild;
 import editor.buildingeditor2.areabuild.AreaBuildList;
 import editor.buildingeditor2.areadata.AreaDataListDPPt;
+import editor.buildingeditor2.buildmodel.BuildModelList;
+import editor.buildingeditor2.buildmodel.BuildModelMatshp;
 import editor.buildingeditor2.tileset.BuildTileset;
 import editor.buildingeditor2.tileset.BuildTilesetList;
 import editor.game.GameFileSystemDPPt;
 import formats.narc2.Narc;
 import formats.narc2.NarcIO;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import nitroreader.nsbmd.NSBMD;
 import nitroreader.nsbmd.sbccommands.MAT;
 import nitroreader.nsbmd.sbccommands.SBCCommand;
 import nitroreader.nsbmd.sbccommands.SHP;
 import utils.Utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class BuildHandlerDPPt {
 
     //private MapEditorHandler handler;
-    private String gameFolderPath = "";
-    private GameFileSystemDPPt gameFileSystem;
+    @Getter
+    @Setter
+    private       String             gameFolderPath;
+    private final GameFileSystemDPPt gameFileSystem;
 
-    private BuildModelList buildModelList;
-    private BuildModelMatshp buildModelMatshp;
+    @Getter
+    private BuildModelList     buildModelList;
+    @Getter
+    private BuildModelMatshp   buildModelMatshp;
+    @Getter
     private BuildAnimeListDPPt buildModelAnimeList;
-    private BuildAnimations buildModelAnims;
+    @Getter
+    private BuildAnimations  buildModelAnims;
+    @Getter
     private AreaDataListDPPt areaDataList;
+    @Getter
     private BuildTilesetList buildTilesetList;
-    private AreaBuildList areaBuildList;
+    @Getter
+    private AreaBuildList    areaBuildList;
 
     public BuildHandlerDPPt(String gameFolderPath) {
         this.gameFolderPath = gameFolderPath;
@@ -115,6 +128,7 @@ public class BuildHandlerDPPt {
             NarcIO.writeNarc(areaBuildList.toNarc(), getGameFilePath(gameFileSystem.getAreaBuildModelPath()));
             NarcIO.writeNarc(buildTilesetList.toNarc(), getGameFilePath(gameFileSystem.getAreaBuildTilesetPath()));
         } catch (Exception ex) {
+            log.error(ex);
             throw ex;
         }
     }
@@ -124,7 +138,7 @@ public class BuildHandlerDPPt {
     }
 
     private void generateMissingFiles() {
-        //TODO: Finish this
+
     }
 
     public void addBuilding(String path) throws IOException {
@@ -248,55 +262,17 @@ public class BuildHandlerDPPt {
         return new File(path).exists();
     }
 
-    public void setGameFolderPath(String path) {
-        this.gameFolderPath = path;
-    }
-
-    public String getGameFolderPath() {
-        return gameFolderPath;
-    }
-
-    public BuildModelList getBuildModelList() {
-        return buildModelList;
-    }
-
-    public BuildModelMatshp getBuildModelMatshp() {
-        return buildModelMatshp;
-    }
-
-    public BuildAnimeListDPPt getBuildModelAnimeList() {
-        return buildModelAnimeList;
-    }
-
-    public BuildAnimations getBuildModelAnims() {
-        return buildModelAnims;
-    }
-
-    public AreaDataListDPPt getAreaDataList() {
-        return areaDataList;
-    }
-
-    public BuildTilesetList getBuildTilesetList() {
-        return buildTilesetList;
-    }
-
-    public AreaBuildList getAreaBuildList() {
-        return areaBuildList;
-    }
-
     public static ArrayList<Integer> getMaterialOrder(byte[] nsbmdData) {
         NSBMD nsbmd = new NSBMD(nsbmdData);
 
-        List<SBCCommand> sbc = nsbmd.getMLD0().getModels().get(0).getSBC();
+        List<SBCCommand> sbc = nsbmd.getMLD0().getModels().getFirst().getSBC();
         List<Integer> materialIDs = new ArrayList<>();
         List<Integer> shapeIDs = new ArrayList<>();
 
         for (SBCCommand cmd : sbc) {
-            if (cmd instanceof MAT) {
-                MAT mat = (MAT) cmd;
+            if (cmd instanceof MAT mat) {
                 materialIDs.add(mat.getMatID());
-            } else if (cmd instanceof SHP) {
-                SHP shp = (SHP) cmd;
+            } else if (cmd instanceof SHP shp) {
                 shapeIDs.add(shp.getShpID());
             }
         }
@@ -307,8 +283,8 @@ public class BuildHandlerDPPt {
         }
 
         ArrayList<Integer> materials = new ArrayList<>(polyLookup.length);
-        for (int i = 0; i < polyLookup.length; i++) {
-            materials.add(polyLookup[i]);
+        for (int j : polyLookup) {
+            materials.add(j);
         }
 
         if (Utils.hasDuplicates(materials)) {

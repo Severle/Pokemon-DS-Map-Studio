@@ -1,42 +1,49 @@
 package editor.buildingeditor2.animations;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import net.miginfocom.swing.MigLayout;
+import renderer.NitroDisplayGL;
+import renderer.ObjectGL;
 
-import net.miginfocom.swing.*;
-import renderer.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 public class AddBuildAnimationDialog extends JDialog {
 
     public static final int ACEPTED = 0, CANCELED = 1;
-    private int returnValue = CANCELED;
+    @Getter
+    private int returnValue   = CANCELED;
+    @Getter
     private int indexSelected = 0;
 
     private byte[] buildModelData;
     private ArrayList<Integer> buildingAnimationIDs;
     private BuildAnimations buildAnimations;
 
-    private ArrayList<Integer> animIconIndices;
-    private ArrayList<ImageIcon> animIcons;
+    private       ArrayList<Integer>   animIconIndices;
+    private final ArrayList<ImageIcon> animIcons;
 
     public AddBuildAnimationDialog(Window owner) {
         super(owner);
         initComponents();
 
         animIcons = new ArrayList<>(4);
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbcaIcon.png")));
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbtaIcon.png")));
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbtpIcon.png")));
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbmaIcon.png")));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbcaIcon.png"))));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbtaIcon.png"))));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbtpIcon.png"))));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbmaIcon.png"))));
 
         animIconIndices = new ArrayList<>();
 
@@ -89,7 +96,7 @@ public class AddBuildAnimationDialog extends JDialog {
 
             nitroDisplayGL.requestUpdate();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -116,13 +123,14 @@ public class AddBuildAnimationDialog extends JDialog {
         updateViewAnimationsList(0);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void updateViewAnimationsList(int indexSelected) {
         if (buildAnimations != null) {
             ArrayList<String> names = new ArrayList<>();
             ArrayList<ModelAnimation> animations = buildAnimations.getAnimations();
             animIconIndices = new ArrayList<>(animations.size());
             for (int i = 0; i < animations.size(); i++) {
-                names.add(String.valueOf(i) + ": "
+                names.add(i + ": "
                         + animations.get(i).getName() + " ["
                         + animations.get(i).getAnimationTypeName() + "]");
                 animIconIndices.add(animations.get(i).getAnimationType());
@@ -131,10 +139,10 @@ public class AddBuildAnimationDialog extends JDialog {
         }
     }
 
-    private static void addElementsToList(JList list, ArrayList<String> elements, int indexSelected) {
-        DefaultListModel listModel = new DefaultListModel();
-        for (int i = 0; i < elements.size(); i++) {
-            listModel.addElement(elements.get(i));
+    private static void addElementsToList(JList<String> list, ArrayList<String> elements, int indexSelected) {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (String element : elements) {
+            listModel.addElement(element);
         }
         list.setModel(listModel);
 
@@ -142,14 +150,7 @@ public class AddBuildAnimationDialog extends JDialog {
         list.setSelectedIndex(indexSelected);
     }
 
-    public int getIndexSelected() {
-        return indexSelected;
-    }
-
-    public int getReturnValue() {
-        return returnValue;
-    }
-
+    @SuppressWarnings({"DataFlowIssue", "DuplicatedCode", "Convert2Diamond", "Convert2MethodRef", "FieldMayBeFinal"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel12 = new JPanel();

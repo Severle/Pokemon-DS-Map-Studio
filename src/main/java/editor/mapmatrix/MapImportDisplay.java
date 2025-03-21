@@ -1,29 +1,19 @@
 package editor.mapmatrix;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class MapImportDisplay extends JPanel {
 
     private MapEditorHandler handler;
@@ -33,16 +23,17 @@ public class MapImportDisplay extends JPanel {
     private Point mapMin = new Point();
     private Point mapMax = new Point();
     private Dimension mapSize;
-    private Point newMapMin = new Point();
-    private Point newMapPos = new Point();
+    private Point     newMapMin  = new Point();
+    @Getter
+    private Point     newMapPos  = new Point();
     private Dimension newMapSize = new Dimension();
     private HashMap<Point, MapData> maps;
 
     private Point globalMin = new Point();
 
-    private float scale = 0.5f;
+    private final float scale = 0.5f;
 
-    private Point lastMouse = new Point();
+    private final Point lastMouse = new Point();
 
     public MapImportDisplay() {
         initComponents();
@@ -65,6 +56,7 @@ public class MapImportDisplay extends JPanel {
         //this.importMatrixMin = getMinCoords(maps);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -135,14 +127,9 @@ public class MapImportDisplay extends JPanel {
     }
 
     public void moveMap(Point dp) {
-        Point newPos = new Point(newMapPos.x + dp.x, newMapPos.y + dp.y);
-        this.newMapPos = newPos;
+        this.newMapPos = new Point(newMapPos.x + dp.x, newMapPos.y + dp.y);
 
         updateSize();
-    }
-
-    public Point getNewMapPos() {
-        return newMapPos;
     }
 
     private void initComponents() {

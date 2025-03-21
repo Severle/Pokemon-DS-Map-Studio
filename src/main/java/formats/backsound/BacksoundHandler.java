@@ -2,34 +2,32 @@
 package formats.backsound;
 
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class BacksoundHandler {
 
-    private MapEditorHandler handler;
+    private final MapEditorHandler handler;
     //private Backsound backsound;
 
-    private BacksoundEditorDialog dialog;
+    @Getter
+    private final BacksoundEditorDialog dialog;
 
-    private int indexSelected = 0;
+    @Setter
+    @Getter
+    private int indexSelected;
 
     public BacksoundHandler(MapEditorHandler handler, BacksoundEditorDialog dialog) {
         this.handler = handler;
         this.dialog = dialog;
 
         indexSelected = 0;
-    }
-
-    public int getIndexSelected() {
-        return indexSelected;
-    }
-
-    public void setIndexSelected(int index) {
-        this.indexSelected = index;
     }
 
     public BackSound getBacksound() {
@@ -42,10 +40,6 @@ public class BacksoundHandler {
 
     public ArrayList<SoundPlate> getSoundplates() {
         return handler.getBacksound().getSoundPlates();
-    }
-
-    public BacksoundEditorDialog getDialog() {
-        return dialog;
     }
 
     public void addSoundplate() {

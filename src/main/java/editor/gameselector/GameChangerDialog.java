@@ -1,25 +1,25 @@
 package editor.gameselector;
 
-import formats.collisions.Collisions;
 import editor.game.Game;
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
+import javax.swing.border.SoftBevelBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 public class GameChangerDialog extends JDialog {
 
     private MapEditorHandler handler;
     public static final int ACEPTED = 0, CANCELED = 1;
+    @Getter
     private int returnValue = CANCELED;
-    private int newGame = Game.DIAMOND;
+    private int newGame     = Game.DIAMOND;
     private int oldGame;
 
     public GameChangerDialog(Window owner) {
@@ -40,10 +40,6 @@ public class GameChangerDialog extends JDialog {
                 handler.setGameIndex(newGame);
 
                 handler.getMapMatrix().clearAllCollisions();
-                /*handler.setCollisions(new Collisions(newGame));
-                if(Game.isGenV(newGame)){
-                    handler.setCollisions2(null);
-                }*/
                 returnValue = ACEPTED;
                 dispose();
             }
@@ -69,14 +65,11 @@ public class GameChangerDialog extends JDialog {
         jlGameIcon.setIcon(new ImageIcon(handler.getGame().gameIcons[newGame]));
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     public int getGameIndex() {
         return newGame;
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jpanelIcon = new JPanel();

@@ -1,35 +1,25 @@
 package editor.smartdrawing;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
-import editor.handler.MapEditorHandler;
 import editor.grid.MapGrid;
+import editor.handler.MapEditorHandler;
 import editor.mapdisplay.MapDisplay;
 import editor.mapdisplay.ViewMode;
-
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-
+import lombok.extern.log4j.Log4j2;
 import utils.Utils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection"})
+@Log4j2
 public class SmartGridDisplay extends JPanel {
 
-    private static BufferedImage gridImage = Utils.loadTexImageAsResource("/imgs/smartGrid.png");
+    private static final BufferedImage gridImage = Utils.loadTexImageAsResource("/imgs/smartGrid.png");
 
     private MapEditorHandler handler;
     private boolean editable = true;
@@ -50,7 +40,6 @@ public class SmartGridDisplay extends JPanel {
                 int y = evt.getY() / MapGrid.tileSize;
                 int gridIndex = y / SmartGrid.height;
                 y %= SmartGrid.height;
-                ;
                 System.out.println(x + "  " + y);
                 if (gridIndex < handler.getSmartGridArray().size() && gridIndex >= 0) {
                     if (!((y == 2) && (x == 4 || x == 3))) {
@@ -85,9 +74,6 @@ public class SmartGridDisplay extends JPanel {
                                     grid[x][y] = handler.getTileIndexSelected();
                                 }
                             }
-                            /*else if (SwingUtilities.isRightMouseButton(evt)) {
-                        grid[x][y] = -1;
-                    }*/
                             repaint();
                         }
                     } else {
@@ -101,38 +87,7 @@ public class SmartGridDisplay extends JPanel {
                         handler.setSmartGridIndexSelected(gridIndex);
                     }
 
-                    JPopupMenu menu = new JPopupMenu();
-                    JMenuItem item1 = new JMenuItem("Add Smart Painter");
-                    JMenuItem item2 = new JMenuItem("Remove Smart Painter");
-                    item1.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            handler.getSmartGridArray().add(new SmartGrid());
-                            updateSize();
-                            repaint();
-                        }
-                    });
-                    item2.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (handler.getSmartGridArray().size() > 1) {
-                                if (gridIndex >= 0 && gridIndex < handler.getSmartGridArray().size()) {
-                                    handler.getSmartGridArray().remove(gridIndex);
-                                    handler.setSmartGridIndexSelected(Math.max(0, gridIndex - 1));
-                                    updateSize();
-                                    repaint();
-                                }
-                            } else {
-                                System.out.println("No se puede");
-                                JOptionPane.showMessageDialog(menu,
-                                        "There must me at least one Smart Painter",
-                                        "Can't delete Smart Painter",
-                                        JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                    });
-                    menu.add(item1);
-                    menu.add(item2);
+                    JPopupMenu menu = getMenu(gridIndex);
 
                     menu.show(this, evt.getX(), evt.getY());
                 }
@@ -154,6 +109,36 @@ public class SmartGridDisplay extends JPanel {
                 }
             }
         }
+    }
+
+    private JPopupMenu getMenu(int gridIndex) {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem item1 = new JMenuItem("Add Smart Painter");
+        JMenuItem item2 = new JMenuItem("Remove Smart Painter");
+        item1.addActionListener(e -> {
+            handler.getSmartGridArray().add(new SmartGrid());
+            updateSize();
+            repaint();
+        });
+        item2.addActionListener(e -> {
+            if (handler.getSmartGridArray().size() > 1) {
+                if (gridIndex >= 0 && gridIndex < handler.getSmartGridArray().size()) {
+                    handler.getSmartGridArray().remove(gridIndex);
+                    handler.setSmartGridIndexSelected(Math.max(0, gridIndex - 1));
+                    updateSize();
+                    repaint();
+                }
+            } else {
+                System.out.println("No se puede");
+                JOptionPane.showMessageDialog(menu,
+                        "There must me at least one Smart Painter",
+                        "Can't delete Smart Painter",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        menu.add(item1);
+        menu.add(item2);
+        return menu;
     }
 
     @Override
@@ -184,7 +169,7 @@ public class SmartGridDisplay extends JPanel {
                                         (j + SmartGrid.height * k) * MapGrid.tileSize,
                                         null);
                             } catch (Exception ex) {
-                                ex.printStackTrace();
+                                log.warn(ex);
                             }
                         }
                     }

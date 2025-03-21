@@ -1,36 +1,25 @@
 package editor.layerselector;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
-import editor.handler.MapEditorHandler;
 import editor.grid.MapGrid;
+import editor.handler.MapEditorHandler;
 import editor.state.MapLayerState;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import javax.swing.AbstractAction;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
+import java.util.Objects;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("unused")
 public class ThumbnailLayerSelector extends JPanel {
 
     private MapEditorHandler handler;
 
-    private BufferedImage[] layerThumbnails = new BufferedImage[MapGrid.numLayers];
-    private static final int layerWidth = 64, layerHeight = 64;
+    private final        BufferedImage[] layerThumbnails = new BufferedImage[MapGrid.numLayers];
+    private static final int             layerWidth      = 64, layerHeight = 64;
     private static final int smallTileSize = 2;
     private static final Color backColor = new Color(0, 127, 127, 255);
 
@@ -79,9 +68,6 @@ public class ThumbnailLayerSelector extends JPanel {
                     }
                     handler.setActiveTileLayer(index);
                 } else if (SwingUtilities.isRightMouseButton(evt)) {
-                    //LayerPopupMenu popupMenu = new LayerPopupMenu(index);
-                    //popupMenu.show(this, evt.getX(), evt.getY());
-
                     JPopupMenu menu = new JPopupMenu();
                     JMenuItem itemShowLayer = new JMenuItem("Show Layer");
                     JMenuItem itemHideLayer = new JMenuItem("Hide Layer");
@@ -93,79 +79,51 @@ public class ThumbnailLayerSelector extends JPanel {
                     JMenuItem itemPasteTiles = new JMenuItem("Paste Tiles");
                     JMenuItem itemPasteHeights = new JMenuItem("Paste Heights");
 
-                    itemShowLayer.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            handler.setLayerState(index, true);
-                            repaint();
-                            handler.getMainFrame().repaintMapDisplay();
+                    itemShowLayer.addActionListener(e -> {
+                        handler.setLayerState(index, true);
+                        repaint();
+                        handler.getMainFrame().repaintMapDisplay();
+                    });
+                    itemHideLayer.addActionListener(e -> {
+                        handler.setLayerState(index, false);
+                        repaint();
+                        handler.getMainFrame().repaintMapDisplay();
+                    });
+                    itemClearLayer.addActionListener(e -> {
+                        if (handler.getTileset().size() > 0) {
+                            handler.clearLayer(index);
+                            //handler.getMainFrame().repaintMapDisplay();
                         }
                     });
-                    itemHideLayer.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            handler.setLayerState(index, false);
-                            repaint();
-                            handler.getMainFrame().repaintMapDisplay();
+                    itemCopyLayer.addActionListener(e -> {
+                        if (handler.getTileset().size() > 0) {
+                            handler.copyLayer(index);
+                            //handler.getMainFrame().repaintMapDisplay();
                         }
                     });
-                    itemClearLayer.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (handler.getTileset().size() > 0) {
-                                handler.clearLayer(index);
-                                //handler.getMainFrame().repaintMapDisplay();
-                            }
+                    itemPasteLayer.addActionListener(e -> {
+                        if (handler.getTileset().size() > 0) {
+                            handler.pasteLayer(index);
                         }
                     });
-                    itemCopyLayer.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (handler.getTileset().size() > 0) {
-                                handler.copyLayer(index);
-                                //handler.getMainFrame().repaintMapDisplay();
-                            }
+                    itemPasteTiles.addActionListener(e -> {
+                        if (handler.getTileset().size() > 0) {
+                            handler.pasteLayerTiles(index);
                         }
                     });
-                    itemPasteLayer.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (handler.getTileset().size() > 0) {
-                                handler.pasteLayer(index);
-                                //handler.getGrid().pasteTileLayer(index);
-                                //handler.getGrid().pasteHeightLayer(index);
-                                //handler.getMainFrame().repaintMapDisplay();
-                            }
-                        }
-                    });
-                    itemPasteTiles.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (handler.getTileset().size() > 0) {
-                                handler.pasteLayerTiles(index);
-                                //handler.getGrid().pasteTileLayer(index);
-                                //handler.getMainFrame().repaintMapDisplay();
-                            }
-                        }
-                    });
-                    itemPasteHeights.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (handler.getTileset().size() > 0) {
-                                handler.pasteLayerHeights(index);
-                                //handler.getGrid().pasteHeightLayer(index);
-                                //handler.getMainFrame().repaintMapDisplay();
-                            }
+                    itemPasteHeights.addActionListener(e -> {
+                        if (handler.getTileset().size() > 0) {
+                            handler.pasteLayerHeights(index);
                         }
                     });
 
-                    itemShowLayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/turnOnIcon.png")));
-                    itemHideLayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/turnOffIcon.png")));
-                    itemClearLayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/RemoveIcon.png")));
-                    itemCopyLayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/copyIcon.png")));
-                    itemPasteLayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/pasteIcon.png")));
-                    itemPasteTiles.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/pasteTileIcon.png")));
-                    itemPasteHeights.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/pasteHeightIcon.png")));
+                    itemShowLayer.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/turnOnIcon.png"))));
+                    itemHideLayer.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/turnOffIcon.png"))));
+                    itemClearLayer.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/RemoveIcon.png"))));
+                    itemCopyLayer.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/copyIcon.png"))));
+                    itemPasteLayer.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/pasteIcon.png"))));
+                    itemPasteTiles.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/pasteTileIcon.png"))));
+                    itemPasteHeights.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/pasteHeightIcon.png"))));
 
                     menu.add(itemShowLayer);
                     menu.add(itemHideLayer);
@@ -209,6 +167,7 @@ public class ThumbnailLayerSelector extends JPanel {
                 } else {
                     g.setColor(new Color(100, 100, 100, 0));
                 }
+                //noinspection StatementWithEmptyBody
                 if (handler.getActiveLayerIndex() == i) {
                     //g.setColor(new Color(255, 100, 100, 100));
                 }
@@ -270,23 +229,17 @@ public class ThumbnailLayerSelector extends JPanel {
 
         public LayerPopupMenu(int layerIndex) {
             JMenuItem showLayer = new JMenuItem("Show Layer");
-            showLayer.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    handler.setLayerState(layerIndex, true);
-                    repaint();
-                }
+            showLayer.addActionListener(e -> {
+                handler.setLayerState(layerIndex, true);
+                repaint();
             });
             showLayer.setEnabled(!handler.renderLayers[layerIndex]);
             add(showLayer);
 
             JMenuItem hideLayer = new JMenuItem("Hide Layer");
-            hideLayer.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    handler.setLayerState(layerIndex, false);
-                    repaint();
-                }
+            hideLayer.addActionListener(e -> {
+                handler.setLayerState(layerIndex, false);
+                repaint();
             });
             hideLayer.setEnabled(handler.renderLayers[layerIndex]);
             add(hideLayer);

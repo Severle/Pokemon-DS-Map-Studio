@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import static utils.LambdaUtils.systemPropertyNotOverwrite;
+
 @Log4j2
 @SuppressWarnings("unused")
 public class ThemeUtil {
@@ -139,10 +141,6 @@ public class ThemeUtil {
         // install font
         HarmonyOSSansFont.install();
         FlatLaf.setPreferredFontFamily(HarmonyOSSansFont.FAMILY);
-    }
-
-    private static void systemPropertyNotOverwrite(String propertyName, Object value) {
-        System.setProperty(propertyName, System.getProperty(propertyName, value.toString()));
     }
 
     public record ThemeEntry(String name, FlatLaf laf) {

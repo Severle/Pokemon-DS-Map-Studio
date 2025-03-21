@@ -1,17 +1,21 @@
 package editor.converter;
 
-import java.awt.*;
-import java.awt.event.*;
+import lombok.Getter;
+
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection", "unused"})
 public class ConverterDialog extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
-    private int returnValue = CANCEL_OPTION;
+    @Getter
+    private int     returnValue         = CANCEL_OPTION;
     private boolean includeNsbtxInNsbmd = true;
 
     public ConverterDialog(Window owner) {
@@ -43,14 +47,11 @@ public class ConverterDialog extends JDialog {
                 "Include NSBTX Help", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     public boolean includeNsbtxInNsbmd() {
         return includeNsbtxInNsbmd;
     }
 
+    @SuppressWarnings({"DataFlowIssue", "FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jbAccept = new JButton();

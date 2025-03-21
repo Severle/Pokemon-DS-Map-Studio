@@ -4,15 +4,20 @@ package editor.buildingeditor2.areabuild;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class AreaBuildList {
 
-    private ArrayList<AreaBuild> areaBuilds;
+    private final ArrayList<AreaBuild> areaBuilds;
 
     public AreaBuildList(Narc narc) {
         final int numFiles = narc.root().getFiles().size();
@@ -20,7 +25,7 @@ public class AreaBuildList {
         for (NarcFile file : narc.root().getFiles()) {
             areaBuilds.add(new AreaBuild(file.getData()));
         }
-        System.out.println("Donete");
+        log.debug("Donete");
     }
 
     public Narc toNarc() throws Exception {
@@ -48,8 +53,7 @@ public class AreaBuildList {
     }
 
     public void removeBuildingOccurences(int buildingIndex) {
-        for (int i = 0; i < areaBuilds.size(); i++) {
-            AreaBuild areaBuild = areaBuilds.get(i);
+        for (AreaBuild areaBuild : areaBuilds) {
             for (int j = 0; j < areaBuild.getBuildingIDs().size(); j++) {
                 if (areaBuild.getBuildingIDs().get(j) == buildingIndex) {
                     areaBuild.getBuildingIDs().remove(j);
@@ -60,18 +64,13 @@ public class AreaBuildList {
     }
 
     public void shiftBuildingIDsFrom(int buildingIndex) {
-        for (int i = 0; i < areaBuilds.size(); i++) {
-            AreaBuild areaBuild = areaBuilds.get(i);
+        for (AreaBuild areaBuild : areaBuilds) {
             for (int j = 0; j < areaBuild.getBuildingIDs().size(); j++) {
                 if (areaBuild.getBuildingIDs().get(j) > buildingIndex) {
                     areaBuild.getBuildingIDs().set(j, areaBuild.getBuildingIDs().get(j) - 1);
                 }
             }
         }
-    }
-
-    public ArrayList<AreaBuild> getAreaBuilds() {
-        return areaBuilds;
     }
 
     public void addBuilding(int areaBuildIndex, int buildingIndex) {

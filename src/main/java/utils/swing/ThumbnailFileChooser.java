@@ -56,7 +56,7 @@ public class ThumbnailFileChooser extends JFileChooser {
 
     private class ThumbnailView extends FileView {
         /**
-         * This thread pool is where the thumnnail icon loaders run
+         * This thread pool is where the thumbnail icon loaders run
          */
         private final ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -67,7 +67,7 @@ public class ThumbnailFileChooser extends JFileChooser {
 
             // Our cache makes browsing back and forth lightning-fast! :D
             synchronized (imageCache) {
-                ImageIcon icon = (ImageIcon) imageCache.get(file);
+                ImageIcon icon = imageCache.get(file);
 
                 if (icon == null) {
                     // Create a new icon with the default image
@@ -103,11 +103,7 @@ public class ThumbnailFileChooser extends JFileChooser {
             icon.setImage(img);
 
             // Repaint the dialog so we see the new icon.
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    repaint();
-                }
-            });
+            SwingUtilities.invokeLater(ThumbnailFileChooser.this::repaint);
         }
     }
 

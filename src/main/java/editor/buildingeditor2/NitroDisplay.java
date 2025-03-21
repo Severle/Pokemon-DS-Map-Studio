@@ -6,6 +6,7 @@ import renderer.NitroDisplayGL;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class NitroDisplay extends NitroDisplayGL {
 
 }

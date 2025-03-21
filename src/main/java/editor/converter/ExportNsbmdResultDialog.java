@@ -1,17 +1,18 @@
 package editor.converter;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
+import renderer.NitroDisplayGL;
+import renderer.ObjectGL;
 
-import renderer.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 public class ExportNsbmdResultDialog extends JDialog {
     public ExportNsbmdResultDialog(Window owner) {
         super(owner);
@@ -32,6 +33,7 @@ public class ExportNsbmdResultDialog extends JDialog {
         nitroDisplayGL1.requestUpdate();
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel2 = new JPanel();

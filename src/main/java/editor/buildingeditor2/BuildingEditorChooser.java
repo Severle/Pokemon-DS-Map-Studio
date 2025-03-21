@@ -3,13 +3,13 @@ package editor.buildingeditor2;
 
 import editor.handler.MapEditorHandler;
 
+import javax.swing.*;
 import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class BuildingEditorChooser {
 
     public static void loadGame(MapEditorHandler handler) {

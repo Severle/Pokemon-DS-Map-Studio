@@ -6,6 +6,7 @@ import java.io.IOException;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class BuildHandler {
 
     private BuildModelMatshp bModelMatshp;

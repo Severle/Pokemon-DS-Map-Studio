@@ -3,6 +3,9 @@ package editor.grid;
 
 import editor.handler.MapEditorHandler;
 import formats.obj.ObjWriter;
+import tileset.Tile;
+import tileset.Tileset;
+import utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,26 +13,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
-import tileset.Tile;
-import tileset.Tileset;
-import utils.Utils;
-
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection", "unused"})
 public class MapGrid {
 
-    private MapEditorHandler handler;
+    private final MapEditorHandler handler;
 
-    //public String filePath = "";
-    //public String tilesetFilePath = "";
-    //public static final String fileExtension = "pdsmap";
-//    private static final String mapMatrixTag = "mapmatrix";
-//    private static final String gameIndexTag = "gameindex";
-//    private static final String tileGridTag = "tilegrid";
-//    private static final String heightGridTag = "heightgrid";
-//    private static final String tilesetTag = "tileset";
-//    private static final String bdhcTag = "bdhc";
     public static final int cols = 32;
     public static final int rows = 32;
     public static final int tileSize = 16;
@@ -41,15 +32,11 @@ public class MapGrid {
     public int[][][] tileLayers = new int[numLayers][cols][rows];
     public int[][][] heightLayers = new int[numLayers][cols][rows];
 
-    //private int[][] tileLayerCopy = null;
-    //private int[][] heightLayerCopy = null;
     public MapLayerGL[] mapLayersGL = new MapLayerGL[numLayers];
 
     public MapGrid(MapEditorHandler handler) {
         this.handler = handler;
 
-        //filePath = "";
-        //tilesetFilePath = "";
         for (int k = 0; k < numLayers; k++) {
             //int[][] tileGrid = new int[cols][rows];
             for (int i = 0; i < cols; i++) {
@@ -62,63 +49,6 @@ public class MapGrid {
         //updateAllMapLayers(handler.useRealTimePostProcessing());
     }
 
-    /*
-    public void saveToFile(String path) throws FileNotFoundException {
-        if (!path.endsWith("." + fileExtension)) {
-            path = path.concat("." + fileExtension);
-        }
-        PrintWriter out = new PrintWriter(path);
-
-        out.println(gameIndexTag);
-        out.println(handler.getGameIndex());
-
-        out.println(tilesetTag);
-        String filename = Utils.removeExtensionFromPath(new File(path).getName());
-        out.println(filename + "." + Tileset.fileExtension);
-
-        for (int[][] tLayer : tileLayers) {
-            out.println(tileGridTag);
-            printMatrixInFile(out, tLayer); //Todo change this
-        }
-
-        for (int[][] hLayer : heightLayers) {
-            out.println(heightGridTag);
-            printMatrixInFile(out, hLayer); //Todo change this
-        }
-
-        out.close();
-    }
-
-    public void loadFromFile(String path) throws FileNotFoundException, IOException {
-        InputStream input = new FileInputStream(new File(path));
-        BufferedReader br = new BufferedReader(new InputStreamReader(input));
-
-        int numTileLayersRead = 0;
-        int numHeightLayersRead = 0;
-
-        if (br.readLine().startsWith(mapMatrixTag)) {
-
-        } else {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith(gameIndexTag)) {
-                    handler.setGameIndex(Integer.valueOf(br.readLine()));
-                } else if (line.startsWith(tilesetTag)) {
-                    String folderPath = new File(path).getParent();
-                    tilesetFilePath = folderPath + File.separator + br.readLine();
-                    System.out.println("Tileset path: " + tilesetFilePath);
-                } else if (line.startsWith(tileGridTag)) {
-                    loadMatrixFromFile(br, tileLayers[numTileLayersRead]);
-                    numTileLayersRead++;
-                } else if (line.startsWith(heightGridTag)) {
-                    loadMatrixFromFile(br, heightLayers[numHeightLayersRead]);
-                    numHeightLayersRead++;
-                }
-            }
-        }
-        br.close();
-        input.close();
-    }*/
     public void saveMapToOBJ(Tileset tset, String path, boolean saveTextures,
                              boolean saveVertexColors, float tileUpscale) throws FileNotFoundException {
         ObjWriter writer = new ObjWriter(tset, this, path, handler.getGameIndex(),
@@ -161,7 +91,13 @@ public class MapGrid {
                             tileLayers[i][j][k] = indices[index];
                         }
                     } catch (Exception ex) {
-                        tileLayers[i][j][k] = -1;
+                        if (tileLayers != null) {
+                            if (tileLayers[i] != null) {
+                                if (tileLayers[i][j] != null) {
+                                    tileLayers[i][j][k] = -1;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -222,7 +158,7 @@ public class MapGrid {
     }
 
     public void moveTilesUp(int layerIndex) {
-        for (int i = 0; i < (cols - 0); i++) {
+        for (int i = 0; i < (cols); i++) {
             for (int j = (rows - 1); j > 0; j--) {
                 tileLayers[layerIndex][i][j] = tileLayers[layerIndex][i][j - 1];
                 heightLayers[layerIndex][i][j] = heightLayers[layerIndex][i][j - 1];
@@ -233,7 +169,7 @@ public class MapGrid {
     }
 
     public void moveTilesDown(int layerIndex) {
-        for (int i = 0; i < (cols - 0); i++) {
+        for (int i = 0; i < (cols); i++) {
             for (int j = 0; j < (rows - 1); j++) {
                 tileLayers[layerIndex][i][j] = tileLayers[layerIndex][i][j + 1];
                 heightLayers[layerIndex][i][j] = heightLayers[layerIndex][i][j + 1];
@@ -244,7 +180,7 @@ public class MapGrid {
     }
 
     public void moveTilesRight(int layerIndex) {
-        for (int i = 0; i < (rows - 0); i++) {
+        for (int i = 0; i < (rows); i++) {
             for (int j = (cols - 1); j > 0; j--) {
                 tileLayers[layerIndex][j][i] = tileLayers[layerIndex][j - 1][i];
                 heightLayers[layerIndex][j][i] = heightLayers[layerIndex][j - 1][i];
@@ -255,7 +191,7 @@ public class MapGrid {
     }
 
     public void moveTilesLeft(int layerIndex) {
-        for (int i = 0; i < (rows - 0); i++) {
+        for (int i = 0; i < (rows); i++) {
             for (int j = 0; j < (cols - 1); j++) {
                 tileLayers[layerIndex][j][i] = tileLayers[layerIndex][j + 1][i];
                 heightLayers[layerIndex][j][i] = heightLayers[layerIndex][j + 1][i];
@@ -332,48 +268,6 @@ public class MapGrid {
         Utils.floodFillMatrix(heightLayers[handler.getActiveLayerIndex()], x, y, value);
     }
 
-    /*
-    public void clearCopyLayer() {
-        tileLayerCopy = null;
-        heightLayerCopy = null;
-    }*/
-
-    /*
-       public void copySelectedLayer() {
-           copyLayer(handler.getActiveLayerIndex());
-       }
-
-       public void pasteTileLayer() {
-           pasteTileLayer(handler.getActiveLayerIndex());
-       }
-
-       public void pasteHeightLayer() {
-           pasteHeightLayer(handler.getActiveLayerIndex());
-       }
-       public void copyLayer(int index) {
-           tileLayerCopy = cloneTileLayer(index);
-           heightLayerCopy = cloneHeightLayer(index);
-       }
-
-       public void pasteTileLayer(int index) {
-           if (tileLayerCopy != null) {
-               tileLayers[index] = cloneLayer(tileLayerCopy);
-           }
-       }
-
-       public void pasteHeightLayer(int index) {
-           if (heightLayerCopy != null) {
-               heightLayers[index] = cloneLayer(heightLayerCopy);
-           }
-       }
-
-       public int[][] getTileLayerCopy() {
-           return tileLayerCopy;
-       }
-
-       public int[][] getHeightLayerCopy() {
-           return heightLayerCopy;
-       }*/
     public int[][] cloneLayer(int[][] layer) {
         int[][] copy = new int[cols][rows];
         for (int i = 0; i < layer.length; i++) {
@@ -399,10 +293,10 @@ public class MapGrid {
     }
 
     public boolean isEmpty() {
-        for (int i = 0; i < tileLayers.length; i++) {
-            for (int j = 0; j < tileLayers[i].length; j++) {
-                for (int k = 0; k < tileLayers[i][j].length; k++) {
-                    if (tileLayers[i][j][k] != -1) {
+        for (int[][] tileLayer : tileLayers) {
+            for (int[] ints : tileLayer) {
+                for (int anInt : ints) {
+                    if (anInt != -1) {
                         return false;
                     }
                 }
@@ -425,11 +319,11 @@ public class MapGrid {
     }
 
     public void addTileIndicesUsed(HashSet<Integer> indices) {
-        for (int i = 0; i < tileLayers.length; i++) {
-            for (int j = 0; j < tileLayers[i].length; j++) {
-                for (int k = 0; k < tileLayers[i][j].length; k++) {
-                    if (tileLayers[i][j][k] != -1) {
-                        indices.add(tileLayers[i][j][k]);
+        for (int[][] tileLayer : tileLayers) {
+            for (int[] ints : tileLayer) {
+                for (int anInt : ints) {
+                    if (anInt != -1) {
+                        indices.add(anInt);
                     }
                 }
             }

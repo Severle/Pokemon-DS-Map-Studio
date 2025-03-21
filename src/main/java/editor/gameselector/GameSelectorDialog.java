@@ -1,36 +1,36 @@
 package editor.gameselector;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-
-import tileset.TilesetRenderer;
 import editor.game.Game;
 import editor.handler.MapEditorHandler;
 import editor.smartdrawing.SmartGrid;
-
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.swing.ImageIcon;
-
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import tileset.TextureNotFoundException;
 import tileset.Tileset;
 import tileset.TilesetIO;
+import tileset.TilesetRenderer;
 import utils.Utils;
+
+import javax.swing.*;
+import javax.swing.border.SoftBevelBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 public class GameSelectorDialog extends JDialog {
 
     private MapEditorHandler handler;
     public static final int ACEPTED = 0, CANCELED = 1;
+    @Getter
     private int returnValue = CANCELED;
-    private int newGame = Game.DIAMOND;
+    private int newGame     = Game.DIAMOND;
 
     private static final String[] defaultTsetsFolderPaths = new String[]{
             "/tilesets/dp",
@@ -79,7 +79,7 @@ public class GameSelectorDialog extends JDialog {
                 try {
                     tr.renderTiles();
                 } catch (NullPointerException ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                 }
                 tr.destroy();
             } catch (NullPointerException | TextureNotFoundException | IOException ex) {
@@ -112,10 +112,6 @@ public class GameSelectorDialog extends JDialog {
         jlGameIcon.setIcon(new ImageIcon(handler.getGame().gameIcons[newGame]));
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     private void loadTilesetThumbnail(int tilesetIndex) {
         BufferedImage img;
         try {
@@ -129,6 +125,7 @@ public class GameSelectorDialog extends JDialog {
 
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jcbGame = new JComboBox<>();

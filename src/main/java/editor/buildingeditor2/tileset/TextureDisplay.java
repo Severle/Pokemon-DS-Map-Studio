@@ -8,11 +8,12 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("DuplicatedCode")
 public class TextureDisplay extends JPanel {
 
     private static final int size = 160;
-    private BufferedImage img;
-    private BufferedImage backImg;
+    private       BufferedImage img;
+    private final BufferedImage backImg;
 
     public TextureDisplay() {
         initComponents();
@@ -57,11 +58,7 @@ public class TextureDisplay extends JPanel {
     }
 
     public void updateImage(BufferedImage updatedImage) {
-        if (updatedImage != null) {
-            this.img = updatedImage;
-        } else {
-            this.img = null;
-        }
+        this.img = updatedImage;
     }
 
     public BufferedImage createBackImg() {

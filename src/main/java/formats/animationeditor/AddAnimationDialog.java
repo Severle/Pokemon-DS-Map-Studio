@@ -26,6 +26,7 @@ public class AddAnimationDialog extends JDialog {
         return jTextField1.getText();
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

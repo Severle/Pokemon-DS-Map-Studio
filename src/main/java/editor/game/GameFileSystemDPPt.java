@@ -1,11 +1,13 @@
 
 package editor.game;
 
-import java.io.File;
+import lombok.Getter;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class GameFileSystemDPPt extends GameFileSystem {
 
     private final String areaDataPath;
@@ -24,34 +26,6 @@ public class GameFileSystemDPPt extends GameFileSystem {
         buildModelMatshpPath = getPath(new String[]{"data", "fielddata", "build_model", "build_model_matshp.dat"});
         buildModelAnimePath = getPath(new String[]{"data", "arc", "bm_anime.narc"});
         buildModelAnimeListPath = getPath(new String[]{"data", "arc", "bm_anime_list.narc"});
-    }
-
-    public String getAreaDataPath() {
-        return areaDataPath;
-    }
-
-    public String getAreaBuildModelPath() {
-        return areaBuildModelPath;
-    }
-
-    public String getAreaBuildTilesetPath() {
-        return areaBuildTilesetPath;
-    }
-
-    public String getBuildModelPath() {
-        return buildModelPath;
-    }
-
-    public String getBuildModelMatshpPath() {
-        return buildModelMatshpPath;
-    }
-
-    public String getBuildModelAnimePath() {
-        return buildModelAnimePath;
-    }
-
-    public String getBuildModelAnimeListPath() {
-        return buildModelAnimeListPath;
     }
 
 }

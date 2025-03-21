@@ -1,28 +1,24 @@
 
 package editor.buildingeditor2.tileset;
 
-import java.io.FileNotFoundException;
+import lombok.Getter;
+import lombok.Setter;
+import utils.Utils;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import utils.Utils;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Setter
+@Getter
 public class BuildTileset {
 
     private byte[] data;
 
     public BuildTileset(byte[] data) {
-        this.data = data;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
         this.data = data;
     }
 

@@ -1,13 +1,14 @@
 
 package editor.game;
 
-import java.awt.image.BufferedImage;
-
 import utils.Utils;
+
+import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class Game {
 
     public static final int DIAMOND = 0;

@@ -1,23 +1,23 @@
 
 package editor.smartdrawing;
 
-import editor.handler.MapEditorHandler;
 import editor.grid.MapGrid;
+import editor.handler.MapEditorHandler;
+import tileset.Tile;
 
 import java.util.ArrayList;
-
-import tileset.Tile;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class SmartGrid {
 
     public static final int width = 5;
     public static final int height = 3;
     public int[][] sgrid = new int[width][height];
 
-    private static ArrayList<SmartUnit> smartUnits = new ArrayList<SmartUnit>() {
+    private static final ArrayList<SmartUnit> smartUnits = new ArrayList<>() {
         {
             add(new SmartUnit(true, false, false, true, false, false, false, false));
             add(new SmartUnit(true, false, true, true, false, false, false, false));
@@ -37,7 +37,7 @@ public class SmartGrid {
         }
     };
 
-    private static ArrayList<SmartUnit> invertedSmartUnits = new ArrayList<SmartUnit>() {
+    private static final ArrayList<SmartUnit> invertedSmartUnits = new ArrayList<>() {
         {
             add(new SmartUnit(true, true, true, true, true, false, true, true));//3
             add(new SmartUnit(false, true, true, true, false, false, false, false));//12
@@ -69,23 +69,6 @@ public class SmartGrid {
             }
         }
 
-        /*
-        smartUnits.add(new SmartUnit(true, false, false, true, false, false, false, false));
-        smartUnits.add(new SmartUnit(true, false, true, true, false, false, false, false));
-        smartUnits.add(new SmartUnit(true, false, true, false, false, false, false, false));
-        smartUnits.add(new SmartUnit(true, true, true, true, true, false, true, true));
-        smartUnits.add(new SmartUnit(true, true, true, true, false, true, true, true));
-
-        smartUnits.add(new SmartUnit(true, true, false, true, false, false, false, false));
-        smartUnits.add(new SmartUnit(true, true, true, true, true, true, true, true));
-        smartUnits.add(new SmartUnit(true, true, true, false, false, false, false, false));
-        smartUnits.add(new SmartUnit(true, true, true, true, true, true, true, false));
-        smartUnits.add(new SmartUnit(true, true, true, true, true, true, false, true));
-
-        smartUnits.add(new SmartUnit(false, true, false, true, false, false, false, false));
-        smartUnits.add(new SmartUnit(false, true, true, true, false, false, false, false));
-        smartUnits.add(new SmartUnit(false, true, true, false, false, false, false, false));
-         */
     }
 
     public void replaceTilesUsingIndices(int[] indices) {
@@ -154,7 +137,7 @@ public class SmartGrid {
     }
 
     private void floodFillUtil(
-            int screen[][], boolean[][] gridToEdit, boolean[][] remainingGrid,
+            int[][] screen, boolean[][] gridToEdit, boolean[][] remainingGrid,
             int x, int y, int prevC, int W, int H, ArrayList<SmartUnit> units) {
         // Base cases 
         if (x < 0 || x >= W || y < 0 || y >= H) {
@@ -174,14 +157,11 @@ public class SmartGrid {
         if (unit.fullCrossNeighbours()) {
 
             index = indexOfSameCorner(units, unit);
-            if (index == -1) {
-                index = 6;
-            }
         } else {
             index = indexOfSameCross(units, unit);
-            if (index == -1) {
-                index = 6;
-            }
+        }
+        if (index == -1) {
+            index = 6;
         }
 
         screen[x][y] = sgrid[index % width][index / width];

@@ -24,6 +24,7 @@
     <Loggers>
         <Logger name="jdk.event.security" level="INFO"/>
         <Logger name="java.lang.Runtime" level="INFO"/>
+        <Logger name="java.lang.ProcessBuilder" level="INFO"/>
         <Logger name="java.io" level="INFO"/>
         <Logger name="java.awt" level="INFO"/>
         <Logger name="javax.swing" level="INFO"/>

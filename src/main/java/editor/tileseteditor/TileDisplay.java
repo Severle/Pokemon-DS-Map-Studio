@@ -1,106 +1,48 @@
 
 package editor.tileseteditor;
 
-import static com.jogamp.opengl.GL.GL_BACK;
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_CULL_FACE;
-import static com.jogamp.opengl.GL.GL_CW;
-import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_DEPTH_TEST;
-import static com.jogamp.opengl.GL.GL_FRONT;
-import static com.jogamp.opengl.GL.GL_GREATER;
-import static com.jogamp.opengl.GL.GL_LEQUAL;
-import static com.jogamp.opengl.GL.GL_LINES;
-import static com.jogamp.opengl.GL.GL_NEAREST;
-import static com.jogamp.opengl.GL.GL_NOTEQUAL;
-import static com.jogamp.opengl.GL.GL_REPEAT;
-import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
-import static com.jogamp.opengl.GL.GL_TEXTURE_MAG_FILTER;
-import static com.jogamp.opengl.GL.GL_TEXTURE_MIN_FILTER;
-import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_S;
-import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_T;
-import static com.jogamp.opengl.GL.GL_TRIANGLES;
-import static com.jogamp.opengl.GL.GL_TRUE;
-import static com.jogamp.opengl.GL2.GL_ARRAY_BUFFER;
-import static com.jogamp.opengl.GL2.GL_BLEND;
-import static com.jogamp.opengl.GL2.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL2.GL_DEPTH_TEST;
-import static com.jogamp.opengl.GL2.GL_FLOAT;
-import static com.jogamp.opengl.GL2.GL_FRONT_AND_BACK;
-import static com.jogamp.opengl.GL2.GL_LEQUAL;
-import static com.jogamp.opengl.GL2.GL_LESS;
-import static com.jogamp.opengl.GL2.GL_LINES;
-import static com.jogamp.opengl.GL2.GL_NEAREST;
-import static com.jogamp.opengl.GL2.GL_ONE_MINUS_DST_ALPHA;
-import static com.jogamp.opengl.GL2.GL_ONE_MINUS_SRC_ALPHA;
-import static com.jogamp.opengl.GL2.GL_REPEAT;
-import static com.jogamp.opengl.GL2.GL_SRC_ALPHA;
-import static com.jogamp.opengl.GL2.GL_STATIC_DRAW;
-import static com.jogamp.opengl.GL2.GL_TEXTURE0;
-import static com.jogamp.opengl.GL2.GL_TEXTURE_2D;
-import static com.jogamp.opengl.GL2.GL_TEXTURE_MAG_FILTER;
-import static com.jogamp.opengl.GL2.GL_TEXTURE_MIN_FILTER;
-import static com.jogamp.opengl.GL2.GL_TEXTURE_WRAP_S;
-import static com.jogamp.opengl.GL2.GL_TEXTURE_WRAP_T;
-import static com.jogamp.opengl.GL2.GL_TRIANGLES;
-
-import com.jogamp.opengl.GL2;
-
-import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
-import static com.jogamp.opengl.GL2ES1.GL_LIGHT_MODEL_AMBIENT;
-import static com.jogamp.opengl.GL2ES1.GL_LIGHT_MODEL_TWO_SIDE;
-import static com.jogamp.opengl.GL2ES3.GL_COLOR;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
-import static com.jogamp.opengl.GL2GL3.GL_FILL;
-import static com.jogamp.opengl.GL2GL3.GL_LINE;
-
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
-
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHT1;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHT2;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_NORMALIZE;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
-
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.awt.ImageUtil;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import editor.handler.MapEditorHandler;
 import geometry.Generator;
-import graphicslib3D.Matrix3D;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import javax.swing.SwingUtilities;
-
+import lombok.Getter;
+import lombok.Setter;
 import tileset.Tile;
 import tileset.Tileset;
-import utils.GlUtils;
 import utils.Utils;
+
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static com.jogamp.opengl.GL.*;
+import static com.jogamp.opengl.GL2.GL_BLEND;
+import static com.jogamp.opengl.GL2.GL_FRONT_AND_BACK;
+import static com.jogamp.opengl.GL2.GL_LESS;
+import static com.jogamp.opengl.GL2.GL_ONE_MINUS_DST_ALPHA;
+import static com.jogamp.opengl.GL2.GL_ONE_MINUS_SRC_ALPHA;
+import static com.jogamp.opengl.GL2.GL_SRC_ALPHA;
+import static com.jogamp.opengl.GL2ES1.GL_ALPHA_TEST;
+import static com.jogamp.opengl.GL2ES3.GL_QUADS;
+import static com.jogamp.opengl.GL2GL3.GL_FILL;
+import static com.jogamp.opengl.GL2GL3.GL_LINE;
+import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
+import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class TileDisplay extends GLJPanel implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
 
     //Map Editor Handler
+    @Setter
     private MapEditorHandler handler;
 
     //OpenGL
@@ -120,7 +62,8 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
     private boolean drawGridEnabled = true;
 
     //Mouse Events
-    private boolean dragging = false;
+    @Getter
+    private final boolean dragging = false;
     private int lastMouseX, lastMouseY;
 
     // Update Display
@@ -129,11 +72,16 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
     //Display Mode
     private boolean wireframeEnabled = true;
     private boolean backfaceCullingEnabled = true;
-    private boolean texturesEnabled = true;
+    @Getter
+    @Setter
+    private boolean texturesEnabled        = true;
+    @Getter
+    @Setter
     private boolean lightingEnabled = false;
-    private boolean normalsEnabled = false;
+    @Setter
+    private boolean normalsEnabled  = false;
 
-    private float normalScale = 0.35f;
+    private static final float normalScale = 0.35f;
 
     public TileDisplay() {
         //Add listeners
@@ -190,8 +138,6 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
 
             System.out.println("UPDATING WINDOW...");
 
-            //handler.getTileset().updateTextures(gl, "res/tileset");
-            //handler.getTileset().loadTexturesGL();
             loadTexturesGL();
 
             //Load Textures into OpenGL
@@ -213,18 +159,6 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
 
                 gl.glEnable(GL2.GL_LIGHTING);
                 gl.glEnable(GL2.GL_LIGHT0);
-
-                //float[] ambientLight = {1f, 1f, 1f, 0f};
-                //gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);
-
-                //float[] specularLight = {1f, 1f, 1f, 1f};
-                //gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, specularLight, 0);
-
-                //float[] diffuseLight = {1f, 1f, 1f, 0f};
-                //gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0);
-
-                //float[] emissionLight = {1f, 1f, 1f, 0f};
-                //gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_EMISSION, emissionLight, 0);
 
                 gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[]{1.0f, 1.0f, 1.0f, 0.0f}, 0);
                 gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[]{-1.0f, 1.0f, -0.05f, 0.0f}, 0);
@@ -308,11 +242,7 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            if (orthoEnabled) {
-                orthoEnabled = false;
-            } else {
-                orthoEnabled = true;
-            }
+            orthoEnabled = !orthoEnabled;
             repaint();
         }
 
@@ -331,9 +261,9 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
     public void mouseWheelMoved(MouseWheelEvent e) {
         int wheelRotation = e.getWheelRotation();
         if (wheelRotation > 0) {
-            cameraZ *= 1.1;
+            cameraZ *= 1.1F;
         } else {
-            cameraZ /= 1.1;
+            cameraZ /= 1.1F;
         }
         repaint();
     }
@@ -732,7 +662,7 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
     }
 
     private Texture loadTextureGL(int index) {
-        Texture tex = null;
+        Texture tex;
         try {
             BufferedImage img = Utils.cloneImg(handler.getTileset().getMaterials().get(index).getTextureImg());
             ImageUtil.flipImageVertically(img);
@@ -747,36 +677,12 @@ public class TileDisplay extends GLJPanel implements GLEventListener, MouseListe
         Collections.swap(textures, index1, index2);
     }
 
-    public void setHandler(MapEditorHandler handler) {
-        this.handler = handler;
-    }
-
     public void setWireframe(boolean enabled) {
         this.wireframeEnabled = enabled;
     }
 
     public void setBackfaceCulling(boolean enabled) {
         this.backfaceCullingEnabled = enabled;
-    }
-
-    public void setLightingEnabled(boolean lightingEnabled) {
-        this.lightingEnabled = lightingEnabled;
-    }
-
-    public boolean isLightingEnabled() {
-        return lightingEnabled;
-    }
-
-    public void setTexturesEnabled(boolean texturesEnabled) {
-        this.texturesEnabled = texturesEnabled;
-    }
-
-    public boolean isTexturesEnabled() {
-        return texturesEnabled;
-    }
-
-    public void setNormalsEnabled(boolean normalsEnabled){
-        this.normalsEnabled = normalsEnabled;
     }
 
 }

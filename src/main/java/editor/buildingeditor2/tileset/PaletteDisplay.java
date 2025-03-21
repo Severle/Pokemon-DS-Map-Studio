@@ -3,15 +3,15 @@ package editor.buildingeditor2.tileset;
 import formats.nsbtx2.NsbtxPalette;
 import formats.nsbtx2.NsbtxTexture;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.GroupLayout;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "DuplicatedCode", "SpellCheckingInspection"})
 public class PaletteDisplay extends JPanel {
     private static final int tileSize = 10;
     private static final int maxNumColors = 256;
@@ -20,9 +20,9 @@ public class PaletteDisplay extends JPanel {
 
     private static final Color borderColor = new Color(102, 102, 102);
     private static final Color selectionFillColor = new Color(255, 0, 0, 120);
-    private static final Color selectionBorderColor = Color.red;
-    private BufferedImage backImg;
-    public ArrayList<Color> palette;
+    private static final Color            selectionBorderColor = Color.red;
+    private final        BufferedImage    backImg;
+    public               ArrayList<Color> palette;
 
     public PaletteDisplay() {
         initComponents();

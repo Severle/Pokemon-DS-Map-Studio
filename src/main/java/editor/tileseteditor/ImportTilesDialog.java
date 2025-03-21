@@ -1,29 +1,30 @@
 package editor.tileseteditor;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-
-import editor.tileselector.*;
-import tileset.TilesetRenderer;
-
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
-
+import editor.tileselector.TileMultiSelector;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import tileset.Tile;
 import tileset.Tileset;
+import tileset.TilesetRenderer;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class ImportTilesDialog extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
+    @Getter
     private int returnValue = CANCEL_OPTION;
 
+    @Getter
     private Tileset tileset;
 
     public ImportTilesDialog(Window owner) {
@@ -67,21 +68,18 @@ public class ImportTilesDialog extends JDialog {
         try {
             tr.renderTiles();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.warn(e);
         }
         tr.destroy();
 
         tileMultiSelector.init(tileset);
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     public ArrayList<Tile> getTilesSelected() {
         return tileMultiSelector.getTilesSelected();
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

@@ -1,15 +1,14 @@
 package editor.keyboard;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class KeyboardInfoDialog extends JDialog {
     public KeyboardInfoDialog(Window owner) {
         super(owner);
@@ -20,6 +19,7 @@ public class KeyboardInfoDialog extends JDialog {
         dispose();
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode", "Convert2Diamond"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();
@@ -31,7 +31,7 @@ public class KeyboardInfoDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Keyboard and Mouse Shortcuts (Not finished)");
         setModal(true);
-        Container contentPane = getContentPane();
+        var contentPane = getContentPane();
 
         //======== jPanel1 ========
         {
@@ -53,7 +53,7 @@ public class KeyboardInfoDialog extends JDialog {
                         "RIGHT CLICK - Get Tile selected",
                         "MOUSE WHEEL CLICK - Flood fill",
                         "Ctrl+Z - Undo",
-                        "Crtl+Y - Redo"
+                        "Ctrl+Y - Redo"
                     };
                     @Override
                     public int getSize() { return values.length; }
@@ -76,7 +76,7 @@ public class KeyboardInfoDialog extends JDialog {
                 jPanel1Layout.createParallelGroup()
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                         .addContainerGap())
             );
         }

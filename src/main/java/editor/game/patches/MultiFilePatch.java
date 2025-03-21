@@ -11,11 +11,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class MultiFilePatch {
 
-    private static final String headerPath = "header.bin";
-    private String gameCode;
-    private List<FilePatch> patches;
+    private static final String          headerPath = "header.bin";
+    private final String          gameCode;
+    private final List<FilePatch> patches;
 
     public MultiFilePatch(String gameCode, List<FilePatch> patches) {
         this.gameCode = gameCode;
@@ -61,7 +62,7 @@ public class MultiFilePatch {
         if(new File(path).exists()){
             return Files.readAllBytes(new File(path).toPath());
         }else{
-            String[] splitPath = path.split(File.separator);
+            String[] splitPath = path.split(File.pathSeparator);
             String fullPath = splitPath[0];
 
             for(int i = 1; i < splitPath.length; i++){

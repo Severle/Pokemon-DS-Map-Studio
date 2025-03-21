@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class BacksoundDisplay extends JPanel {
     private MapEditorHandler handler;
     private BacksoundHandler backsoundHandler;
@@ -69,7 +70,7 @@ public class BacksoundDisplay extends JPanel {
     }
 
     private void formMouseDragged(MouseEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             if (dragging && isCursorInsiePanel(e)) {
                 SoundPlate p      = backsoundHandler.getSelectedSoundplate();
                 int        deltaX = (e.getX() - lastX) / TILE_SIZE;
@@ -108,8 +109,9 @@ public class BacksoundDisplay extends JPanel {
         }
     }
 
+    @SuppressWarnings("MagicConstant")
     private void formMouseMoved(MouseEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             int x = e.getX();
             int y = e.getY();
             if (isHoveringPlate(backsoundHandler.getSelectedSoundplate(), x, y)) {
@@ -134,7 +136,7 @@ public class BacksoundDisplay extends JPanel {
     }
 
     private void formMousePressed(MouseEvent e) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             int x = e.getX();
             int y = e.getY();
             if (indexPlateHovering != -1) {
@@ -188,7 +190,7 @@ public class BacksoundDisplay extends JPanel {
     }
 
     private void drawPlates(Graphics g, BackSound backsound) {
-        if (backsoundHandler.getSoundplates().size() > 0) {
+        if (!backsoundHandler.getSoundplates().isEmpty()) {
             for (int i = 0; i < backsound.getSoundPlates().size(); i++) {
 
                 g.setColor(getColorWithAlpha(getPlateColor(backsound, i), 120));
@@ -295,10 +297,7 @@ public class BacksoundDisplay extends JPanel {
     public boolean isCursorInsiePanel(MouseEvent evt) {
         int x = evt.getX();
         int y = evt.getY();
-        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
-            return false;
-        }
-        return true;
+        return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
     }
 
     public boolean isHoveringPlate(SoundPlate p, int x, int y) {

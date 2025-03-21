@@ -2,19 +2,20 @@ package editor.heightselector;
 
 import editor.handler.MapEditorHandler;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("DuplicatedCode")
 public class HeightSelector extends JPanel {
 
     private MapEditorHandler handler;
 
-    private int tileSize = 16;
+    private final int tileSize = 16;
 
     public HeightSelector() {
         initComponents();
@@ -37,24 +38,7 @@ public class HeightSelector extends JPanel {
             int numHeights = handler.getNumHeights();
             for (int i = 0; i < numHeights; i++) {
                 g.drawImage(handler.getHeightImage(i), 0, i * tileSize, null);
-                /*
-                //Draw height color
-                g.setColor(handler.getHeightColorByIndex(i));
-                g.fillRect(0, (numHeights - 1 - i) * tileSize, tileSize, tileSize);
-
-                //Draw grid
-                g.setColor(new Color(255, 255, 255, 255));
-                g.drawRect(0, (numHeights - 1 - i) * tileSize, tileSize, tileSize);
-
-                //Draw height value
-                int xOffset = Math.abs(handler.getHeight(i)) > 9 ? 1 : 5;
-                g.setColor(new Color(0, 0, 0, 255));
-                g.drawString(String.valueOf(handler.getHeight(i)), xOffset, (numHeights - i) * tileSize - 2);
-                */
             }
-
-            //g.setColor(new Color(50, 50, 50));
-            //g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
             g.setColor(Color.red);
             g.drawRect(

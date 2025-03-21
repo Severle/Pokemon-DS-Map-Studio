@@ -1,50 +1,62 @@
 
 package editor.buildingeditor2;
 
-import editor.buildingeditor2.buildmodel.BuildModelMatshp;
-import editor.buildingeditor2.buildmodel.BuildModelList;
 import editor.buildingeditor2.animations.BuildAnimations;
 import editor.buildingeditor2.animations.BuildAnimeListHGSS;
 import editor.buildingeditor2.animations.MapAnimations;
 import editor.buildingeditor2.areabuild.AreaBuild;
 import editor.buildingeditor2.areabuild.AreaBuildList;
 import editor.buildingeditor2.areadata.AreaDataListHGSS;
+import editor.buildingeditor2.buildmodel.BuildModelList;
+import editor.buildingeditor2.buildmodel.BuildModelMatshp;
 import editor.buildingeditor2.tileset.BuildTileset;
 import editor.buildingeditor2.tileset.BuildTilesetList;
 import editor.game.GameFileSystemHGSS;
 import formats.narc2.Narc;
 import formats.narc2.NarcIO;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import nitroreader.nsbmd.NSBMD;
 import nitroreader.nsbmd.sbccommands.MAT;
 import nitroreader.nsbmd.sbccommands.SBCCommand;
 import nitroreader.nsbmd.sbccommands.SHP;
 import utils.Utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class BuildHandlerHGSS {
 
     //private MapEditorHandler handler;
-    private String gameFolderPath = "";
-    private GameFileSystemHGSS gameFileSystem;
+    @Getter
+    @Setter
+    private       String             gameFolderPath;
+    private final GameFileSystemHGSS gameFileSystem;
 
-    private int buildBlockIndexSelected = 0;
-    private final int numBuildBlocks = 2;
+    @Setter
+    private       int buildBlockIndexSelected = 0;
+    private final int numBuildBlocks          = 2;
 
-    private BuildModelList[] buildModelList = new BuildModelList[numBuildBlocks]; //2
-    private BuildModelMatshp[] buildModelMatshp = new BuildModelMatshp[numBuildBlocks]; //2
-    private BuildAnimeListHGSS[] buildModelAnimeList = new BuildAnimeListHGSS[numBuildBlocks]; //2
-    private BuildAnimations buildModelAnims;
+    private final BuildModelList[]     buildModelList      = new BuildModelList[numBuildBlocks]; //2
+    private final BuildModelMatshp[]   buildModelMatshp    = new BuildModelMatshp[numBuildBlocks]; //2
+    private final BuildAnimeListHGSS[] buildModelAnimeList = new BuildAnimeListHGSS[numBuildBlocks]; //2
+    @Getter
+    private BuildAnimations  buildModelAnims;
+    @Getter
     private AreaDataListHGSS areaDataList;
+    @Getter
     private BuildTilesetList buildTilesetList;
+    @Getter
     private AreaBuildList areaBuildList;
+    @Getter
     private MapAnimations mapAnimations;
 
 
@@ -143,16 +155,13 @@ public class BuildHandlerHGSS {
             NarcIO.writeNarc(buildTilesetList.toNarc(), getGameFilePath(gameFileSystem.getAreaBuildTilesetPath()));
             NarcIO.writeNarc(mapAnimations.toNarc(), getGameFilePath(gameFileSystem.getMapAnimationsPath()));
         } catch (Exception ex) {
+            log.error(ex);
             throw ex;
         }
     }
 
-    /*
-    public void saveBuildModelList() throws IOException {
-        NarcIO.writeNarc(buildModelList.toNarc(), getGameFilePath(gameFileSystem.getBuildModelPath()));
-    }*/
     private void generateMissingFiles() {
-        //TODO: Finish this
+
     }
 
     public void addBuilding(String path) throws IOException {
@@ -288,14 +297,6 @@ public class BuildHandlerHGSS {
         return new File(path).exists();
     }
 
-    public void setGameFolderPath(String path) {
-        this.gameFolderPath = path;
-    }
-
-    public String getGameFolderPath() {
-        return gameFolderPath;
-    }
-
     public BuildModelList getBuildModelList() {
         return buildModelList[buildBlockIndexSelected];
     }
@@ -308,35 +309,17 @@ public class BuildHandlerHGSS {
         return buildModelAnimeList[buildBlockIndexSelected];
     }
 
-    public BuildAnimations getBuildModelAnims() {
-        return buildModelAnims;
-    }
-
-    public AreaDataListHGSS getAreaDataList() {
-        return areaDataList;
-    }
-
-    public BuildTilesetList getBuildTilesetList() {
-        return buildTilesetList;
-    }
-
-    public AreaBuildList getAreaBuildList() {
-        return areaBuildList;
-    }
-
     public static ArrayList<Integer> getMaterialOrder(byte[] nsbmdData) {
         NSBMD nsbmd = new NSBMD(nsbmdData);
 
-        List<SBCCommand> sbc = nsbmd.getMLD0().getModels().get(0).getSBC();
+        List<SBCCommand> sbc = nsbmd.getMLD0().getModels().getFirst().getSBC();
         List<Integer> materialIDs = new ArrayList<>();
         List<Integer> shapeIDs = new ArrayList<>();
 
         for (SBCCommand cmd : sbc) {
-            if (cmd instanceof MAT) {
-                MAT mat = (MAT) cmd;
+            if (cmd instanceof MAT mat) {
                 materialIDs.add(mat.getMatID());
-            } else if (cmd instanceof SHP) {
-                SHP shp = (SHP) cmd;
+            } else if (cmd instanceof SHP shp) {
                 shapeIDs.add(shp.getShpID());
             }
         }
@@ -347,8 +330,8 @@ public class BuildHandlerHGSS {
         }
 
         ArrayList<Integer> materials = new ArrayList<>(polyLookup.length);
-        for (int i = 0; i < polyLookup.length; i++) {
-            materials.add(polyLookup[i]);
+        for (int j : polyLookup) {
+            materials.add(j);
         }
 
         if (Utils.hasDuplicates(materials)) {
@@ -357,14 +340,4 @@ public class BuildHandlerHGSS {
 
         return materials;
     }
-
-    public void setBuildBlockIndexSelected(int buildBlockIndexSelected) {
-        this.buildBlockIndexSelected = buildBlockIndexSelected;
-    }
-
-    public MapAnimations getMapAnimations() {
-        return mapAnimations;
-    }
-
-
 }

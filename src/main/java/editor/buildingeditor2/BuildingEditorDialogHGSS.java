@@ -1,14 +1,5 @@
 package editor.buildingeditor2;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
-import formats.nsbtx2.*;
-import net.miginfocom.swing.*;
 import editor.buildingeditor2.animations.AddBuildAnimationDialog;
 import editor.buildingeditor2.animations.BuildAnimInfoHGSS;
 import editor.buildingeditor2.animations.ModelAnimation;
@@ -18,41 +9,11 @@ import editor.buildingeditor2.areadata.AreaDataHGSS;
 import editor.buildingeditor2.buildfile.Build;
 import editor.buildingeditor2.buildfile.BuildFile;
 import editor.handler.MapEditorHandler;
-import formats.nsbtx2.Nsbtx2;
-import formats.nsbtx2.NsbtxLoader2;
-import formats.nsbtx2.NsbtxPalette;
-import formats.nsbtx2.NsbtxTexture;
-import formats.nsbtx2.NsbtxWriter;
-
-import java.awt.Color;
-
-import utils.Utils.MutableBoolean;
-
-import java.awt.Component;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import nitroreader.nsbca.NSBCA;
+import editor.mapmatrix.MapMatrix;
+import formats.nsbtx2.*;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import net.miginfocom.swing.MigLayout;
 import nitroreader.nsbca.NSBCAreader;
 import nitroreader.nsbta.NSBTA;
 import nitroreader.nsbta.NSBTAreader;
@@ -63,45 +24,67 @@ import nitroreader.shared.G3Dheader;
 import renderer.NitroDisplayGL;
 import renderer.ObjectGL;
 import utils.Utils;
+import utils.Utils.MutableBoolean;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Getter
+@Log4j2
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection", "unused", "SuspiciousMethodCalls", "ExtractMethodRecommender"})
 public class BuildingEditorDialogHGSS extends JDialog {
     private MapEditorHandler handler;
     private BuildHandlerHGSS buildHandler;
 
-    private ImageIcon nsbmdIcon;
-    private ImageIcon nsbtxIcon;
-    private ImageIcon areaDataIcon;
-    private ArrayList<ImageIcon> animIcons;
-    private ArrayList<Integer> selectedAnimIconIndices;
+    private final ImageIcon nsbmdIcon;
+    private final ImageIcon            nsbtxIcon;
+    private final ImageIcon            areaDataIcon;
+    private final ArrayList<ImageIcon> animIcons;
+    private       ArrayList<Integer>   selectedAnimIconIndices;
     private ArrayList<Integer> animIconIndices;
     private ArrayList<Integer> mapAnimIconIndices;
 
-    private MutableBoolean jlBuildModelEnabled = new MutableBoolean(true);
-    private MutableBoolean jlMaterialOrderEnabled = new MutableBoolean(true);
-    private MutableBoolean jlBuildAnimeListEnabled = new MutableBoolean(true);
-    private MutableBoolean jlAreaDataListEnabled = new MutableBoolean(true);
-    private MutableBoolean jlBuildTsetListEnabled = new MutableBoolean(true);
-    private MutableBoolean jlAreaBuildListEnabled = new MutableBoolean(true);
-    private MutableBoolean jlAnimationsListEnabled = new MutableBoolean(true);
-    private MutableBoolean jlBuildFileEnabled = new MutableBoolean(true);
+    private final MutableBoolean jlBuildModelEnabled     = new MutableBoolean(true);
+    private final MutableBoolean jlMaterialOrderEnabled  = new MutableBoolean(true);
+    private final MutableBoolean jlBuildAnimeListEnabled = new MutableBoolean(true);
+    private final MutableBoolean jlAreaDataListEnabled  = new MutableBoolean(true);
+    private final MutableBoolean jlBuildTsetListEnabled  = new MutableBoolean(true);
+    private final MutableBoolean jlAreaBuildListEnabled  = new MutableBoolean(true);
+    private final MutableBoolean jlAnimationsListEnabled = new MutableBoolean(true);
+    private final MutableBoolean jlBuildFileEnabled      = new MutableBoolean(true);
 
-    private MutableBoolean jcbAnimationTypeEnabled = new MutableBoolean(true);
+    @SuppressWarnings("WriteOnlyObject")
+    private final MutableBoolean jcbAnimationTypeEnabled = new MutableBoolean(true);
 
-    private MutableBoolean jtfBuildTsetEnabled = new MutableBoolean(true);
-    private MutableBoolean jtfMapTsetEnabled = new MutableBoolean(true);
-    private MutableBoolean jcbAreaTypeEnabled = new MutableBoolean(true);
-    private MutableBoolean buildPropertiesEnabled = new MutableBoolean(true);
-    private MutableBoolean jcbDynamicTexEnabled = new MutableBoolean(true);
-    private MutableBoolean jcbAreaLightEnabled = new MutableBoolean(true);
+    private final MutableBoolean jtfBuildTsetEnabled = new MutableBoolean(true);
+    private final MutableBoolean jtfMapTsetEnabled      = new MutableBoolean(true);
+    private final MutableBoolean jcbAreaTypeEnabled     = new MutableBoolean(true);
+    private final MutableBoolean buildPropertiesEnabled = new MutableBoolean(true);
+    private final MutableBoolean jcbDynamicTexEnabled = new MutableBoolean(true);
+    private final MutableBoolean jcbAreaLightEnabled  = new MutableBoolean(true);
 
-    private MutableBoolean jcbAnimType1Enabled = new MutableBoolean(true);
-    private MutableBoolean jcbAnimType2Enabled = new MutableBoolean(true);
-    private MutableBoolean jcbLoopEnabled = new MutableBoolean(true);
-    private MutableBoolean jcbUnknown1Enabled = new MutableBoolean(true);
-    private MutableBoolean jcbNumAnimsEnabled = new MutableBoolean(true);
+    private final MutableBoolean jcbAnimType1Enabled = new MutableBoolean(true);
+    private final MutableBoolean jcbAnimType2Enabled = new MutableBoolean(true);
+    private final MutableBoolean jcbLoopEnabled     = new MutableBoolean(true);
+    private final MutableBoolean jcbUnknown1Enabled = new MutableBoolean(true);
+    private final MutableBoolean jcbNumAnimsEnabled = new MutableBoolean(true);
 
     private static final Color redColor = new Color(255, 200, 200);
     private static final Color greenColor = new Color(200, 255, 200);
@@ -111,21 +94,21 @@ public class BuildingEditorDialogHGSS extends JDialog {
         super(owner);
         initComponents();
 
-        jTabbedPane1.setIconAt(0, new ImageIcon(getClass().getResource("/icons/BuildingIcon.png")));
-        jTabbedPane1.setIconAt(1, new ImageIcon(getClass().getResource("/icons/AreaDataIcon.png")));
-        jTabbedPane1.setIconAt(2, new ImageIcon(getClass().getResource("/icons/NsbtxIcon.png")));
-        jTabbedPane1.setIconAt(3, new ImageIcon(getClass().getResource("/icons/AnimationIcon.png")));
-        jTabbedPane1.setIconAt(4, new ImageIcon(getClass().getResource("/icons/mapIcon.png")));
+        jTabbedPane1.setIconAt(0, new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/BuildingIcon.png"))));
+        jTabbedPane1.setIconAt(1, new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/AreaDataIcon.png"))));
+        jTabbedPane1.setIconAt(2, new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbtxIcon.png"))));
+        jTabbedPane1.setIconAt(3, new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/AnimationIcon.png"))));
+        jTabbedPane1.setIconAt(4, new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/mapIcon.png"))));
 
-        nsbmdIcon = new ImageIcon(getClass().getResource("/icons/NsbmdIcon.png"));
-        nsbtxIcon = new ImageIcon(getClass().getResource("/icons/NsbtxIcon.png"));
-        areaDataIcon = new ImageIcon(getClass().getResource("/icons/AreaDataIcon.png"));
+        nsbmdIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbmdIcon.png")));
+        nsbtxIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbtxIcon.png")));
+        areaDataIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/AreaDataIcon.png")));
 
         animIcons = new ArrayList<>(4);
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbcaIcon.png")));
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbtaIcon.png")));
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbtpIcon.png")));
-        animIcons.add(new ImageIcon(getClass().getResource("/icons/NsbmaIcon.png")));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbcaIcon.png"))));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbtaIcon.png"))));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbtpIcon.png"))));
+        animIcons.add(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbmaIcon.png"))));
 
         selectedAnimIconIndices = new ArrayList<>();
         animIconIndices = new ArrayList<>();
@@ -190,14 +173,11 @@ public class BuildingEditorDialogHGSS extends JDialog {
         nitroDisplayMap.getObjectsGL().add(new ObjectGL());//Add space for Map's NSBMD
         nitroDisplayMapAnims.getObjectsGL().add(new ObjectGL());//Add space for Map's NSBMD
 
-        jcbAnimType1.setModel(new DefaultComboBoxModel(BuildAnimInfoHGSS.namesAnimType1.values().toArray()));
-        jcbAnimType2.setModel(new DefaultComboBoxModel(BuildAnimInfoHGSS.namesAnimType2.values().toArray()));
-        jcbLoopType.setModel(new DefaultComboBoxModel(BuildAnimInfoHGSS.namesLoopType.values().toArray()));
-        jcbUnknown1.setModel(new DefaultComboBoxModel(BuildAnimInfoHGSS.namesDoorSound.values().toArray()));
-        jcbNumAnims.setModel(new DefaultComboBoxModel(BuildAnimInfoHGSS.namesNumAnims.values().toArray()));
-
-        //jcbDynamicTex.setModel(new DefaultComboBoxModel(AreaDataHGSS.namesDynamicTexType.values().toArray()));
-        //updateModelJcbMapAnimations();
+        jcbAnimType1.setModel(new DefaultComboBoxModel<>(BuildAnimInfoHGSS.namesAnimType1.values().toArray(new String[0])));
+        jcbAnimType2.setModel(new DefaultComboBoxModel<>(BuildAnimInfoHGSS.namesAnimType2.values().toArray(new String[0])));
+        jcbLoopType.setModel(new DefaultComboBoxModel<>(BuildAnimInfoHGSS.namesLoopType.values().toArray(new String[0])));
+        jcbUnknown1.setModel(new DefaultComboBoxModel<>(BuildAnimInfoHGSS.namesDoorSound.values().toArray(new String[0])));
+        jcbNumAnims.setModel(new DefaultComboBoxModel<>(BuildAnimInfoHGSS.namesNumAnims.values().toArray(new String[0])));
     }
 
     private void jlBuildModelValueChanged(ListSelectionEvent evt) {
@@ -229,7 +209,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 nsbtxPanel.updateViewPaletteNameList(0);
                 nsbtxPanel.updateView();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
@@ -302,7 +282,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 String fileName = buildHandler.getBuildModelList().getModelsName().get(jlBuildModel.getSelectedIndex());
                 fc.setSelectedFile(new File(fileName + ".nsbmd"));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -327,11 +307,11 @@ public class BuildingEditorDialogHGSS extends JDialog {
         if (buildHandler.getBuildModelList() != null) {
             ArrayList<Integer> occurrences = buildHandler.getAreaBuildList().getBuildingOccurrences(jlBuildModel.getSelectedIndex());
             if (!occurrences.isEmpty()) {
-                String occurenceIDs = "";
+                StringBuilder occurenceIDs = new StringBuilder();
                 for (int i = 0; i < occurrences.size() - 1; i++) {
-                    occurenceIDs += String.valueOf(occurrences.get(i)) + ", ";
+                    occurenceIDs.append(occurrences.get(i)).append(", ");
                 }
-                occurenceIDs += String.valueOf(occurrences.get(occurrences.size() - 1));
+                occurenceIDs.append(occurrences.getLast());
 
                 int returnVal2 = JOptionPane.showConfirmDialog(this.getContentPane(),
                         "This building is being used in the following tilesets: \n" + occurenceIDs + "\n"
@@ -409,7 +389,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Buildings can't have more than "
-                                + String.valueOf(BuildAnimInfoHGSS.MAX_ANIMS_PER_BUILDING) + " animations.",
+                                + BuildAnimInfoHGSS.MAX_ANIMS_PER_BUILDING + " animations.",
                         "Can't add animation", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -419,7 +399,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
         if (buildHandler.getBuildModelList() != null
                 && buildHandler.getBuildModelAnimeList() != null
                 && buildHandler.getBuildModelAnims() != null) {
-            if (buildHandler.getBuildModelAnimeList().getAnimations().get(jlBuildModel.getSelectedIndex()).getAnimIDs().size() > 0) {
+            if (!buildHandler.getBuildModelAnimeList().getAnimations().get(jlBuildModel.getSelectedIndex()).getAnimIDs().isEmpty()) {
                 final AddBuildAnimationDialog dialog = new AddBuildAnimationDialog(handler.getMainFrame());
                 dialog.init(buildHandler.getBuildModelList().getModelsData().get(jlBuildModel.getSelectedIndex()),
                         buildHandler.getBuildModelAnims(),
@@ -541,7 +521,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 String fileName = buildHandler.getBuildModelAnims().getAnimations().get(jlAnimationsList.getSelectedIndex()).getName();
                 fc.setSelectedFile(new File(fileName + "." + type));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -589,15 +569,15 @@ public class BuildingEditorDialogHGSS extends JDialog {
         if (buildHandler.getBuildModelList() != null) {
             ArrayList<Integer> occurrences = buildHandler.getAreaBuildList().getBuildingOccurrences(jlBuildModel.getSelectedIndex());
             if (!occurrences.isEmpty()) {
-                String occurenceIDs = "";
+                StringBuilder occurenceIDs = new StringBuilder();
                 for (int i = 0; i < occurrences.size() - 1; i++) {
-                    occurenceIDs += String.valueOf(occurrences.get(i)) + ", ";
+                    occurenceIDs.append(occurrences.get(i)).append(", ");
                 }
-                occurenceIDs += String.valueOf(occurrences.get(occurrences.size() - 1));
+                occurenceIDs.append(occurrences.getLast());
 
                 JOptionPane.showMessageDialog(this,
                         "This building is being used in the following building tilesets: \n" + occurenceIDs,
-                        String.valueOf(occurrences.size()) + " occurrences found", JOptionPane.INFORMATION_MESSAGE);
+                        occurrences.size() + " occurrences found", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this,
                         "This building is not included in any building tileset.",
@@ -606,6 +586,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
         }
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     private void jcbAnimType1ActionPerformed(ActionEvent evt) {
         if (jcbAnimType1Enabled.value) {
             BuildAnimInfoHGSS info = buildHandler.getBuildModelAnimeList().getAnimations().get(jlBuildModel.getSelectedIndex());
@@ -640,7 +621,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 int value = Integer.parseInt(jtfBuildTset.getText());
                 areaData.setBuildingTilesetID(value);
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             jtfBuildTsetEnabled.value = false;
             jtfBuildTset.setText(String.valueOf(areaData.getBuildingTilesetID()));
@@ -657,7 +638,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 int value = Integer.parseInt(jtfMapTset.getText());
                 areaData.setMapTilesetID(value);
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             jtfMapTsetEnabled.value = false;
             jtfMapTset.setText(String.valueOf(areaData.getMapTilesetID()));
@@ -685,10 +666,9 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 loadAnimationInNitroDisplay(nitroDisplayGL, 0, anim);
 
             } catch (Exception ex) {
-                //ex.printStackTrace();
+                log.warn(ex);
             }
         }
-
     }
 
     private void jbImportMaterialsFromNsbmdActionPerformed(ActionEvent evt) {
@@ -728,7 +708,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                     nitroDisplayAreaData.fitCameraToModel(0);
                     nitroDisplayAreaData.requestUpdate();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                 }
             }
         }
@@ -786,14 +766,14 @@ public class BuildingEditorDialogHGSS extends JDialog {
                         JOptionPane.showMessageDialog(this,
                                 "Textures and palettes succesfully imported.\n"
                                         + "(Some textures or palettes were already in the tileset)\n"
-                                        + "- " + String.valueOf(addedTextures) + " textures added\n"
-                                        + "- " + String.valueOf(addedPalettes) + " palettes added",
+                                        + "- " + addedTextures + " textures added\n"
+                                        + "- " + addedPalettes + " palettes added",
                                 "Data imported", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(this,
                                 "Textures and palettes succesfully imported.\n"
-                                        + "- " + String.valueOf(addedTextures) + " textures added\n"
-                                        + "- " + String.valueOf(addedPalettes) + " palettes added",
+                                        + "- " + addedTextures + " textures added\n"
+                                        + "- " + addedPalettes + " palettes added",
                                 "Data imported", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {
@@ -807,7 +787,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                         "No NSBTX in the NSMBD", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
             JOptionPane.showMessageDialog(this,
                     "There was a problem importing the textures and palettes.\n"
                             + "Make sure that you have the converter program in the converter folder.",
@@ -839,7 +819,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                     updateViewAreaBuildList(buildHandler.getAreaBuildList().getAreaBuilds().size() - 1);
 
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                     JOptionPane.showMessageDialog(this,
                             "There was a problem adding the NSBTX",
                             "Can't add NSBTX", JOptionPane.ERROR_MESSAGE);
@@ -869,7 +849,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                     updateViewBuildTsetList(jlBuildTsetList.getSelectedIndex());
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                     JOptionPane.showMessageDialog(this,
                             "There was a problem adding the NSBTX",
                             "Can't add NSBTX", JOptionPane.ERROR_MESSAGE);
@@ -889,11 +869,11 @@ public class BuildingEditorDialogHGSS extends JDialog {
             fc.setFileFilter(new FileNameExtensionFilter("NSBTX (*.nsbtx)", "nsbtx"));
             fc.setApproveButtonText("Save");
             fc.setDialogTitle("Save Building's NSBTX");
-            try {//TODO: Replace this with some index bounds cheking?
-                String fileName = "Building Tileset " + String.valueOf(jlBuildTsetList.getSelectedIndex());
+            try {
+                String fileName = "Building Tileset " + jlBuildTsetList.getSelectedIndex();
                 fc.setSelectedFile(new File(fileName + ".nsbtx"));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -915,7 +895,6 @@ public class BuildingEditorDialogHGSS extends JDialog {
     }
 
     private void jbRemoveTsetActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
     }
 
     private void jbRemoveTexturesActionPerformed(ActionEvent evt) {
@@ -957,8 +936,8 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 if (removedTexs > 0 || removedPals > 0) {
                     JOptionPane.showMessageDialog(this,
                             "Textures and palettes succesfully removed.\n"
-                                    + "- " + String.valueOf(removedTexs) + " textures removed\n"
-                                    + "- " + String.valueOf(removedPals) + " palettes removed",
+                                    + "- " + removedTexs + " textures removed\n"
+                                    + "- " + removedPals + " palettes removed",
                             "Data removed", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this,
@@ -979,7 +958,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 nsbtxPanel.updateViewPaletteNameList(0);
                 nsbtxPanel.updateView();
             } catch (Exception ex2) {
-                ex2.printStackTrace();
+                log.warn(ex2);
             }
             JOptionPane.showMessageDialog(this,
                     "There was a problem removing the textures and palettes.",
@@ -1054,12 +1033,12 @@ public class BuildingEditorDialogHGSS extends JDialog {
             fc.setFileFilter(new FileNameExtensionFilter("BLD (*.bld)", "bld"));
             fc.setApproveButtonText("Save");
             fc.setDialogTitle("Save Building File");
-            try {//TODO: Replace this with some index bounds cheking?
+            try {
                 File file = new File(handler.getMapMatrix().filePath);
                 String fileName = Utils.removeExtensionFromPath(file.getName()) + "." + BuildFile.fileExtension;
                 fc.setSelectedFile(new File(fileName));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -1099,7 +1078,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
     private void jbRemoveBldActionPerformed(ActionEvent evt) {
         if (handler.getBuildings() != null) {
-            if (handler.getBuildings().getBuilds().size() > 0) {
+            if (!handler.getBuildings().getBuilds().isEmpty()) {
                 int index = jlBuildFile.getSelectedIndex();
                 handler.getBuildings().getBuilds().remove(index);
 
@@ -1125,7 +1104,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 updateViewBuildFileList(jlBuildFile.getSelectedIndex());
                 updateViewNitroDisplayMap();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
@@ -1138,7 +1117,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                 updateViewNitroDisplayMapBuildProperties(jlBuildFile.getSelectedIndex());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
@@ -1151,7 +1130,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                 updateViewNitroDisplayMapBuildProperties(jlBuildFile.getSelectedIndex());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
 
@@ -1166,7 +1145,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                 updateViewNitroDisplayMapBuildProperties(jlBuildFile.getSelectedIndex());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
@@ -1179,7 +1158,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                 updateViewNitroDisplayMapBuildProperties(jlBuildFile.getSelectedIndex());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
@@ -1192,7 +1171,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                 updateViewNitroDisplayMapBuildProperties(jlBuildFile.getSelectedIndex());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
@@ -1205,13 +1184,13 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
                 updateViewNitroDisplayMapBuildProperties(jlBuildFile.getSelectedIndex());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
         }
     }
 
     private void jbChooseModelBldActionPerformed(ActionEvent evt) {
-        if (handler.getBuildings().getBuilds().size() > 0) {
+        if (!handler.getBuildings().getBuilds().isEmpty()) {
             final AddBuildModelDialog dialog = new AddBuildModelDialog(handler.getMainFrame());
             dialog.init(buildHandler.getBuildModelList(), null);
             dialog.setLocationRelativeTo(this);
@@ -1338,7 +1317,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                         }
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                 }
             }
 
@@ -1378,8 +1357,8 @@ public class BuildingEditorDialogHGSS extends JDialog {
             if (removedTexs > 0 || removedPals > 0) {
                 JOptionPane.showMessageDialog(this,
                         "Textures and palettes succesfully removed.\n"
-                                + "- " + String.valueOf(removedTexs) + " textures removed\n"
-                                + "- " + String.valueOf(removedPals) + " palettes removed",
+                                + "- " + removedTexs + " textures removed\n"
+                                + "- " + removedPals + " palettes removed",
                         "Data removed", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this,
@@ -1396,7 +1375,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 nsbtxPanel.updateViewPaletteNameList(0);
                 nsbtxPanel.updateView();
             } catch (Exception ex2) {
-                ex2.printStackTrace();
+                log.warn(ex2);
             }
             JOptionPane.showMessageDialog(this,
                     "There was a problem removing the textures and palettes.",
@@ -1471,7 +1450,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 String fileName = buildHandler.getMapAnimations().getAnimations().get(jlMapAnimationsList.getSelectedIndex()).getName();
                 fc.setSelectedFile(new File(fileName + "." + type));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -1534,7 +1513,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 //nitroDisplayMapAnims.requestUpdate();
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
@@ -1551,14 +1530,6 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
         updateViewBuildFileList(0);
         updateViewNitroDisplayMap();
-
-        /*updateViewMaterialOrderList(jlMaterialOrder.getSelectedIndex());
-        updateViewBuildAnimeList(jlSelectedAnimationsList.getSelectedIndex());
-        updateViewAreaDataList(jlAreaDataList.getSelectedIndex());
-        updateViewAreaDataProperties();
-        updateViewBuildTsetList(jlBuildTsetList.getSelectedIndex());
-        updateViewAreaBuildList(jlAreaBuildList.getSelectedIndex());
-        updateViewAnimationsList(jlAnimationsList.getSelectedIndex());*/
     }
 
     private void updateViewBuildModelList(int indexSelected) {
@@ -1577,14 +1548,13 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
             List<Build> builds = handler.getBuildings().getBuilds();
 
-            DefaultListModel listModel = new DefaultListModel();
-            for (int i = 0; i < builds.size(); i++) {
-                Build build = builds.get(i);
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            for (Build build : builds) {
                 int buildID = build.getModeID();
                 if (buildID >= 0 && buildID < buildHandler.getBuildModelList().getSize()) {
-                    listModel.addElement(String.valueOf(buildID) + ": " + buildHandler.getBuildModelList().getModelsName().get(buildID));
+                    listModel.addElement(buildID + ": " + buildHandler.getBuildModelList().getModelsName().get(buildID));
                 } else {
-                    listModel.addElement(String.valueOf(buildID) + ": " + "NOT FOUND");
+                    listModel.addElement(buildID + ": " + "NOT FOUND");
                 }
             }
             jlBuildFile.setModel(listModel);
@@ -1620,7 +1590,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
             if (!materials.isEmpty()) {
                 names = new ArrayList<>(materials.size());
                 for (Integer material : materials) {
-                    names.add("Material " + String.valueOf(material));
+                    names.add("Material " + material);
                 }
             } else {
                 names = new ArrayList<>();
@@ -1639,7 +1609,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
             if (!animations.isEmpty()) {
                 selectedAnimIconIndices = new ArrayList<>(animations.size());
                 for (Integer animID : animations) {
-                    names.add(String.valueOf(animID) + ": "
+                    names.add(animID + ": "
                             + buildHandler.getBuildModelAnims().getAnimations().get(animID).getName() + " ["
                             + buildHandler.getBuildModelAnims().getAnimationTypeName(animID) + "]");
                     selectedAnimIconIndices.add(buildHandler.getBuildModelAnims().getAnimationType(animID));
@@ -1664,12 +1634,12 @@ public class BuildingEditorDialogHGSS extends JDialog {
             updateViewJCB(jcbNumAnims, jcbNumAnimsEnabled, BuildAnimInfoHGSS.namesNumAnims, info.getNumAnims());
             updateViewJCB(jcbUnknown1, jcbUnknown1Enabled, BuildAnimInfoHGSS.namesDoorSound, info.getDoorSound());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
 
     }
 
-    private void updateViewJCB(JComboBox jcb, MutableBoolean jcbEnabled, Map<Integer, String> map, Integer value) {
+    private void updateViewJCB(JComboBox<String> jcb, MutableBoolean jcbEnabled, Map<Integer, String> map, Integer value) {
         jcbEnabled.value = false;
         try {
             jcb.setSelectedItem(map.get(value));
@@ -1681,7 +1651,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
     private void updateModelJcbMapAnimations() {
         jcbDynamicTexEnabled.value = false;
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("No Animations");
         for (int i = 0; i < buildHandler.getMapAnimations().getAnimations().size(); i++) {
             model.addElement(buildHandler.getMapAnimations().getAnimations().get(i).getName());
@@ -1749,12 +1719,12 @@ public class BuildingEditorDialogHGSS extends JDialog {
             jlAreaBuildListEnabled.value = false;
             final int selectedTileset = jlBuildTsetList.getSelectedIndex();
             ArrayList<Integer> IDs = buildHandler.getAreaBuildList().getAreaBuilds().get(selectedTileset).getBuildingIDs();
-            DefaultListModel listModel = new DefaultListModel();
-            for (int i = 0; i < IDs.size(); i++) {
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            for (Integer id : IDs) {
                 try {
-                    listModel.addElement(String.valueOf(IDs.get(i)) + ": " + buildHandler.getBuildModelList().getModelsName().get(IDs.get(i)));
+                    listModel.addElement(id + ": " + buildHandler.getBuildModelList().getModelsName().get(id));
                 } catch (Exception ex) {
-                    listModel.addElement(String.valueOf(IDs.get(i)) + ": " + "NOT FOUND");
+                    listModel.addElement(id + ": " + "NOT FOUND");
                 }
             }
             jlAreaBuildList.setModel(listModel);
@@ -1772,7 +1742,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
             ArrayList<ModelAnimation> animations = buildHandler.getBuildModelAnims().getAnimations();
             animIconIndices = new ArrayList<>(animations.size());
             for (int i = 0; i < animations.size(); i++) {
-                names.add(String.valueOf(i) + ": "
+                names.add(i + ": "
                         + animations.get(i).getName() + " ["
                         + animations.get(i).getAnimationTypeName() + "]");
                 animIconIndices.add(animations.get(i).getAnimationType());
@@ -1788,7 +1758,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
             ArrayList<ModelAnimation> animations = buildHandler.getMapAnimations().getAnimations();
             mapAnimIconIndices = new ArrayList<>(animations.size());
             for (int i = 0; i < animations.size(); i++) {
-                names.add(String.valueOf(i) + ": "
+                names.add(i + ": "
                         + animations.get(i).getName() + " ["
                         + animations.get(i).getAnimationTypeName() + "]");
                 mapAnimIconIndices.add(animations.get(i).getAnimationType());
@@ -1822,7 +1792,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "There was a problem reading some of the files.",
                         "Error opening game files", JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace();
+                log.warn(ex);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Can't find some game files. \n"
@@ -1844,7 +1814,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 nitroDisplayMap.getObjectsGL().get(jlBuildFile.getSelectedIndex() + 1).setDrawBounds(true);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
@@ -1852,7 +1822,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
         BuildFile buildFile = handler.getBuildings();
 
         for (int i = 1, size = nitroDisplayMap.getObjectsGL().size(); i < size; i++) {
-            nitroDisplayMap.getObjectsGL().remove(nitroDisplayMap.getObjectsGL().size() - 1);
+            nitroDisplayMap.getObjectsGL().removeLast();
         }
 
         for (int i = 0; i < buildFile.getBuilds().size(); i++) {
@@ -1869,7 +1839,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 byte[] data = buildHandler.getBuildModelList().getModelsData().get(build.getModeID());
                 object.setNsbmdData(data);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
 
             try {
@@ -1878,7 +1848,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                     loadAnimationInNitroDisplay(nitroDisplayMap, 1 + i, anim);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex);
             }
 
             object.setX(build.getX() * 16.0f);
@@ -1906,7 +1876,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
             object.setScaleY(build.getScaleY());
             object.setScaleZ(build.getScaleZ());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
@@ -1919,14 +1889,14 @@ public class BuildingEditorDialogHGSS extends JDialog {
             nitroDisplayGL.getObjectGL(0).setNsbta(null);
             nitroDisplayGL.getObjectGL(0).setNsbva(null);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
     private void loadAnimationInNitroDisplay(NitroDisplayGL display, int objectIndex, ModelAnimation anim) {
         if (anim.getAnimationType() == ModelAnimation.TYPE_NSBCA) {
             NSBCAreader reader = new NSBCAreader(new ByteReader(anim.getData()));
-            display.getObjectGL(objectIndex).setNsbca((NSBCA) reader.readFile());
+            display.getObjectGL(objectIndex).setNsbca(reader.readFile());
             display.requestUpdate();
         } else if (anim.getAnimationType() == ModelAnimation.TYPE_NSBTA) {
             NSBTAreader reader = new NSBTAreader(new ByteReader(anim.getData()));
@@ -1937,17 +1907,12 @@ public class BuildingEditorDialogHGSS extends JDialog {
             display.getObjectGL(objectIndex).setNsbtp((NSBTP) reader.readFile());
             display.requestUpdate();
         }
-        /*else if (anim.getAnimationType() == BuildAnimation.TYPE_NSBMA) {
-            NSBMAreader reader = new NSBMAreader(new ByteReader(anim.getData()));
-            nitroDisplayGL1.getHandler().setNsbma((NSBMA) reader.readFile());
-            nitroDisplayGL1.requestUpdate();
-        }*/
     }
 
 
     public void tryLoadBuildFile() {
         try {
-            String filePath = handler.getMapMatrix().getFilePathWithCoords(handler.getMapMatrix().getMatrix(),
+            String filePath = MapMatrix.getFilePathWithCoords(handler.getMapMatrix().getMatrix(),
                     new File(handler.getMapMatrix().filePath).getParent(),
                     new File(handler.getMapMatrix().filePath).getName(),
                     handler.getMapSelected(), "nsbmd");
@@ -1966,29 +1931,13 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
-    /*
-    public void tryLoadBuildFile() {
-        try {
-            File[] files = findFilesWithExtension(new File(handler.getMapMatrix().filePath).getParent(), "nsbmd");
-            if (files.length > 0) {
-
-                byte[] mapData = Files.readAllBytes(files[0].toPath());
-                nitroDisplayMap.getObjectGL(0).setNsbmdData(mapData);
-
-                nitroDisplayMap.requestUpdate();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }*/
-
     public void tryLoadMapAnimFile() {
         try {
-            String filePath = handler.getMapMatrix().getFilePathWithCoords(handler.getMapMatrix().getMatrix(),
+            String filePath = MapMatrix.getFilePathWithCoords(handler.getMapMatrix().getMatrix(),
                     new File(handler.getMapMatrix().filePath).getParent(),
                     new File(handler.getMapMatrix().filePath).getName(),
                     handler.getMapSelected(), "nsbmd");
@@ -2007,7 +1956,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
@@ -2018,21 +1967,18 @@ public class BuildingEditorDialogHGSS extends JDialog {
         handler.getBuildings().saveToFile(path + File.separator + filename);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static File[] findFilesWithExtension(String folderPath, String extension) {
         File dir = new File(folderPath);
 
-        return dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(extension);
-            }
-        });
+        return dir.listFiles((dir1, filename) -> filename.endsWith(extension));
     }
 
-    private static void addElementsToList(JList list, MutableBoolean listEnabled, String name, int numElements, int indexSelected) {
+    private static void addElementsToList(JList<String> list, MutableBoolean listEnabled, String name, int numElements, int indexSelected) {
         listEnabled.value = false;
-        DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
         for (int i = 0; i < numElements; i++) {
-            listModel.addElement(name + " " + String.valueOf(i));
+            listModel.addElement(name + " " + i);
         }
         list.setModel(listModel);
         listEnabled.value = true;
@@ -2043,11 +1989,11 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
     }
 
-    private static void addElementsToListWithIndices(JList list, MutableBoolean listEnabled, ArrayList<String> elements, int indexSelected) {
+    private static void addElementsToListWithIndices(JList<String> list, MutableBoolean listEnabled, ArrayList<String> elements, int indexSelected) {
         listEnabled.value = false;
-        DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
         for (int i = 0; i < elements.size(); i++) {
-            listModel.addElement(String.valueOf(i) + ": " + elements.get(i));
+            listModel.addElement(i + ": " + elements.get(i));
         }
         list.setModel(listModel);
         listEnabled.value = true;
@@ -2058,10 +2004,10 @@ public class BuildingEditorDialogHGSS extends JDialog {
 
     }
 
-    private static void addElementsToList(JList list, ArrayList<String> elements, int indexSelected) {
-        DefaultListModel listModel = new DefaultListModel();
-        for (int i = 0; i < elements.size(); i++) {
-            listModel.addElement(elements.get(i));
+    private static void addElementsToList(JList<String> list, ArrayList<String> elements, int indexSelected) {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (String element : elements) {
+            listModel.addElement(element);
         }
         list.setModel(listModel);
 
@@ -2069,7 +2015,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
         list.setSelectedIndex(indexSelected);
     }
 
-    private static void addIconToJList(JList list, ImageIcon icon) {
+    private static void addIconToJList(JList<String> list, ImageIcon icon) {
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -2080,6 +2026,7 @@ public class BuildingEditorDialogHGSS extends JDialog {
         });
     }
 
+    @SuppressWarnings({"DataFlowIssue", "Convert2Diamond", "FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jTabbedPane1 = new JTabbedPane();

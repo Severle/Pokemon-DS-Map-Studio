@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class TilesetThumbnailDisplay extends JPanel {
 
     private BufferedImage img;

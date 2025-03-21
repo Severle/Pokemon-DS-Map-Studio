@@ -4,6 +4,7 @@ package editor.buildingeditor2.animations;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +12,10 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@Getter
 public class BuildAnimations {
 
-    private ArrayList<ModelAnimation> animations;
+    private final ArrayList<ModelAnimation> animations;
 
     public BuildAnimations(Narc narc) {
         final int numAnimations = narc.root().getFiles().size();
@@ -23,6 +25,7 @@ public class BuildAnimations {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public Narc toNarc() {
         NarcFolder root = new NarcFolder();
         ArrayList<NarcFile> files = new ArrayList<>(animations.size());
@@ -55,10 +58,6 @@ public class BuildAnimations {
         if (index >= 0 && index < animations.size()) {
             animations.get(index).saveToFile(path);
         }
-    }
-
-    public ArrayList<ModelAnimation> getAnimations() {
-        return animations;
     }
 
     public String getAnimationTypeName(int index) {

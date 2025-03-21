@@ -3,6 +3,7 @@ package editor.state;
 
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -11,15 +12,15 @@ import java.util.Set;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class MapLayerState extends State {
 
-    private MapEditorHandler handler;
-    private int layerIndex;
+    private final MapEditorHandler handler;
+    @Getter
+    private final int              layerIndex;
 
-    private HashMap<Point, int[][]> mapTileLayers;
-    private HashMap<Point, int[][]> mapHeightLayers;
-    //private int[][] tileLayer;
-    //private int[][] heightLayer;
+    private final HashMap<Point, int[][]> mapTileLayers;
+    private final HashMap<Point, int[][]> mapHeightLayers;
 
     public MapLayerState(String name, MapEditorHandler handler) {
         this(name, handler, true);
@@ -58,14 +59,7 @@ public class MapLayerState extends State {
 
         //Remove maps that were not used
         handler.getMapMatrix().getMatrix().entrySet().removeIf(entry -> !mapTileLayers.containsKey(entry.getKey()));
-        
-        /*
-        for(MapData mapData : handler.getMapMatrix().getMatrix().values()){
-            mapData.getGrid().updateAllMapLayers(handler.useRealTimePostProcessing());
-        }*/
 
-        //handler.getGrid().setTileLayer(layerIndex, tileLayer);
-        //handler.getGrid().setHeightLayer(layerIndex, heightLayer);
     }
 
     public void updateState() {
@@ -77,10 +71,6 @@ public class MapLayerState extends State {
             mapHeightLayers.put(handler.getMapSelected(), handler.getGrid().cloneHeightLayer(layerIndex));
         }
 
-    }
-
-    public int getLayerIndex() {
-        return layerIndex;
     }
 
     public Set<Point> getKeySet() {

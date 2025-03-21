@@ -1,20 +1,21 @@
 package editor.buildingeditor;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
+import lombok.Getter;
+import net.miginfocom.swing.MigLayout;
 
-import net.miginfocom.swing.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode", "unused", "FieldCanBeLocal"})
 public class BuildingMaterialRequestDialog extends JDialog {
     public static final int ACEPTED = 0, CANCELED = 1;
+    @Getter
     private int returnValue = CANCELED;
-    private int value = 0;
+    private int value       = 0;
     private int min = 1;
     private int max = 20;
     private boolean useUndefined = false;
@@ -37,8 +38,8 @@ public class BuildingMaterialRequestDialog extends JDialog {
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "The number must be inside the bounds ["
-                                    + String.valueOf(min) + ", "
-                                    + String.valueOf(max) + "]",
+                                    + min + ", "
+                                    + max + "]",
                             "Number is out of bounds",
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -77,10 +78,7 @@ public class BuildingMaterialRequestDialog extends JDialog {
         return useUndefined;
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
+    @SuppressWarnings("Convert2MethodRef")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jLabel1 = new JLabel();

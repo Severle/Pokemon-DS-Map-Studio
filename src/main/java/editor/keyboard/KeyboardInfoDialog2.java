@@ -1,14 +1,13 @@
 package editor.keyboard;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public class KeyboardInfoDialog2 extends JDialog {
     public KeyboardInfoDialog2(Window owner) {
         super(owner);
@@ -18,10 +17,11 @@ public class KeyboardInfoDialog2 extends JDialog {
         jbAccept.requestFocus();
     }
 
-    private void jbAcceptActionPerformed(ActionEvent e) {
+    private void jbAcceptActionPerformed(ActionEvent ignored) {
         dispose();
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode", "Convert2Diamond"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jTabbedPane1 = new JTabbedPane();

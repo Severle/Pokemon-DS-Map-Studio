@@ -1,26 +1,26 @@
 
 package editor.buildingeditor;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import utils.io.BinaryReader;
 import utils.io.BinaryWriter;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class BuildModelMatshp {
 
-    private ArrayList<ArrayList<Integer>> materials;
+    private final ArrayList<ArrayList<Integer>> materials;
 
-    public BuildModelMatshp(String path) throws FileNotFoundException,
+    public BuildModelMatshp(String path) throws
             IOException {
         BinaryReader br = new BinaryReader(path);
 
         int numBuildings = br.readUInt16();
-        int numMaterials = br.readUInt16();
+        br.readUInt16();
 
         ArrayList<ArrayList<Integer>> newMaterials = new ArrayList<>(numBuildings);
         ArrayList<Integer> offsets = new ArrayList<>(numBuildings);
@@ -59,29 +59,29 @@ public class BuildModelMatshp {
 
     }
 
-    public void saveToFile(String path) throws FileNotFoundException, IOException {
+    public void saveToFile(String path) throws IOException {
         BinaryWriter bw = new BinaryWriter(path);
 
         bw.writeUInt16(materials.size());
         bw.writeUInt16(countNumberOfMaterials());
 
         int offset = 0;
-        for (int i = 0; i < materials.size(); i++) {
-            if (materials.get(i) != null) {
-                bw.writeUInt16(materials.get(i).size());
+        for (ArrayList<Integer> material : materials) {
+            if (material != null) {
+                bw.writeUInt16(material.size());
                 bw.writeUInt16(offset);
-                offset += materials.get(i).size();
+                offset += material.size();
             } else {
                 bw.writeUInt16(0);
                 bw.writeUInt16(65535);
             }
         }
 
-        for (int i = 0; i < materials.size(); i++) {
-            if (materials.get(i) != null) {
-                for (int j = 0; j < materials.get(i).size(); j++) {
+        for (ArrayList<Integer> material : materials) {
+            if (material != null) {
+                for (int j = 0; j < material.size(); j++) {
                     bw.writeUInt16(j);
-                    bw.writeUInt16(materials.get(i).get(j));
+                    bw.writeUInt16(material.get(j));
                 }
             }
         }
@@ -91,9 +91,9 @@ public class BuildModelMatshp {
 
     public int countNumberOfMaterials() {
         int count = 0;
-        for (int i = 0; i < materials.size(); i++) {
-            if (materials.get(i) != null) {
-                count += materials.get(i).size();
+        for (ArrayList<Integer> material : materials) {
+            if (material != null) {
+                count += material.size();
             }
         }
         return count;

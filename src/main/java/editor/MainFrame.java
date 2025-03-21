@@ -50,7 +50,6 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.miginfocom.swing.MigLayout;
 import tileset.*;
-import utils.ThemeUtil;
 import utils.Utils;
 
 import javax.imageio.ImageIO;
@@ -85,35 +84,8 @@ public class MainFrame extends JFrame {
     private static final List<String> recentMaps  = new ArrayList<>();
     private boolean opened_map = false;
 
-    public static void main(String[] args) {
-        try {
-            // install theme
-            String theme = preferences.get(ThemeUtil.KEY, ThemeUtil.defaultTheme().name());
-            ThemeUtil.getOrDefault(theme).install();
-
-            // load recent map
-            loadRecentMaps();
-        } catch (Exception ex) {
-            log.error("Failed to initialize LaF", ex);
-        }
-
-        /* Create and display the form */
-        EventQueue.invokeLater(() -> {
-            MainFrame mainFrame = new MainFrame();
-            mainFrame.setVisible(true);
-
-            if (args.length > 0) {
-                try {
-                    if (args[0].endsWith(MapMatrix.fileExtension)) {
-                        mainFrame.openMap(args[0]);
-                    } else if (args[0].endsWith(Tileset.fileExtension)) {
-                        mainFrame.openTileset(args[0]);
-                    }
-                } catch (Exception e) {
-                    log.error(e);
-                }
-            }
-        });
+    public static void initialize() {
+        loadRecentMaps();
     }
 
     public MainFrame() {
@@ -1668,7 +1640,7 @@ public class MainFrame extends JFrame {
             //mapDisplay.updateMapLayerGL(state.getLayerIndex());
 
             handler.getMapMatrix().removeUnusedMaps();
-            if (!handler.mapSelectedExists()) {
+            if (handler.mapSelectedNotExists()) {
                 handler.setDefaultMapSelected();
 
                 handler.getMainFrame().getThumbnailLayerSelector().drawAllLayerThumbnails();

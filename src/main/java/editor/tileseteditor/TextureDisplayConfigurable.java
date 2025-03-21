@@ -1,14 +1,10 @@
 package editor.tileseteditor;
 
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
-import tileset.Tile;
 import tileset.TilesetMaterial;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo, JackHack96
@@ -54,6 +50,7 @@ public class TextureDisplayConfigurable extends JPanel {
         this.index = index;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public BufferedImage createBackImg() {
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();

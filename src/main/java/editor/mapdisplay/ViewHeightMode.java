@@ -5,20 +5,19 @@ import com.jogamp.opengl.GL2;
 import editor.state.MapLayerState;
 import math.vec.Vec3f;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.util.HashSet;
-import javax.swing.SwingUtilities;
+import java.util.Objects;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("DuplicatedCode")
 public class ViewHeightMode extends ViewMode {
 
     @Override
@@ -56,10 +55,10 @@ public class ViewHeightMode extends ViewMode {
                     break;
                 case MODE_ZOOM:
                     if (SwingUtilities.isLeftMouseButton(e)) {
-                        d.orthoScale *= 1.5;
+                        d.orthoScale *= 1.5F;
                         d.repaint();
                     } else if (SwingUtilities.isRightMouseButton(e)) {
-                        d.orthoScale /= 1.5;
+                        d.orthoScale /= 1.5F;
                         d.repaint();
                     }
                     break;
@@ -69,10 +68,8 @@ public class ViewHeightMode extends ViewMode {
 
     @Override
     public void mouseReleased(MapDisplay d, MouseEvent e) {
-        switch (d.editMode) {
-            case MODE_CLEAR:
-                d.handler.getMapMatrix().removeUnusedMaps();
-                break;
+        if (Objects.requireNonNull(d.editMode) == MapDisplay.EditMode.MODE_CLEAR) {
+            d.handler.getMapMatrix().removeUnusedMaps();
         }
         d.handler.updateLayerThumbnail(d.handler.getActiveLayerIndex());
         d.handler.repaintThumbnailLayerSelector();
@@ -172,11 +169,7 @@ public class ViewHeightMode extends ViewMode {
                     d.handler.getMainFrame().repaintHeightSelector();
                     d.repaint();
                     break;
-                case MODE_MOVE:
-                    d.zoomCameraOrtho(e);
-                    d.repaint();
-                    break;
-                case MODE_ZOOM:
+                case MODE_MOVE, MODE_ZOOM:
                     d.zoomCameraOrtho(e);
                     d.repaint();
                     break;
@@ -218,9 +211,6 @@ public class ViewHeightMode extends ViewMode {
     public void applyCameraTransform(MapDisplay d, GL2 gl) {
         float v = (16.0f + d.borderSize) / d.orthoScale;
         gl.glOrtho(-v, v, -v, v, getZNear(d), getZFar(d));
-        //TODO: Use this code for keeping the aspect ratio
-        //float aspect = d.getAspectRatio();
-        //gl.glOrtho(-v * aspect, v * aspect, -v, v, -100.0f, 100.0f);
     }
 
     @Override
@@ -247,8 +237,8 @@ public class ViewHeightMode extends ViewMode {
     public Vec3f[][] getFrustumPlanes(MapDisplay d) {
         Vec3f camAngles = new Vec3f(d.cameraRotX, d.cameraRotY, d.cameraRotZ);
         Vec3f tarPos = new Vec3f(d.cameraX, d.cameraY, 0.0f);
-        Vec3f camDir = d.rotToDir_(camAngles);
-        Vec3f camUp = d.rotToUp_(camAngles);
+        Vec3f camDir = MapDisplay.rotToDir_(camAngles);
+        Vec3f camUp = MapDisplay.rotToUp_(camAngles);
         Vec3f camRight = camDir.cross_(camUp);
         //Vec3f camPos = tarPos.add_(camDir.negate_().scale_(d.cameraZ));
         Vec3f camPos = tarPos.add_(camDir.negate_().scale_(40.0f));

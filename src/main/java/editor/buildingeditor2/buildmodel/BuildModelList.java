@@ -4,6 +4,8 @@ package editor.buildingeditor2.buildmodel;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
+import utils.Utils;
+import utils.io.BinaryReader;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,16 +13,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import utils.io.BinaryReader;
-import utils.Utils;
-
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class BuildModelList {
 
-    private ArrayList<byte[]> buildModelsData;
-    private ArrayList<String> buildModelsName;
+    private final ArrayList<byte[]> buildModelsData;
+    private       ArrayList<String> buildModelsName;
 
     public BuildModelList(Narc narc) {
         final int numModels = narc.root().getFiles().size();
@@ -33,19 +33,19 @@ public class BuildModelList {
 
     public Narc toNarc() {
         NarcFolder root = new NarcFolder();
-        for (int i = 0; i < buildModelsData.size(); i++) {
-            root.getFiles().add(new NarcFile("", root, buildModelsData.get(i)));
+        for (byte[] buildModelsDatum : buildModelsData) {
+            root.getFiles().add(new NarcFile("", root, buildModelsDatum));
         }
         return new Narc(root);
     }
 
-    public void addBuildingModel(String path) throws IOException, Exception {
+    public void addBuildingModel(String path) throws Exception {
         byte[] data = readBuildingModel(path);
         buildModelsData.add(data);
         calculateModelsName();
     }
 
-    public void replaceBuildingModel(int index, String path) throws IOException, Exception {
+    public void replaceBuildingModel(int index, String path) throws Exception {
         byte[] data = readBuildingModel(path);
         buildModelsData.set(index, data);
         calculateModelsName();
@@ -66,7 +66,7 @@ public class BuildModelList {
         }
     }
 
-    private static byte[] readBuildingModel(String path) throws IOException, Exception {
+    private static byte[] readBuildingModel(String path) throws Exception {
         byte[] data = Files.readAllBytes(Paths.get(path));
         if (BinaryReader.readString(data, 0, 4).equals("BMD0")) {
             return data;
@@ -104,7 +104,7 @@ public class BuildModelList {
             try {
                 buildModelsName.add(getModelName(buildModelsData.get(i)));
             } catch (Exception ex) {
-                buildModelsName.add("Unknown model " + String.valueOf(i));
+                buildModelsName.add("Unknown model " + i);
             }
         }
     }

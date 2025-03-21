@@ -1,15 +1,21 @@
 
 package editor.buildingeditor2.buildfile;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Trifindo
  */
+@Setter
 public class Build {
 
     public static final int dataSize = 48;
 
-    private int modelID;
+    private int   modelID;
+    @Getter
     private float x, y, z;
+    @Getter
     private float scaleX, scaleY, scaleZ;
 
     public Build() {
@@ -35,58 +41,4 @@ public class Build {
     public int getModeID() {
         return modelID;
     }
-
-    public void setModelID(int modelIndex) {
-        this.modelID = modelIndex;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
-    public void setZ(float z) {
-        this.z = z;
-    }
-
-    public float getScaleX() {
-        return scaleX;
-    }
-
-    public void setScaleX(float scaleX) {
-        this.scaleX = scaleX;
-    }
-
-    public float getScaleY() {
-        return scaleY;
-    }
-
-    public void setScaleY(float scaleY) {
-        this.scaleY = scaleY;
-    }
-
-    public float getScaleZ() {
-        return scaleZ;
-    }
-
-    public void setScaleZ(float scaleZ) {
-        this.scaleZ = scaleZ;
-    }
-
-
 }

@@ -1,27 +1,28 @@
 package editor.tileseteditor;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import java.awt.Color;
-
+import lombok.Getter;
 import utils.swing.SwingUtils;
 import utils.swing.SwingUtils.MutableBoolean;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ExportTileDialog extends JDialog {
 
-    private MutableBoolean jtfScaleEnabled = new MutableBoolean(true);
-    public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
-    private int returnValue = CANCEL_OPTION;
-    private float scale = 1.0f;
-    private float minScale = 0.001f;
-    private boolean flip = false;
+    private final       MutableBoolean jtfScaleEnabled = new MutableBoolean(true);
+    public static final int            APPROVE_OPTION  = 1, CANCEL_OPTION = 0;
+    @Getter
+    private       int   returnValue = CANCEL_OPTION;
+    @Getter
+    private       float scale       = 1.0f;
+    private final float minScale    = 0.001f;
+    private       boolean flip     = false;
     private boolean includeVertexColors = true;
 
     private static final Color redColor = new Color(255, 200, 200);
@@ -45,10 +46,11 @@ public class ExportTileDialog extends JDialog {
         flip = jcbFlip.isSelected();
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void jbApplyScaleActionPerformed(ActionEvent e) {
         float value;
         try {
-            value = Float.valueOf(jtfScale.getText());
+            value = Float.parseFloat(jtfScale.getText());
             if (value < minScale) {
                 value = minScale;
             }
@@ -76,14 +78,6 @@ public class ExportTileDialog extends JDialog {
         dispose();
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-
     public boolean flip() {
         return flip;
     }
@@ -92,6 +86,7 @@ public class ExportTileDialog extends JDialog {
         return includeVertexColors;
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

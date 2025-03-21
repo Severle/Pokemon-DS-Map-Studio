@@ -1,21 +1,25 @@
 package editor.bordermap;
 
 import editor.handler.MapEditorHandler;
+import lombok.extern.log4j.Log4j2;
 import tileset.NormalsNotFoundException;
 import tileset.TextureNotFoundException;
 import tileset.Tile;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class BorderMapsDisplay extends JPanel {
     private static final int mapSize = 32;
     private static final Color backgroundColor = new Color(0.0f, 0.5f, 0.5f, 1.0f);
@@ -85,7 +89,7 @@ public class BorderMapsDisplay extends JPanel {
                         System.out.println("border map loaded");
 
                     } catch (TextureNotFoundException | NormalsNotFoundException | IOException ex) {
-                        ex.printStackTrace();
+                        log.error(ex);
                     }
                 }
             } else if (SwingUtilities.isRightMouseButton(evt)) {
@@ -116,7 +120,7 @@ public class BorderMapsDisplay extends JPanel {
         }
 
         g.setColor(Color.white);
-        g.fillRect(1 * mapSize, 1 * mapSize, mapSize, mapSize);
+        g.fillRect(mapSize, mapSize, mapSize, mapSize);
 
         if (handler != null) {
             for (int i = 0; i < BorderMapsGrid.cols; i++) {
@@ -139,6 +143,7 @@ public class BorderMapsDisplay extends JPanel {
         this.handler = handler;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 

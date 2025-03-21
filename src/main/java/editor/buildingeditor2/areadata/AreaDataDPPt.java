@@ -1,16 +1,23 @@
 
 package editor.buildingeditor2.areadata;
 
+import lombok.Getter;
+import lombok.Setter;
 import utils.io.BinaryReader;
 import utils.io.BinaryWriter;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Setter
 public class AreaDataDPPt {
 
+    @Getter
     private int buildingTilesetID;
+    @Getter
     private int mapTilesetID;
+    @Getter
     private int unknown1;
     private int areaType;
 
@@ -37,36 +44,8 @@ public class AreaDataDPPt {
         return data;
     }
 
-    public int getBuildingTilesetID() {
-        return buildingTilesetID;
-    }
-
-    public void setBuildingTilesetID(int buildingTilesetID) {
-        this.buildingTilesetID = buildingTilesetID;
-    }
-
-    public int getMapTilesetID() {
-        return mapTilesetID;
-    }
-
-    public void setMapTilesetID(int mapTilesetID) {
-        this.mapTilesetID = mapTilesetID;
-    }
-
-    public int getUnknown1() {
-        return unknown1;
-    }
-
-    public void setUnknown1(int unknown1) {
-        this.unknown1 = unknown1;
-    }
-
     public int getUnknown2() {
         return areaType;
-    }
-
-    public void setAreaType(int unknown2) {
-        this.areaType = unknown2;
     }
 
 

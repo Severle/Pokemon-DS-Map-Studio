@@ -1,38 +1,36 @@
 package editor.gameselector;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
-import tileset.TilesetRenderer;
 import editor.game.Game;
 import editor.handler.MapEditorHandler;
 import editor.smartdrawing.SmartGrid;
-
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JList;
-
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import tileset.TextureNotFoundException;
 import tileset.Tileset;
 import tileset.TilesetIO;
+import tileset.TilesetRenderer;
 import utils.Utils;
+
+import javax.swing.*;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 public class GameTsetSelectorDialog2 extends JDialog {
 
     private MapEditorHandler handler;
     public static final int ACCEPTED = 0, CANCELED = 1;
+    @Getter
     private int returnValue = CANCELED;
-    private int newGame = Game.DIAMOND;
+    private int newGame     = Game.DIAMOND;
 
     //Separator
     private static final String s = "/";
@@ -40,7 +38,7 @@ public class GameTsetSelectorDialog2 extends JDialog {
     private static final String rootFolderPath = "/" + "tilesets";
     private static final String none = "None";
 
-    private String[] folderPaths = {
+    private final String[]   folderPaths    = {
             "Diamond_-_Pearl",
             "Platinum",
             "Heart_Gold_-_Soul_Silver",
@@ -49,7 +47,7 @@ public class GameTsetSelectorDialog2 extends JDialog {
             "Various",
             "None"
     };
-    private String[][] subfolderPaths = {
+    private final String[][] subfolderPaths = {
             {"Overworld"},
             {
                     "Tileset_6_-_Overworld_(by_Jiboule)",
@@ -92,7 +90,7 @@ public class GameTsetSelectorDialog2 extends JDialog {
             }
     };
 
-    private String[][] tsetNames = {
+    private final String[][] tsetNames = {
             {"DiamondPearlTileset.pdsts"},
             {
                     "Tileset_6_PT_Jiboule.pdsts",
@@ -164,7 +162,7 @@ public class GameTsetSelectorDialog2 extends JDialog {
                 try {
                     tr.renderTiles();
                 } catch (NullPointerException ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                 }
                 tr.destroy();//NEW CODE
             } catch (NullPointerException | TextureNotFoundException | IOException | IndexOutOfBoundsException ex) {
@@ -221,10 +219,6 @@ public class GameTsetSelectorDialog2 extends JDialog {
         jlGameIcon.setIcon(new ImageIcon(handler.getGame().gameIcons[newGame]));
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
     private void loadTilesetThumbnail(int folderIndex, int tilesetIndex) {
         BufferedImage img;
         try {
@@ -241,7 +235,7 @@ public class GameTsetSelectorDialog2 extends JDialog {
 
     }
 
-    private void addItemsToJList(JList list, String[] items) {
+    private void addItemsToJList(JList<String> list, String[] items) {
         DefaultListModel<String> model = new DefaultListModel<>();
         if (items != null) {
             for (String item : items) {
@@ -251,6 +245,7 @@ public class GameTsetSelectorDialog2 extends JDialog {
         list.setModel(model);
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode", "Convert2Diamond"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jpanelIcon = new JPanel();

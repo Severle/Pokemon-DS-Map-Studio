@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("unused")
 public class GeometryGL {
 
     public static final int vertexPerTri = 3;

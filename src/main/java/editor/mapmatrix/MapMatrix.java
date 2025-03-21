@@ -2,39 +2,29 @@
 package editor.mapmatrix;
 
 import com.jogamp.common.nio.Buffers;
-import formats.backsound.BackSound;
-import formats.bdhc.Bdhc;
-import formats.bdhc.BdhcLoaderDP;
-import formats.bdhc.BdhcLoaderHGSS;
-import formats.bdhc.BdhcWriterDP;
-import formats.bdhc.BdhcWriterHGSS;
 import editor.buildingeditor2.buildfile.BuildFile;
-import formats.bdhcam.Bdhcam;
-import formats.bdhcam.BdhcamLoader;
-import formats.bdhcam.BdhcamWriter;
-import formats.collisions.Collisions;
 import editor.game.Game;
 import editor.grid.MapGrid;
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
+import formats.backsound.BackSound;
+import formats.bdhc.*;
+import formats.bdhcam.Bdhcam;
+import formats.bdhcam.BdhcamLoader;
+import formats.bdhcam.BdhcamWriter;
+import formats.collisions.Collisions;
 import formats.obj.ObjWriter;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import tileset.TextureNotFoundException;
+import tileset.Tile;
+import tileset.Tileset;
+import tileset.TilesetIO;
+import utils.Utils;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -42,15 +32,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import tileset.TextureNotFoundException;
-import tileset.Tile;
-import tileset.Tileset;
-import tileset.TilesetIO;
-import utils.Utils;
-
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class MapMatrix {
 
     private static final int expectedMaxNumMaps = 25;
@@ -64,19 +50,23 @@ public class MapMatrix {
     private static final String tilesetTag = "tileset";
     private static final String bdhcTag = "bdhc";
 
-    private MapEditorHandler handler;
-    private HashMap<Point, MapData> matrix; //Key is map coords
+    private final MapEditorHandler        handler;
+    @Getter
+    private       HashMap<Point, MapData> matrix; //Key is map coords
 
     //Border maps
+    @Getter
     private HashSet<Point> borderMaps;
 
     //Contours
+    @Getter
     private HashMap<Integer, ArrayList<Point>> contourPoints;
     private HashMap<Integer, FloatBuffer> contourPointsBuffer;
-    private HashMap<Integer, Color> areaColors;
+    @Getter
+    private HashMap<Integer, Color>       areaColors;
 
-    public String filePath = "";
-    public String tilesetFilePath = "";
+    public String filePath;
+    public String tilesetFilePath;
     public static final String fileExtension = "pdsmap";
 
     public MapMatrix(MapEditorHandler handler) {
@@ -148,7 +138,7 @@ public class MapMatrix {
         out.close();
     }
 
-    public void loadGridsFromFile(String path) throws FileNotFoundException, IOException, Exception {
+    public void loadGridsFromFile(String path) throws Exception {
         filePath = "";
         tilesetFilePath = "";
 
@@ -157,7 +147,7 @@ public class MapMatrix {
         borderMaps = new HashSet<>();
         updateBordersData();
 
-        InputStream input = new FileInputStream(new File(path));
+        InputStream input = new FileInputStream(path);
         BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
         int numMapsRead = 0;
@@ -170,7 +160,7 @@ public class MapMatrix {
         String line;
         while ((line = br.readLine()) != null) {
             if (line.startsWith(gameIndexTag)) {
-                handler.setGameIndex(Integer.valueOf(br.readLine()));
+                handler.setGameIndex(Integer.parseInt(br.readLine()));
             } else if (line.startsWith(tilesetTag)) {
                 String folderPath = new File(path).getParent();
                 tilesetFilePath = folderPath + File.separator + br.readLine();
@@ -209,10 +199,10 @@ public class MapMatrix {
         input.close();
     }
 
-    public static HashMap<Point, MapData> getGridsFromFile(String path, MapEditorHandler handler) throws FileNotFoundException, IOException, Exception {
+    public static HashMap<Point, MapData> getGridsFromFile(String path, MapEditorHandler handler) throws Exception {
         HashMap<Point, MapData> matrix = new HashMap<>(expectedMaxNumMaps);
 
-        InputStream input = new FileInputStream(new File(path));
+        InputStream input = new FileInputStream(path);
         BufferedReader br = new BufferedReader(new InputStreamReader(input));
 
         String tilesetFilePath;
@@ -226,11 +216,12 @@ public class MapMatrix {
         int currentAreaIndex = 0;
         String line;
         while ((line = br.readLine()) != null) {
+            //noinspection StatementWithEmptyBody
             if (line.startsWith(gameIndexTag)) {
 
             } else if (line.startsWith(tilesetTag)) {
                 String folderPath = new File(path).getParent();
-                tilesetFilePath = folderPath + File.separator + br.readLine();
+                br.readLine();
 
             } else if (line.startsWith(mapTag)) {
                 String[] splittedLine = br.readLine().split(" ");
@@ -395,31 +386,6 @@ public class MapMatrix {
             mapEntry.getValue().getBuildings().saveToFile(path);
         }
     }
-
-    /*
-    public void saveBinaryMaps() {
-        System.out.println("Saving Binary maps...");
-        int game = handler.getGameIndex();
-        for (HashMap.Entry<Point, MapData> mapEntry : matrix.entrySet()) {
-            Point p = mapEntry.getKey();
-            try {
-                if (game == Game.HEART_GOLD || game == Game.SOUL_SILVER) {
-                    String path = getFilePathWithCoords(matrix, new File(filePath).getParent(),
-                            new File(filePath).getName(), mapEntry.getKey(), "bin");
-
-                    File file = new File(path);
-                    MapBinHGSS mapBin = new MapBinHGSS(file.getParent(), file.getName());
-                    mapBin.saveToFile(path);
-
-                    System.out.println("Map BIN saved (" + p.x + ", " + p.y + ")");
-                }
-            } catch (Exception ex) {
-                //ex.printStackTrace();
-                System.out.println("Map BIN NOT saved! (" + p.x + ", " + p.y + ")");
-
-            }
-        }
-    }*/
 
 
     public void loadBDHCsFromFile(HashMap<Point, MapData> matrix, String folderPath, String mapFileName, int game) {
@@ -611,9 +577,6 @@ public class MapMatrix {
     }
 
     public static String getFilePathWithCoords(HashMap<Point, MapData> matrix, String folderPath, String mapFileName, String nameEnd, Point mapCoords, String extensionName) {
-        //String filename = Utils.removeExtensionFromPath(mapFileName) + nameEnd;
-        //Point minCoords = getMinCoords(matrix);
-        //filename += "_" + String.format("%02d", mapCoords.x - minCoords.x) + "_" + String.format("%02d", mapCoords.y - minCoords.y);
         String filename = getMapName(matrix, mapFileName, nameEnd, mapCoords);
         return folderPath + File.separator + filename + "." + extensionName;
     }
@@ -692,20 +655,12 @@ public class MapMatrix {
         return getMapAndCreate(new Point(x, y));
     }
 
-    public HashMap<Point, MapData> getMatrix() {
-        return matrix;
-    }
-
-    public HashSet<Point> getBorderMaps() {
-        return borderMaps;
-    }
-
     public Point getMinCoords() {
         return getMinCoords(matrix);
     }
 
     public static Point getMinCoords(HashMap<Point, MapData> matrix) {
-        if (matrix.size() > 0) {
+        if (!matrix.isEmpty()) {
             Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
             Set<Point> coords = matrix.keySet();
             for (Point p : coords) {
@@ -727,7 +682,7 @@ public class MapMatrix {
     }
 
     public static Point getMaxCoords(HashMap<Point, MapData> matrix) {
-        if (matrix.size() > 0) {
+        if (!matrix.isEmpty()) {
             Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
             Set<Point> coords = matrix.keySet();
             for (Point p : coords) {
@@ -778,7 +733,7 @@ public class MapMatrix {
             removeUnusedMapFiles(folderPath, BuildFile.fileExtension);
             removeUnusedMapFiles(folderPath, BackSound.fileExtension);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
 
@@ -787,18 +742,15 @@ public class MapMatrix {
 
         if (folderPath != null) {
             File folder = new File(folderPath);
-            File[] filesToRemove = folder.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return canRemoveMapFile(name, fileExtension, minCoords);
-                }
-            });
+            File[] filesToRemove = folder.listFiles((dir, name) -> canRemoveMapFile(name, fileExtension, minCoords));
 
-            for (File file : filesToRemove) {
-                try {
-                    Files.deleteIfExists(file.toPath());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+            if (filesToRemove != null) {
+                for (File file : filesToRemove) {
+                    try {
+                        Files.deleteIfExists(file.toPath());
+                    } catch (Exception ex) {
+                        log.warn(ex);
+                    }
                 }
             }
         }
@@ -812,7 +764,7 @@ public class MapMatrix {
     }
 
     public ArrayList<Point> generateContourPoints(Point min) {
-        ArrayList<Point> contourPoints = new ArrayList(matrix.size() * 3);//Approximation
+        ArrayList<Point> contourPoints = new ArrayList<>(matrix.size() * 3);//Approximation
         for (Point p : matrix.keySet()) {
             if (!matrix.containsKey(new Point(p.x - 1, p.y))) {
                 contourPoints.add(new Point(p.x - min.x, p.y - min.y));
@@ -882,10 +834,7 @@ public class MapMatrix {
     private boolean canAddContour(Point p, Point nearP) {
         if (!matrix.containsKey(nearP)) {
             return true;
-        } else if (matrix.get(p).getAreaIndex() != matrix.get(nearP).getAreaIndex()) {
-            return true;
-        }
-        return false;
+        } else return matrix.get(p).getAreaIndex() != matrix.get(nearP).getAreaIndex();
     }
 
     public float[] generateContourPointsGL(ArrayList<Point> points) {
@@ -936,7 +885,7 @@ public class MapMatrix {
         mapCoords.y += minCoords.y;
 
         //System.out.println(mapCoords.x + " " + mapCoords.y + " " + fileName + " USED: " + matrix.keySet().contains(mapCoords));
-        return matrix.keySet().contains(mapCoords);
+        return matrix.containsKey(mapCoords);
     }
 
     private Point geMapCoordsFromName(String fileName) {
@@ -969,14 +918,6 @@ public class MapMatrix {
 
     public HashMap<Integer, FloatBuffer> getContourPointsGL() {
         return contourPointsBuffer;
-    }
-
-    public HashMap<Integer, ArrayList<Point>> getContourPoints() {
-        return contourPoints;
-    }
-
-    public HashMap<Integer, Color> getAreaColors() {
-        return areaColors;
     }
 
     public void moveMap(Point src, Point dst) {
@@ -1022,7 +963,7 @@ public class MapMatrix {
                     g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 50));
                     g.fillRect(x, y, MapData.mapThumbnailSize - 1, MapData.mapThumbnailSize - 1);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                 }
 
                 g.setColor(Color.white);

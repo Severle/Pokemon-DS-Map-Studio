@@ -7,6 +7,9 @@ import editor.buildingeditor2.buildfile.BuildFile;
 import formats.bdhcam.Bdhcam;
 import formats.collisions.Collisions;
 import editor.grid.MapGrid;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,36 +18,55 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings("SpellCheckingInspection")
 public class MapData {
 
     //Map Editor Handler
-    private MapEditorHandler handler;
+    private final MapEditorHandler handler;
 
     //Map grid
+    @Setter
+    @Getter
     private MapGrid grid;
 
     //Bdhc
+    @Setter
+    @Getter
     private Bdhc bdhc;
 
     //Bdhcam
+    @Setter
+    @Getter
     private Bdhcam bdhcam;
 
     //Backsound
+    @Setter
+    @Getter
     private BackSound backsound;
 
     //Collisions
+    @Setter
+    @Getter
     private Collisions collisions;
+    @Setter
+    @Getter
     private Collisions collisions2;
 
     //Building file
+    @Setter
+    @Getter
     private BuildFile buildings;
 
     //Map thumbnail
-    public static final int mapThumbnailSize = 64;
-    private static final int smallTileSize = 2;
-    private BufferedImage mapThumbnail;
+    public static final  int           mapThumbnailSize = 64;
+    private static final int           smallTileSize    = 2;
+    @Getter
+    private              BufferedImage mapThumbnail;
 
     //Area index
+    @Getter
+    @Setter
     private int areaIndex;
 
     public MapData(MapEditorHandler handler) {
@@ -54,16 +76,15 @@ public class MapData {
         bdhc = new Bdhc();
         backsound = new BackSound();
         collisions = new Collisions(handler.getGameIndex());
-        collisions2 = new Collisions(handler.getGameIndex());;
+        collisions2 = new Collisions(handler.getGameIndex());
         buildings = new BuildFile();
         bdhcam = new Bdhcam();
 
         areaIndex = 0;
-        //System.out.println("Map data created");
     }
 
     public void updateMapThumbnail() {
-        int[][][] tiles = grid.tileLayers;
+        int[][][] tiles   = grid.tileLayers;
         int[][][] heights = grid.heightLayers;
 
         mapThumbnail = new BufferedImage(mapThumbnailSize, mapThumbnailSize, BufferedImage.TYPE_INT_ARGB);
@@ -75,6 +96,7 @@ public class MapData {
         for (int i = 0; i < MapGrid.cols; i++) {
             for (int j = 0; j < MapGrid.rows; j++) {
                 try {
+                    @SuppressWarnings("NumericOverflow")
                     int maxHeight = -Integer.MIN_VALUE;
                     int maxHeightIndex = 0;
                     for (int k = 0; k < MapGrid.numLayers; k++) {
@@ -94,81 +116,13 @@ public class MapData {
                                 null);
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.warn(ex);
                 }
             }
         }
     }
 
-    public MapGrid getGrid() {
-        return grid;
-    }
-
-    public void setGrid(MapGrid grid) {
-        this.grid = grid;
-    }
-
-    public Bdhc getBdhc() {
-        return bdhc;
-    }
-
-    public void setBdhc(Bdhc bdhc) {
-        this.bdhc = bdhc;
-    }
-
-    public BackSound getBacksound() {
-        return backsound;
-    }
-
-    public void setBacksound(BackSound backsound) {
-        this.backsound = backsound;
-    }
-
-    public Collisions getCollisions() {
-        return collisions;
-    }
-
-    public void setCollisions(Collisions collisions) {
-        this.collisions = collisions;
-    }
-
-    public Collisions getCollisions2() {
-        return collisions2;
-    }
-
-    public void setCollisions2(Collisions collisions2) {
-        this.collisions2 = collisions2;
-    }
-
-    public BuildFile getBuildings() {
-        return buildings;
-    }
-
-    public void setBuildings(BuildFile buildings) {
-        this.buildings = buildings;
-    }
-
-    public BufferedImage getMapThumbnail() {
-        return mapThumbnail;
-    }
-
     public boolean isUnused() {
         return grid.isEmpty();
-    }
-
-    public void setAreaIndex(int areaIndex) {
-        this.areaIndex = areaIndex;
-    }
-
-    public int getAreaIndex() {
-        return areaIndex;
-    }
-
-    public Bdhcam getBdhcam() {
-        return bdhcam;
-    }
-
-    public void setBdhcam(Bdhcam bdhcam) {
-        this.bdhcam = bdhcam;
     }
 }

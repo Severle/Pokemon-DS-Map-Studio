@@ -1,8 +1,13 @@
 package editor.game.patches;
 
+import lombok.Getter;
+import lombok.Setter;
 import utils.Utils;
 
 
+@Setter
+@Getter
+@SuppressWarnings("unused")
 public class FilePatch {
 
     private String filePath;
@@ -36,35 +41,4 @@ public class FilePatch {
         System.arraycopy(newData, 0, gameData, dataOffset, newData.length);
     }
 
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public int getDataOffset() {
-        return dataOffset;
-    }
-
-    public void setDataOffset(int dataOffset) {
-        this.dataOffset = dataOffset;
-    }
-
-    public byte[] getOldData() {
-        return oldData;
-    }
-
-    public void setOldData(byte[] oldData) {
-        this.oldData = oldData;
-    }
-
-    public byte[] getNewData() {
-        return newData;
-    }
-
-    public void setNewData(byte[] newData) {
-        this.newData = newData;
-    }
 }

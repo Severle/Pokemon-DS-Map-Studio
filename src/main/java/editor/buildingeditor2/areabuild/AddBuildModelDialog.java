@@ -1,36 +1,43 @@
 package editor.buildingeditor2.areabuild;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
 import editor.buildingeditor2.buildmodel.BuildModelList;
-import net.miginfocom.swing.*;
-import renderer.*;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import net.miginfocom.swing.MigLayout;
+import renderer.NitroDisplayGL;
+import renderer.ObjectGL;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "FieldCanBeLocal", "unused"})
 public class AddBuildModelDialog extends JDialog {
     public static final int ACEPTED = 0, CANCELED = 1;
-    private int returnValue = CANCELED;
+    @Getter
+    private int returnValue   = CANCELED;
+    @Getter
     private int indexSelected = 0;
 
     private BuildModelList buildings;
     //private AreaBuild areaBuild;
     private ArrayList<Integer> addedBuildings;
 
-    private ImageIcon nsbmdIcon;
+    private final ImageIcon nsbmdIcon;
 
     public AddBuildModelDialog(Window owner) {
         super(owner);
         initComponents();
-        nsbmdIcon = new ImageIcon(getClass().getResource("/icons/NsbmdIcon.png"));
+        nsbmdIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/NsbmdIcon.png")));
 
         addIconToJList(jlBuildModelList, nsbmdIcon);
 
@@ -48,7 +55,7 @@ public class AddBuildModelDialog extends JDialog {
             nitroDisplayGL.getObjectGL().setNsbva(null);
             nitroDisplayGL.requestUpdate();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -79,14 +86,7 @@ public class AddBuildModelDialog extends JDialog {
         updateViewBuildModelList(0);
     }
 
-    public int getIndexSelected() {
-        return indexSelected;
-    }
-
-    public int getReturnValue() {
-        return returnValue;
-    }
-
+    @SuppressWarnings("SameParameterValue")
     private void updateViewBuildModelList(int indexSelected) {
         addElementsToListWithIndices(jlBuildModelList,
                 buildings.getModelsName(),
@@ -94,10 +94,10 @@ public class AddBuildModelDialog extends JDialog {
 
     }
 
-    private static void addElementsToListWithIndices(JList list, ArrayList<String> elements, int indexSelected) {
-        DefaultListModel listModel = new DefaultListModel();
+    private static void addElementsToListWithIndices(JList<String> list, ArrayList<String> elements, int indexSelected) {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
         for (int i = 0; i < elements.size(); i++) {
-            listModel.addElement(String.valueOf(i) + ": " + elements.get(i));
+            listModel.addElement(i + ": " + elements.get(i));
         }
         list.setModel(listModel);
 
@@ -106,7 +106,7 @@ public class AddBuildModelDialog extends JDialog {
         list.ensureIndexIsVisible(indexSelected);
     }
 
-    private static void addIconToJList(JList list, ImageIcon icon) {
+    private static void addIconToJList(JList<String> list, ImageIcon icon) {
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -117,6 +117,7 @@ public class AddBuildModelDialog extends JDialog {
         });
     }
 
+    @SuppressWarnings({"DuplicatedCode", "FieldMayBeFinal", "DataFlowIssue", "Convert2Diamond", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel12 = new JPanel();

@@ -12,7 +12,7 @@ public class StateHandler {
     private int stateIndex;
     private boolean stateAdded = false;
 
-    private ArrayList<State> states;
+    private final ArrayList<State> states;
 
     public StateHandler() {
         states = new ArrayList<>(maxNumStates + 1);
@@ -27,7 +27,7 @@ public class StateHandler {
             states.remove(stateIndex);
         }
         if (states.size() > maxNumStates) {
-            states.remove(0);
+            states.removeFirst();
             stateIndex--;
         }
     }

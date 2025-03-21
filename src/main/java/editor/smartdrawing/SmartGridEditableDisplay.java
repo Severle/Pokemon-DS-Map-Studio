@@ -1,35 +1,31 @@
 package editor.smartdrawing;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
 import editor.grid.MapGrid;
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import tileset.Tile;
+import utils.Utils;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-
-import tileset.Tile;
-import utils.Utils;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection"})
+@Log4j2
 public class SmartGridEditableDisplay extends JPanel {
 
-    private static BufferedImage gridImage = Utils.loadTexImageAsResource("/imgs/smartGrid.png");
+    private static final BufferedImage gridImage = Utils.loadTexImageAsResource("/imgs/smartGrid.png");
 
     private MapEditorHandler handler;
 
+    @Getter
     private ArrayList<SmartGridEditable> smartGridArray;
 
     public SmartGridEditableDisplay() {
@@ -93,42 +89,41 @@ public class SmartGridEditableDisplay extends JPanel {
                     handler.setSmartGridIndexSelected(gridIndex);
                 }
 
-                JPopupMenu menu = new JPopupMenu();
-                JMenuItem item1 = new JMenuItem("Add Smart Painter");
-                JMenuItem item2 = new JMenuItem("Remove Smart Painter");
-                item1.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        smartGridArray.add(new SmartGridEditable());
-                        updateSize();
-                        repaint();
-                    }
-                });
-                item2.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (smartGridArray.size() > 1) {
-                            if (gridIndex >= 0 && gridIndex < smartGridArray.size()) {
-                                smartGridArray.remove(gridIndex);
-                                handler.setSmartGridIndexSelected(Math.max(0, gridIndex - 1));
-                                updateSize();
-                                repaint();
-                            }
-                        } else {
-                            System.out.println("No se puede");
-                            JOptionPane.showMessageDialog(menu,
-                                    "There must me at least one Smart Painter",
-                                    "Can't delete Smart Painter",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                });
-                menu.add(item1);
-                menu.add(item2);
+                JPopupMenu menu = getMenu(gridIndex);
 
                 menu.show(this, evt.getX(), evt.getY());
             }
         }
+    }
+
+    private JPopupMenu getMenu(int gridIndex) {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem item1 = new JMenuItem("Add Smart Painter");
+        JMenuItem item2 = new JMenuItem("Remove Smart Painter");
+        item1.addActionListener(e -> {
+            smartGridArray.add(new SmartGridEditable());
+            updateSize();
+            repaint();
+        });
+        item2.addActionListener(e -> {
+            if (smartGridArray.size() > 1) {
+                if (gridIndex >= 0 && gridIndex < smartGridArray.size()) {
+                    smartGridArray.remove(gridIndex);
+                    handler.setSmartGridIndexSelected(Math.max(0, gridIndex - 1));
+                    updateSize();
+                    repaint();
+                }
+            } else {
+                System.out.println("No se puede");
+                JOptionPane.showMessageDialog(menu,
+                        "There must me at least one Smart Painter",
+                        "Can't delete Smart Painter",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        menu.add(item1);
+        menu.add(item2);
+        return menu;
     }
 
     @Override
@@ -163,7 +158,7 @@ public class SmartGridEditableDisplay extends JPanel {
                                         (j + SmartGrid.height * k) * MapGrid.tileSize,
                                         null);
                             } catch (Exception ex) {
-                                ex.printStackTrace();
+                                log.warn(ex);
                             }
                         }
                     }
@@ -222,10 +217,6 @@ public class SmartGridEditableDisplay extends JPanel {
         this.setPreferredSize(new Dimension(
                 SmartGrid.width * MapGrid.tileSize,
                 SmartGrid.height * MapGrid.tileSize * handler.getSmartGridArray().size()));
-    }
-
-    public ArrayList<SmartGridEditable> getSmartGridArray() {
-        return smartGridArray;
     }
 
     public void moveSelectedSmartGridUp() {

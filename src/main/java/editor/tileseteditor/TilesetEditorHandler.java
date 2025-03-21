@@ -4,26 +4,34 @@ package editor.tileseteditor;
 import editor.handler.MapData;
 import editor.handler.MapEditorHandler;
 import editor.smartdrawing.SmartGrid;
-
-import java.awt.Color;
-
+import lombok.Getter;
+import lombok.Setter;
 import tileset.Tileset;
 import tileset.TilesetMaterial;
+
+import java.awt.*;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class TilesetEditorHandler {
 
-    private MapEditorHandler handler;
+    private final MapEditorHandler handler;
 
-    private Tileset oldTset;
+    private final Tileset oldTset;
 
+    @Getter
+    @Setter
     private int textureIdIndexSelected = 0;
-    private int materialIndexSelected = 0;
+    @Getter
+    @Setter
+    private int materialIndexSelected  = 0;
 
     //private TilesetRenderer tr;
 
+    @Setter
+    @Getter
     private Color lastColorUsed = Color.white;
 
     public TilesetEditorHandler(MapEditorHandler handler) {
@@ -56,14 +64,6 @@ public class TilesetEditorHandler {
         }
     }
 
-    public void setTextureIdIndexSelected(int index) {
-        this.textureIdIndexSelected = index;
-    }
-
-    public int getTextureIdIndexSelected() {
-        return textureIdIndexSelected;
-    }
-
     public int getTextureIndexSelected() {
         return handler.getTileSelected().getTextureIDs().get(textureIdIndexSelected);
     }
@@ -80,42 +80,8 @@ public class TilesetEditorHandler {
         return handler;
     }
 
-    /*
-    public void updateTilesetRenderer() {
-        tr.setTileset(handler.getTileset());
-    }
-
-    public void updateTileThumbnail(int index) {
-        tr.init();
-        tr.renderTileThumbnail(index);
-        //tr.renderTiles();
-    }
-    
-    public void updateTileThumnails(ArrayList<Integer> indices){
-        tr.init();
-        for(int i = 0; i < indices.size(); i++){
-            tr.renderTileThumbnail(indices.get(i));
-        }
-    }
-    */
-    public void setMaterialIndexSelected(int index) {
-        this.materialIndexSelected = index;
-    }
-
-    public int getMaterialIndexSelected() {
-        return this.materialIndexSelected;
-    }
-
     public TilesetMaterial getMaterialSelected() {
         return handler.getTileset().getMaterial(materialIndexSelected);
-    }
-
-    public Color getLastColorUsed() {
-        return lastColorUsed;
-    }
-
-    public void setLastColorUsed(Color color) {
-        this.lastColorUsed = color;
     }
 
 }

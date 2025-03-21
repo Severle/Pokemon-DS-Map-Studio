@@ -1,27 +1,24 @@
 package editor.tileselector;
 
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-
 import editor.handler.MapEditorHandler;
 import editor.mapdisplay.MapDisplay;
 import editor.mapdisplay.ViewMode;
 import editor.tileseteditor.TilesetEditorDialog;
+import lombok.Setter;
+import tileset.Tile;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import javax.swing.SwingUtilities;
-
-import tileset.Tile;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"DuplicatedCode", "SpellCheckingInspection"})
 public class TileSelector extends JPanel {
 
     private MapEditorHandler handler;
@@ -36,7 +33,8 @@ public class TileSelector extends JPanel {
     private boolean multiselecting = false;
     private boolean dragging = false;
     private boolean canDrag = false;
-    private int indexTileHovering = -1;
+    private int indexTileHovering       = -1;
+    @Setter
     private int indexSecondTileSelected = -1;
     private int mouseX, mouseY;
     private BufferedImage multiSelectImg;
@@ -121,7 +119,7 @@ public class TileSelector extends JPanel {
                         for (int i = 0; i < handler.getTileset().size(); i++) {
                             indices.add(i);
                         }
-                        ArrayList<Integer> selectionIndices = new ArrayList(
+                        ArrayList<Integer> selectionIndices = new ArrayList<>(
                                 indices.subList(handler.getTileIndexSelected(),
                                         indexSecondTileSelected + 1));
                         for (int i = 0; i < selectionIndices.size(); i++) {
@@ -153,7 +151,7 @@ public class TileSelector extends JPanel {
 
         if (display != null) {
             g.drawImage(display, 0, 0, null);
-            if (boundingBoxes.size() > 0) {
+            if (!boundingBoxes.isEmpty()) {
                 g.setColor(Color.red);
                 drawTileBounds(g, handler.getTileIndexSelected());
             }
@@ -161,7 +159,7 @@ public class TileSelector extends JPanel {
 
         if (handler != null) {
             if (handler.getTileset().size() > 0) {
-                if (multiSelectionEnabled && (multiselecting || dragging || canDrag) && boundingBoxes.size() > 0) {
+                if (multiSelectionEnabled && (multiselecting || dragging || canDrag) && !boundingBoxes.isEmpty()) {
                     int limit = Math.min(indexSecondTileSelected, handler.getTileset().size() - 1);
                     for (int i = handler.getTileIndexSelected() + 1; i <= limit; i++) {
                         g.setColor(Color.red);
@@ -169,16 +167,13 @@ public class TileSelector extends JPanel {
                     }
                 }
                 if (dragging) {
-                    if (indexTileHovering != -1 && boundingBoxes.size() > 0) {
+                    if (indexTileHovering != -1 && !boundingBoxes.isEmpty()) {
                         g.setColor(Color.blue);
                         drawTileBounds(g, indexTileHovering);
                     }
 
                     g.drawImage(multiSelectImg,
                             mouseX, mouseY, null);
-                    /*
-                    g.drawImage(handler.getTileSelected().getThumbnail(),
-                            mouseX, mouseY, null);*/
                 }
             }
         }
@@ -221,7 +216,7 @@ public class TileSelector extends JPanel {
             System.out.println("Num rows: " + rows);
             display = new BufferedImage(maxCols * tilePixelSize, rows * tilePixelSize, BufferedImage.TYPE_4BYTE_ABGR);
         } else {
-            display = new BufferedImage(maxCols * tilePixelSize, 1 * tilePixelSize, BufferedImage.TYPE_4BYTE_ABGR);
+            display = new BufferedImage(maxCols * tilePixelSize, tilePixelSize, BufferedImage.TYPE_4BYTE_ABGR);
         }
         paintTiles();
 
@@ -252,8 +247,7 @@ public class TileSelector extends JPanel {
     public void updateTiles(ArrayList<Integer> indices) {
         Graphics g = display.getGraphics();
 
-        for (int i = 0; i < indices.size(); i++) {
-            int index = indices.get(i);
+        for (int index : indices) {
             Tile tile = handler.getTileset().get(index);
             g.drawImage(
                     tile.getThumbnail(),
@@ -408,10 +402,6 @@ public class TileSelector extends JPanel {
             return boundingBoxes.get(handler.getTileIndexSelected()).y;
         }
         return 0;
-    }
-
-    public void setIndexSecondTileSelected(int index) {
-        this.indexSecondTileSelected = index;
     }
 
     private void initComponents() {

@@ -1,23 +1,22 @@
 package editor.buildingeditor;
 
 import editor.handler.MapEditorHandler;
-import net.miginfocom.swing.*;
+import net.miginfocom.swing.MigLayout;
 import utils.Utils;
 
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import javax.swing.event.*;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "SpellCheckingInspection", "FieldCanBeLocal"})
 public class BuildingEditorDialog extends JDialog {
     private MapEditorHandler handler;
     private BuildHandler buildHandler;
@@ -202,7 +201,7 @@ public class BuildingEditorDialog extends JDialog {
 
         System.out.println("Index selected: " + indexSelected);
         jlBuildingIDsEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < buildHandler.getBuildModelMatshp().getAllMaterials().size(); i++) {
             String name = "Building " + String.format("%03d", i);
             demoList.addElement(name);
@@ -215,12 +214,12 @@ public class BuildingEditorDialog extends JDialog {
     }
 
     public void updateViewMaterialOrder() {
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         int buildingSelected = jlBuildingIDs.getSelectedIndex();
         ArrayList<Integer> materials = buildHandler.getBuildModelMatshp().getMaterials(buildingSelected);
         if (materials != null) {
-            for (int i = 0; i < materials.size(); i++) {
-                String name = "Material " + materials.get(i);
+            for (Integer material : materials) {
+                String name = "Material " + material;
                 demoList.addElement(name);
             }
         } else {
@@ -238,7 +237,7 @@ public class BuildingEditorDialog extends JDialog {
     }
 
     public void updateViewBtl(int indexSelected) {
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         ArrayList<Integer> buildingIDs = buildHandler.getBuildTilesetList().getBuildingIDs();
         for (int i = 0; i < buildHandler.getBuildTilesetList().getBuildingIDs().size(); i++) {
             String name = "Building " + String.format("%03d", buildingIDs.get(i));
@@ -249,6 +248,7 @@ public class BuildingEditorDialog extends JDialog {
         jlBuildTilesetList.ensureIndexIsVisible(indexSelected);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public void addBuildingBmmWithDialog() {
         final BuildingMaterialRequestDialog dialog = new BuildingMaterialRequestDialog(handler.getMainFrame());
         dialog.init("Number of materials for the Building: ", 1, 20);
@@ -292,6 +292,7 @@ public class BuildingEditorDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public void replaceBuildingBmmWithDialog() {
         final BuildingMaterialRequestDialog dialog = new BuildingMaterialRequestDialog(handler.getMainFrame());
         dialog.init("Number of materials for the Building: ", 1, 20);
@@ -374,6 +375,7 @@ public class BuildingEditorDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings({"Convert2Diamond", "DuplicatedCode", "FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

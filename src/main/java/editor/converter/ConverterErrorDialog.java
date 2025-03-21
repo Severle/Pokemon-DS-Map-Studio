@@ -1,16 +1,15 @@
 package editor.converter;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
+import net.miginfocom.swing.MigLayout;
 
-import net.miginfocom.swing.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused", "SpellCheckingInspection"})
 public class ConverterErrorDialog extends JDialog {
     public ConverterErrorDialog(Window owner) {
         super(owner);
@@ -28,6 +27,7 @@ public class ConverterErrorDialog extends JDialog {
         jTextArea1.setText(textAreaMsg);
     }
 
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jLabel1 = new JLabel();

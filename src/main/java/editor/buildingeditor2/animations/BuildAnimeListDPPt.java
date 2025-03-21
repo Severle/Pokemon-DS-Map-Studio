@@ -4,21 +4,23 @@ package editor.buildingeditor2.animations;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
-
-import java.util.ArrayList;
-
+import lombok.Getter;
 import utils.io.BinaryReader;
 import utils.io.BinaryWriter;
+
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class BuildAnimeListDPPt {
 
-    public static final int MAX_ANIMS_PER_BUILDING = 4;
-    private ArrayList<ArrayList<Integer>> animations;
-    private ArrayList<Byte> secondBytes;
-    private ArrayList<Boolean> slopeAnimations;
+    public static final int                           MAX_ANIMS_PER_BUILDING = 4;
+    private final ArrayList<ArrayList<Integer>> animations;
+    private final ArrayList<Byte>    secondBytes;
+    private final ArrayList<Boolean> slopeAnimations;
 
     public BuildAnimeListDPPt(Narc narc) {
         NarcFolder root = narc.root();
@@ -60,7 +62,7 @@ public class BuildAnimeListDPPt {
             BinaryWriter.writeUInt32(data, 4 + i * 4, animations.get(animationIndex).get(i));
         }
         for (; i < MAX_ANIMS_PER_BUILDING; i++) {
-            BinaryWriter.writeUInt32(data, 4 + i * 4, 0xFFFFFFFF);
+            BinaryWriter.writeUInt32(data, 4 + i * 4, 0xFFFFFFFFL);
         }
         return data;
     }
@@ -141,15 +143,5 @@ public class BuildAnimeListDPPt {
             slopeAnimations.remove(index);
         }
     }
-
-    public ArrayList<ArrayList<Integer>> getAnimations() {
-        return animations;
-    }
-
-    public ArrayList<Byte> getSecondBytes() {
-        return secondBytes;
-    }
-
-    public ArrayList<Boolean> getSlopeAnimations(){return slopeAnimations; }
 
 }

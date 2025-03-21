@@ -6,6 +6,7 @@ import javax.swing.GroupLayout;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("unused")
 public class KeyInfo extends JPanel {
     public KeyInfo() {
         initComponents();

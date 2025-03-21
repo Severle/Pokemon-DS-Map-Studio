@@ -1,26 +1,22 @@
 package editor.tileseteditor;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
-import java.awt.Component;
-import java.awt.Image;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JList;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Getter
+@Log4j2
+@SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class ReplaceMaterialDialog extends JDialog {
 
     private MapEditorHandler handler;
@@ -30,8 +26,10 @@ public class ReplaceMaterialDialog extends JDialog {
     private boolean jcbNewMaterialEnabled = true;
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
+    @Getter
     private int returnValue = CANCEL_OPTION;
 
+    @Getter
     private int indexSelected;
 
     private ArrayList<ImageIcon> materialIcons;
@@ -73,11 +71,11 @@ public class ReplaceMaterialDialog extends JDialog {
     }
 
     private void initJComboBox() {
-        Object[] names = new String[handler.getTileset().getMaterials().size()];
+        String[] names = new String[handler.getTileset().getMaterials().size()];
         for (int i = 0; i < names.length; i++) {
             names[i] = handler.getTileset().getMaterials().get(i).getImageName();
         }
-        DefaultComboBoxModel model = new DefaultComboBoxModel(names);
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(names);
         jcbNewMaterialEnabled = false;
         jcbNewMaterial.setModel(model);
         jcbNewMaterialEnabled = true;
@@ -100,14 +98,7 @@ public class ReplaceMaterialDialog extends JDialog {
 
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
-    public int getIndexSelected() {
-        return indexSelected;
-    }
-
+    @SuppressWarnings({"FieldMayBeFinal", "Convert2MethodRef", "UnnecessaryUnicodeEscape", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

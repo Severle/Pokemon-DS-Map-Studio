@@ -1,20 +1,23 @@
 
 package editor.grid;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import tileset.Tile;
 import tileset.Tileset;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Trifindo
  */
+@Getter
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode", "unused"})
 public class MapLayerGL {
 
-    private HashMap<Integer, GeometryGL> geometryGL;
+    private final HashMap<Integer, GeometryGL> geometryGL;
 
     public MapLayerGL(int[][] tileGrid, int[][] heightGrid, Tileset tset, boolean realTimePostProcessing, int maxTileableSize) {
         if (realTimePostProcessing) {
@@ -54,14 +57,14 @@ public class MapLayerGL {
                         Tile tile = tset.get(tileGrid[i][j]);
 
                         float[] offset = new float[]{
-                                (i - (MapGrid.cols) / 2),
-                                (j - (MapGrid.rows) / 2),
+                                (i - (float) (MapGrid.cols) / 2),
+                                (j - (float) (MapGrid.rows) / 2),
                                 heightGrid[i][j]
                         };
 
                         addTileToMap(tile, geometryMap, offset, trisAdded, quadsAdded);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.warn(ex);
                     }
                 }
             }
@@ -105,7 +108,7 @@ public class MapLayerGL {
                             }
                         }
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.warn(ex);
                     }
                 }
             }
@@ -135,8 +138,8 @@ public class MapLayerGL {
                         Tile tile = tset.get(tileGrid[i][j]);
 
                         float[] offset = new float[]{
-                                (i - (MapGrid.cols) / 2) + tile.getXOffset(),
-                                (j - (MapGrid.rows) / 2) + tile.getYOffset(),
+                                (i - (float) (MapGrid.cols) / 2) + tile.getXOffset(),
+                                (j - (float) (MapGrid.rows) / 2) + tile.getYOffset(),
                                 heightGrid[i][j]
                         };
 
@@ -155,7 +158,7 @@ public class MapLayerGL {
 
                         addTileToMap(tile, geometryMap, offset, scale, texScale, trisAdded, quadsAdded);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.warn(ex);
                     }
                 }
             }
@@ -168,6 +171,7 @@ public class MapLayerGL {
         return geometryMap;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void evaluateTile(Tile tile, int c, int r,
                                      int[][] tileGrid, int[][] heightGrid, boolean[][] writtenGrid,
                                      int[][] scaleMatrixX, int[][] scaleMatrixY, int cols, int rows, int maxTileableSize) {
@@ -211,8 +215,7 @@ public class MapLayerGL {
         int n = 1;
         for (int i = width, limit = cols - c; i < limit && n < maxTileableSize; i += width) {
             int nextC = c + i;
-            int nextR = r;
-            if (sameHeightAndType(tileGrid, heightGrid, c, r, nextC, nextR) && !writtenGrid[nextC][nextR]) {
+            if (sameHeightAndType(tileGrid, heightGrid, c, r, nextC, r) && !writtenGrid[nextC][r]) {
                 n++;
             } else {
                 return n;
@@ -225,9 +228,8 @@ public class MapLayerGL {
                                          int c, int r, boolean[][] writtenGrid, int height, int rows, int maxTileableSize) {
         int n = 1;
         for (int i = height, limit = rows - r; i < limit && n < maxTileableSize; i += height) {
-            int nextC = c;
             int nextR = r + i;
-            if (sameHeightAndType(tileGrid, heightGrid, c, r, nextC, nextR) && !writtenGrid[nextC][nextR]) {
+            if (sameHeightAndType(tileGrid, heightGrid, c, r, c, nextR) && !writtenGrid[c][nextR]) {
                 n++;
             } else {
                 return n;
@@ -271,11 +273,13 @@ public class MapLayerGL {
         return n;
     }
 
-    private static boolean sameHeightAndType(int[][] tileGrid, int heightGrid[][], int c1, int r1, int c2, int r2) {
+    private static boolean sameHeightAndType(int[][] tileGrid, int[][] heightGrid, int c1, int r1, int c2, int r2) {
         return (tileGrid[c1][r1] == tileGrid[c2][r2] && heightGrid[c1][r1] == heightGrid[c2][r2]);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private static float[] getTexScale(Tile tile, int scaleX, int scaleY) {
+        //noinspection StatementWithEmptyBody
         if (tile.isXtileable() && tile.isYtileable()) {
             //New code
         } else if (tile.isXtileable()) {
@@ -408,14 +412,14 @@ public class MapLayerGL {
 
     private static HashMap<Integer, GeometrySize> calculateGeometrySizes(int[][] tileGrid, Tileset tset) {
         HashMap<Integer, GeometrySize> infoMap = new HashMap<>(tset.getMaterials().size());
-        for (int i = 0; i < tileGrid.length; i++) {
-            for (int j = 0; j < tileGrid[i].length; j++) {
-                if (tileGrid[i][j] != -1) {
+        for (int[] ints : tileGrid) {
+            for (int anInt : ints) {
+                if (anInt != -1) {
                     try {
-                        Tile tile = tset.get(tileGrid[i][j]);
+                        Tile tile = tset.get(anInt);
                         for (int k = 0; k < tile.getTextureIDs().size(); k++) {
-                            int ID = tile.getTextureIDs().get(k);
-                            int numTris = getNumPolygons(k, tile.getTexOffsetsTri(), tile.getVCoordsTri(), 3, tile.getTextureIDs().size());
+                            int ID       = tile.getTextureIDs().get(k);
+                            int numTris  = getNumPolygons(k, tile.getTexOffsetsTri(), tile.getVCoordsTri(), 3, tile.getTextureIDs().size());
                             int numQuads = getNumPolygons(k, tile.getTexOffsetsQuad(), tile.getVCoordsQuad(), 4, tile.getTextureIDs().size());
 
                             GeometrySize info = infoMap.get(ID);
@@ -428,7 +432,7 @@ public class MapLayerGL {
                             }
                         }
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.warn(ex);
                     }
                 }
             }
@@ -449,11 +453,12 @@ public class MapLayerGL {
 
     }
 
+    @Getter
     private static class GeometrySize {
 
-        private int ID;
-        private int numTris = 0;
-        private int numQuads = 0;
+        private final int ID;
+        private       int numTris;
+        private int numQuads;
 
         public GeometrySize(int ID, int numTris, int numQuads) {
             this.ID = ID;
@@ -469,21 +474,6 @@ public class MapLayerGL {
             this.numTris += numTris;
         }
 
-        public int getNumQuads() {
-            return numQuads;
-        }
-
-        public int getNumTris() {
-            return numTris;
-        }
-
-        public int getID() {
-            return ID;
-        }
-    }
-
-    public HashMap<Integer, GeometryGL> getGeometryGL() {
-        return geometryGL;
     }
 
     public int getNumGeometryGL() {

@@ -2,6 +2,9 @@
 package editor.buildingeditor2.animations;
 
 import editor.buildingeditor2.NamedFile;
+import lombok.Getter;
+import utils.Utils;
+import utils.io.BinaryReader;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,12 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import utils.io.BinaryReader;
-import utils.Utils;
-
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class ModelAnimation implements NamedFile {
 
     public static final int TYPE_NSBCA = 0;
@@ -23,7 +24,7 @@ public class ModelAnimation implements NamedFile {
     public static final int TYPE_NSBMA = 3;
     public static final int TYPE_NSBVA = 4;
 
-    private static final ArrayList<String> typeFileNames = new ArrayList<String>() {
+    private static final ArrayList<String> typeFileNames = new ArrayList<>() {
         {
             add("BCA0");
             add("BTA0");
@@ -32,7 +33,7 @@ public class ModelAnimation implements NamedFile {
         }
     };
 
-    private static final ArrayList<String> typeFileExtensions = new ArrayList<String>() {
+    private static final ArrayList<String> typeFileExtensions = new ArrayList<>() {
         {
             add("nsbca");
             add("nsbta");
@@ -42,8 +43,9 @@ public class ModelAnimation implements NamedFile {
     };
 
     private String name;
-    private int type;
-    private byte[] data;
+    private       int    type;
+    @Getter
+    private final byte[] data;
 
     public ModelAnimation(byte[] data, int index) {
         this.data = data;
@@ -56,7 +58,7 @@ public class ModelAnimation implements NamedFile {
         return name;
     }
 
-    public ModelAnimation(String path, int index) throws IOException, Exception {
+    public ModelAnimation(String path, int index) throws Exception {
         byte[] data = Files.readAllBytes(Paths.get(path));
         String signature = BinaryReader.readString(data, 0, 4);
         if (typeFileNames.contains(signature)) {
@@ -79,7 +81,7 @@ public class ModelAnimation implements NamedFile {
         try {
             name = getAnimationName(data);
         } catch (Exception ex) {
-            name = "Unknown animation " + String.valueOf(index);
+            name = "Unknown animation " + index;
         }
     }
 
@@ -107,17 +109,13 @@ public class ModelAnimation implements NamedFile {
         return typeFileExtensions.get(type);
     }
 
-    public byte[] getData() {
-        return data;
-    }
-
     private static String getAnimationName(byte[] data) throws Exception {
         long nameOffset = BinaryReader.readUInt32(data, 16);
         String name = BinaryReader.readString(data, (int) (32 + nameOffset), 16);
         return Utils.removeLastOccurrences(name, '\u0000');
     }
 
-    private static int getAnimationType(byte[] data) throws Exception {
+    private static int getAnimationType(byte[] data) {
         String type = BinaryReader.readString(data, 0, 4);
         return typeFileNames.indexOf(type);
     }

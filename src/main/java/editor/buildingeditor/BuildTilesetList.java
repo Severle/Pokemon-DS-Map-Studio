@@ -1,21 +1,23 @@
 
 package editor.buildingeditor;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import lombok.Getter;
 import utils.io.BinaryReader;
 import utils.io.BinaryWriter;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class BuildTilesetList {
 
-    private ArrayList<Integer> buildingIDs;
+    private final ArrayList<Integer> buildingIDs;
 
-    public BuildTilesetList(String path) throws FileNotFoundException,
+    public BuildTilesetList(String path) throws
             IOException {
         BinaryReader br = new BinaryReader(path);
         int numberOfBuildings = br.readUInt16();
@@ -26,19 +28,15 @@ public class BuildTilesetList {
         br.close();
     }
 
-    public void saveToFile(String path) throws FileNotFoundException, IOException {
+    public void saveToFile(String path) throws IOException {
         BinaryWriter bw = new BinaryWriter(path);
 
         bw.writeUInt16(buildingIDs.size());
-        for (int i = 0; i < buildingIDs.size(); i++) {
-            bw.writeUInt16(buildingIDs.get(i));
+        for (Integer buildingID : buildingIDs) {
+            bw.writeUInt16(buildingID);
         }
         bw.close();
 
-    }
-
-    public ArrayList<Integer> getBuildingIDs() {
-        return buildingIDs;
     }
 
 

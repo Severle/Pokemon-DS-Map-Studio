@@ -4,15 +4,18 @@ package editor.buildingeditor2.areadata;
 import formats.narc2.Narc;
 import formats.narc2.NarcFile;
 import formats.narc2.NarcFolder;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
+@Getter
 public class AreaDataListDPPt {
 
-    private ArrayList<AreaDataDPPt> areaDatas;
+    private final ArrayList<AreaDataDPPt> areaDatas;
 
     public AreaDataListDPPt(Narc narc) throws Exception {
         final int numFiles = narc.root().getFiles().size();
@@ -30,10 +33,6 @@ public class AreaDataListDPPt {
         }
         root.setFiles(files);
         return new Narc(root);
-    }
-
-    public ArrayList<AreaDataDPPt> getAreaDatas() {
-        return areaDatas;
     }
 
 }
