@@ -51,6 +51,7 @@ import lombok.extern.log4j.Log4j2;
 import net.miginfocom.swing.MigLayout;
 import tileset.*;
 import utils.Utils;
+import utils.i18n.I18nUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -139,9 +140,12 @@ public class MainFrame extends JFrame {
     }
 
     private void formWindowClosing(WindowEvent e) {
-        int returnVal = JOptionPane.showConfirmDialog(this,
-                "Do you want to exit Pokemon DS Map Studio?",
-                "Closing Pokemon DS Map Studio", JOptionPane.YES_NO_OPTION);
+        int returnVal = JOptionPane.showConfirmDialog(
+                this,
+                I18nUtil.getString("quit.message"),
+                I18nUtil.getString("quit.title"),
+                JOptionPane.YES_NO_OPTION
+        );
         if (returnVal == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
@@ -1538,7 +1542,6 @@ public class MainFrame extends JFrame {
             fcOpen.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
         }
         fcOpen.setFileFilter(new FileNameExtensionFilter("IMD (*.imd)", "imd"));
-        fcOpen.setApproveButtonText("Open");
         fcOpen.setDialogTitle("Open IMD Map for converting into NSBTX");
         return fcOpen;
     }
@@ -1814,7 +1817,12 @@ public class MainFrame extends JFrame {
 
             m.addActionListener(e -> {
                 if (opened_map) {
-                    int returnVal = JOptionPane.showConfirmDialog(this, "Do you want to close current map?", "Open recent", JOptionPane.YES_NO_OPTION);
+                    int returnVal = JOptionPane.showConfirmDialog(
+                            this,
+                            I18nUtil.getString("hint.close-current-map"),
+                            I18nUtil.getString("open-recent.title"),
+                            JOptionPane.YES_NO_OPTION
+                    );
                     if (returnVal == JOptionPane.YES_OPTION)
                         openMap(item);
                 } else
