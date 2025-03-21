@@ -6,33 +6,29 @@ import formats.imd.ImdNode;
 import formats.imd.nodes.Body;
 import formats.imd.nodes.TexImage;
 import formats.imd.nodes.TexPalette;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "HttpUrlsUsage", "DuplicatedCode", "GrazieInspection"})
 public class NsbtxImd extends ImdNode {
 
     public NsbtxImd(Nsbtx2 nsbtx) {
         super("imd");
 
-        attributes = new ArrayList<ImdAttribute>() {
+        attributes = new ArrayList<>() {
             {
                 add(new ImdAttribute("version", "1.6.0"));
             }
@@ -68,7 +64,7 @@ public class NsbtxImd extends ImdNode {
     }
 
     private void saveToXML(String xmlPath) throws ParserConfigurationException,
-            TransformerConfigurationException, TransformerException, IOException {
+            TransformerException, IOException {
         Document dom;
 
         // instance of a DocumentBuilderFactory
@@ -81,13 +77,11 @@ public class NsbtxImd extends ImdNode {
 
         // create the root element
         Element rootEle = dom.createElement(nodeName);
-        for (int i = 0; i < attributes.size(); i++) {
-            ImdAttribute attrib = attributes.get(i);
+        for (ImdAttribute attrib : attributes) {
             rootEle.setAttribute(attrib.tag, attrib.value);
         }
 
-        for (int i = 0; i < subnodes.size(); i++) {
-            ImdNode subnode = subnodes.get(i);
+        for (ImdNode subnode : subnodes) {
             printImdNode(subnode, dom, rootEle);
         }
 

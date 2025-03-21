@@ -11,13 +11,14 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class NsbtxDisplay2 extends JPanel {
 
     private NsbtxHandler2 nsbtxHandler;
 
     private static final int size = 160;
-    private BufferedImage img;
-    private BufferedImage backImg;
+    private       BufferedImage img;
+    private final BufferedImage backImg;
 
     public NsbtxDisplay2() {
         initComponents();
@@ -27,6 +28,7 @@ public class NsbtxDisplay2 extends JPanel {
         backImg = createBackImg();
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -45,12 +47,7 @@ public class NsbtxDisplay2 extends JPanel {
 
     public void updateImage() {
         if (nsbtxHandler != null) {
-            BufferedImage updatedImage = nsbtxHandler.getSelectedImage();
-            if (updatedImage != null) {
-                this.img = updatedImage;
-            } else {
-                this.img = null;
-            }
+            this.img = nsbtxHandler.getSelectedImage();
         }
     }
 
@@ -58,6 +55,7 @@ public class NsbtxDisplay2 extends JPanel {
         this.nsbtxHandler = nsbtxHandler;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public BufferedImage createBackImg() {
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         Graphics g = img.getGraphics();

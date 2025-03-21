@@ -14,6 +14,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class PaletteDisplay2 extends JPanel {
 
     private static final int tileSize = 10;
@@ -24,9 +25,9 @@ public class PaletteDisplay2 extends JPanel {
 
     private static final Color borderColor = new Color(102, 102, 102);
     private static final Color selectionFillColor = new Color(255, 0, 0, 120);
-    private static final Color selectionBorderColor = Color.red;
-    private BufferedImage backImg;
-    public ArrayList<Color> palette;
+    private static final Color            selectionBorderColor = Color.red;
+    private final        BufferedImage    backImg;
+    public               ArrayList<Color> palette;
 
     public PaletteDisplay2() {
         initComponents();
@@ -59,14 +60,8 @@ public class PaletteDisplay2 extends JPanel {
         g.setColor(borderColor);
         g.drawRect(0, 0, cols * tileSize - 1, rows * tileSize - 1);
 
+        //noinspection StatementWithEmptyBody
         if (palette != null) {
-            /*//TODO: Finish this
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setStroke(new BasicStroke(2));
-            int index = nsbtxHandler.getColorIndexSelected();
-            g.setColor(selectionBorderColor);
-            g.drawRect(index * tileSize + 1, 1, tileSize - 2, tileSize - 2);
-             */
         }
 
     }
@@ -93,26 +88,6 @@ public class PaletteDisplay2 extends JPanel {
         }
     }
 
-    /*
-    public void updatePaletteColor(int index){
-        if (nsbtxHandler != null) {
-            if (nsbtxHandler.getNsbtx() != null) {
-                palette.set(index, nsbtxHandler.getNsbtx().getPaletteColor(
-                        nsbtxHandler.getPaletteIndexSelected(), index));
-            }
-        }
-    }
-
-    public void updateSelectedPaletteColor(){
-        if (nsbtxHandler != null) {
-            if (nsbtxHandler.getNsbtx() != null) {
-                int index = nsbtxHandler.getColorIndexSelected();
-                palette.set(index, nsbtxHandler.getNsbtx().getPaletteColor(
-                        nsbtxHandler.getPaletteIndexSelected(), index));
-            }
-        }
-    }
-     */
     private BufferedImage createNoPaletteImg() {
         BufferedImage img = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = (Graphics2D) img.getGraphics();

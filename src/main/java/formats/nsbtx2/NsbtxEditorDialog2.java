@@ -1,18 +1,23 @@
 package formats.nsbtx2;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
 import editor.converter.ConverterErrorDialog;
 import editor.handler.MapEditorHandler;
-import formats.nsbtx.*;
 import formats.nsbtx2.exceptions.NsbtxTextureSizeException;
+import net.miginfocom.swing.MigLayout;
+import utils.Utils;
+import utils.Utils.MutableBoolean;
+import utils.swing.ThumbnailFileChooser;
 
-import java.awt.Color;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,31 +26,20 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import javax.imageio.ImageIO;
-import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import net.miginfocom.swing.*;
-
-import utils.swing.ThumbnailFileChooser;
-import utils.Utils;
-import utils.Utils.MutableBoolean;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode", "FieldCanBeLocal"})
 public class NsbtxEditorDialog2 extends JDialog {
 
     private MapEditorHandler handler;
     private NsbtxHandler2 nsbtxHandler;
 
     private boolean textureListEnabled = true;
-    private boolean paletteListEnabled = true;
-    private MutableBoolean jtfTextureActive = new MutableBoolean(true);
-    private MutableBoolean jtfPaletteActive = new MutableBoolean(true);
+    private       boolean        paletteListEnabled = true;
+    private final MutableBoolean jtfTextureActive = new MutableBoolean(true);
+    private final MutableBoolean jtfPaletteActive = new MutableBoolean(true);
 
     private static final Color editingColor = new Color(255, 185, 185);
     private static final Color rightColor = new Color(200, 255, 200);
@@ -249,16 +243,13 @@ public class NsbtxEditorDialog2 extends JDialog {
             String name = nsbtxHandler.getSelectedTexture().getName();
             jtfTextureActive.value = false;
             jtfTextureName.setText(name);
-            jtfTextureName.setBackground(UIManager.getColor("TextPane.background"));
-            jtfTextureName.setForeground(UIManager.getColor("TextPane.foreground"));
-            jtfTextureActive.value = true;
         } else {
             jtfTextureActive.value = false;
             jtfTextureName.setText("");
-            jtfTextureName.setBackground(UIManager.getColor("TextPane.background"));
-            jtfTextureName.setForeground(UIManager.getColor("TextPane.foreground"));
-            jtfTextureActive.value = true;
         }
+        jtfTextureName.setBackground(UIManager.getColor("TextPane.background"));
+        jtfTextureName.setForeground(UIManager.getColor("TextPane.foreground"));
+        jtfTextureActive.value = true;
     }
 
     private void updateViewPaletteName() {
@@ -266,21 +257,18 @@ public class NsbtxEditorDialog2 extends JDialog {
             String name = nsbtxHandler.getSelectedPalette().getName();
             jtfPaletteActive.value = false;
             jtfPaletteName.setText(name);
-            jtfPaletteName.setBackground(UIManager.getColor("TextPane.background"));
-            jtfPaletteName.setForeground(UIManager.getColor("TextPane.foreground"));
-            jtfPaletteActive.value = true;
         } else {
             jtfPaletteActive.value = false;
             jtfPaletteName.setText("");
-            jtfPaletteName.setBackground(UIManager.getColor("TextPane.background"));
-            jtfPaletteName.setForeground(UIManager.getColor("TextPane.foreground"));
-            jtfPaletteActive.value = true;
         }
+        jtfPaletteName.setBackground(UIManager.getColor("TextPane.background"));
+        jtfPaletteName.setForeground(UIManager.getColor("TextPane.foreground"));
+        jtfPaletteActive.value = true;
     }
 
     private void updateViewTextureNameList(int indexSelected) {
         textureListEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < nsbtxHandler.getNsbtx().getTextures().size(); i++) {
             String name = nsbtxHandler.getNsbtx().getTexture(i).getName();
             demoList.addElement(name);
@@ -297,7 +285,7 @@ public class NsbtxEditorDialog2 extends JDialog {
 
     private void updateViewPaletteNameList(int indexSelected) {
         paletteListEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < nsbtxHandler.getNsbtx().getPalettes().size(); i++) {
             String name = nsbtxHandler.getNsbtx().getPalette(i).getName();
             demoList.addElement(name);
@@ -553,9 +541,9 @@ public class NsbtxEditorDialog2 extends JDialog {
                 File[] files = fc.getSelectedFiles();
 
                 boolean errorLoadingFiles = false;
-                boolean errorTexturesSize = false;
-                String wrongSizeTextureNames = "";
-                int numWrongSizeTextures = 0;
+                boolean       errorTexturesSize     = false;
+                StringBuilder wrongSizeTextureNames = new StringBuilder();
+                int           numWrongSizeTextures  = 0;
                 final int maxWrongSizeTextures = 6;
                 for (File file : files) {
                     try {
@@ -569,9 +557,9 @@ public class NsbtxEditorDialog2 extends JDialog {
                         } catch (NsbtxTextureSizeException ex) {
                             errorTexturesSize = true;
                             if (numWrongSizeTextures < maxWrongSizeTextures) {
-                                wrongSizeTextureNames += "- " + name + "\n";
+                                wrongSizeTextureNames.append("- ").append(name).append("\n");
                             } else if (numWrongSizeTextures == maxWrongSizeTextures) {
-                                wrongSizeTextureNames += "...(more)" + "\n";
+                                wrongSizeTextureNames.append("...(more)" + "\n");
                             }
                             numWrongSizeTextures++;
                         }
@@ -582,7 +570,7 @@ public class NsbtxEditorDialog2 extends JDialog {
 
                 if (errorTexturesSize) {
                     JOptionPane.showMessageDialog(this,
-                            String.valueOf(numWrongSizeTextures)
+                            numWrongSizeTextures
                                     + " images do not have the same size as the source texture: \n"
                                     + wrongSizeTextureNames,
                             "Can't add some palettes", JOptionPane.ERROR_MESSAGE);
@@ -804,23 +792,23 @@ public class NsbtxEditorDialog2 extends JDialog {
         }
     }
 
-    private boolean hasRepeatedTextures() {
+    private boolean hasNoRepeatedTextures() {
         String repeatedTex = nsbtxHandler.getNsbtx().getRepeatedTextureName();
         String repeatedPal = nsbtxHandler.getNsbtx().getRepeatedPaletteName();
         if (repeatedTex != null) {
             JOptionPane.showMessageDialog(this, "The texture named \"" + repeatedTex + "\" is repeated",
                     "Repeated texture name", JOptionPane.ERROR_MESSAGE);
-            return true;
+            return false;
         } else if (repeatedPal != null) {
             JOptionPane.showMessageDialog(this, "The palette named \"" + repeatedPal + "\" is repeated",
                     "Repeated palette name", JOptionPane.ERROR_MESSAGE);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void saveNsbtx() {
-        if (!hasRepeatedTextures()) {
+        if (hasNoRepeatedTextures()) {
             String path = nsbtxHandler.getNsbtx().getPath();
             path = Utils.removeExtensionFromPath(path);
             path = Utils.addExtensionToPath(path, "imd");
@@ -840,7 +828,7 @@ public class NsbtxEditorDialog2 extends JDialog {
 
     private void saveNsbtxWithDialog() {
         if (nsbtxHandler.getNsbtx().hasTextures() && nsbtxHandler.getNsbtx().hasPalettes()) {
-            if (!hasRepeatedTextures()) {
+            if (hasNoRepeatedTextures()) {
                 final JFileChooser fc = new JFileChooser();
                 if (handler.getLastNsbtxDirectoryUsed() != null) {
                     fc.setCurrentDirectory(new File(handler.getLastNsbtxDirectoryUsed()));
@@ -898,10 +886,10 @@ public class NsbtxEditorDialog2 extends JDialog {
 
                 BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-                String outputString = "";
-                String line = null;
+                StringBuilder outputString = new StringBuilder();
+                String        line;
                 while ((line = stdError.readLine()) != null) {
-                    outputString += line + "\n";
+                    outputString.append(line).append("\n");
                 }
 
                 p.waitFor();
@@ -946,7 +934,7 @@ public class NsbtxEditorDialog2 extends JDialog {
                     ConverterErrorDialog dialog = new ConverterErrorDialog(handler.getMainFrame());
                     dialog.init("There was a problem saving the NSBTX file. \n"
                                     + "The output from the converter is:",
-                            outputString);
+                            outputString.toString());
                     dialog.setTitle("Problem generating file");
                     dialog.setLocationRelativeTo(this);
                     dialog.setVisible(true);
@@ -979,6 +967,7 @@ public class NsbtxEditorDialog2 extends JDialog {
         return jlPaletteNames.getSelectedIndex();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private String setElementInString(String src, String newPart) {
         return src + newPart;
         //return src.replaceFirst(" ", newPart).substring(0, Math.min(16, src.length()));
@@ -992,6 +981,7 @@ public class NsbtxEditorDialog2 extends JDialog {
         // TODO add your code here
     }
 
+    @SuppressWarnings({"Convert2MethodRef", "Convert2Diamond", "FieldMayBeFinal", "UnnecessaryUnicodeEscape", "DataFlowIssue"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jMenuBar1 = new JMenuBar();

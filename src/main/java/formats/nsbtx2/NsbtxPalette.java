@@ -1,16 +1,21 @@
 
 package formats.nsbtx2;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
+import lombok.Getter;
+import lombok.Setter;
 import utils.Utils;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
+@Setter
 public class NsbtxPalette {
 
+    @Getter
     private String name;
     private byte[] data;
 
@@ -59,14 +64,6 @@ public class NsbtxPalette {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getDataSize() {
         if (data != null) {
             return this.data.length;
@@ -75,22 +72,18 @@ public class NsbtxPalette {
         }
     }
 
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
     public int getDataSizeImd() {
         return this.data.length / 2;
     }
 
     public String getDataAsHexStringImd() {
-        String hexString = "";
+        StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < data.length; i += 2) {
-            hexString += " ";
-            hexString += String.format("%02x", data[i + 1]);
-            hexString += String.format("%02x", data[i]);
+            hexString.append(" ");
+            hexString.append(String.format("%02x", data[i + 1]));
+            hexString.append(String.format("%02x", data[i]));
         }
-        return hexString;
+        return hexString.toString();
     }
 
 }

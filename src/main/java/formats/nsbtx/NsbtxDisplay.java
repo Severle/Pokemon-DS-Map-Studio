@@ -11,13 +11,14 @@ import java.awt.image.BufferedImage;
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class NsbtxDisplay extends JPanel {
 
     private NsbtxHandler nsbtxHandler;
 
     private static final int size = 128;
-    private BufferedImage img;
-    private BufferedImage backImg;
+    private       BufferedImage img;
+    private final BufferedImage backImg;
 
     public NsbtxDisplay() {
         initComponents();

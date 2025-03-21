@@ -2,6 +2,8 @@
 package formats.nsbtx;
 
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,24 +11,26 @@ import java.io.IOException;
 /**
  * @author Trifindo
  */
+@Getter
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class NsbtxHandler {
 
-    private MapEditorHandler handler;
-    private NsbtxEditorDialog dialog;
-    private Nsbtx nsbtx = null;
+    private final MapEditorHandler  handler;
+    private final NsbtxEditorDialog dialog;
+    private Nsbtx  nsbtx     = null;
+    @Setter
     private String nsbtxPath = null;
 
+    @Setter
     private int textureIndexSelected = 0;
+    @Setter
     private int paletteIndexSelected = 0;
-    private int colorIndexSelected = 0;
+    @Setter
+    private int colorIndexSelected   = 0;
 
     public NsbtxHandler(MapEditorHandler handler, NsbtxEditorDialog dialog) {
         this.handler = handler;
         this.dialog = dialog;
-    }
-
-    public Nsbtx getNsbtx() {
-        return nsbtx;
     }
 
     public void loadNsbtx(String path) throws IOException {
@@ -41,40 +45,12 @@ public class NsbtxHandler {
         return null;
     }
 
-    public int getTextureIndexSelected() {
-        return textureIndexSelected;
-    }
-
-    public int getPaletteIndexSelected() {
-        return paletteIndexSelected;
-    }
-
-    public void setTextureIndexSelected(int index) {
-        this.textureIndexSelected = index;
-    }
-
-    public void setPaletteIndexSelected(int index) {
-        this.paletteIndexSelected = index;
-    }
-
     public int getSelectedTextureWidth() {
         return nsbtx.textureInfos.get(textureIndexSelected).width;
     }
 
     public int getSelectedTextureHeight() {
         return nsbtx.textureInfos.get(textureIndexSelected).height;
-    }
-
-    public int getColorIndexSelected() {
-        return colorIndexSelected;
-    }
-
-    public void setColorIndexSelected(int index) {
-        this.colorIndexSelected = index;
-    }
-
-    public NsbtxEditorDialog getDialog() {
-        return dialog;
     }
 
     public int getNumColorsInSelectedPalette() {
@@ -87,14 +63,6 @@ public class NsbtxHandler {
 
     public void decrementColorIndexSelected() {
         this.colorIndexSelected--;
-    }
-
-    public String getNsbtxPath() {
-        return nsbtxPath;
-    }
-
-    public void setNsbtxPath(String path) {
-        this.nsbtxPath = path;
     }
 
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class NsbtxWriter {
 
     public static void saveNsbtx(Nsbtx nsbtx, String path) throws IOException {

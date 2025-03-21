@@ -2,18 +2,29 @@
 package formats.nsbtx2;
 
 import formats.nsbtx2.exceptions.NsbtxTextureFormatException;
+import lombok.Getter;
+import lombok.Setter;
 import utils.Utils;
 
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode", "unused"})
 public class NsbtxTexture {
 
-    private String name;
-    private int colorFormat;
+    @Setter
+    @Getter
+    private       String  name;
+    @Getter
+    private final int     colorFormat;
     private boolean isTransparent;
-    private int width;
-    private int height;
+    @Setter
+    @Getter
+    private int    width;
+    @Setter
+    @Getter
+    private int    height;
+    @Setter
     private byte[] data;
 
     public NsbtxTexture(byte[] nsbtxData, int offsetTextureInfo,
@@ -62,8 +73,7 @@ public class NsbtxTexture {
         int mask = 0xFF >> (8 - bitDepth);
         int pixelIndex = 0;
         byte[] colorIndices = new byte[width * height];
-        for (int i = 0; i < data.length; i++) {
-            byte dataByte = data[i];
+        for (byte dataByte : data) {
             for (int j = 0; j < pixelsPerByte; j++) {
                 byte colorIndex = (byte) ((dataByte >> bitDepth * j) & mask);
                 colorIndices[pixelIndex] = colorIndex;
@@ -75,13 +85,13 @@ public class NsbtxTexture {
 
 
     public String getDataAsHexStringImd() {
-        String hexString = "";
+        StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < data.length; i += 2) {
-            hexString += " ";
-            hexString += String.format("%02x", data[i + 1]);
-            hexString += String.format("%02x", data[i]);
+            hexString.append(" ");
+            hexString.append(String.format("%02x", data[i + 1]));
+            hexString.append(String.format("%02x", data[i]));
         }
-        return hexString;
+        return hexString.toString();
     }
 
     public int getBitDepth() {
@@ -92,44 +102,12 @@ public class NsbtxTexture {
         return Nsbtx2.numColors[colorFormat];
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getColorFormat() {
-        return colorFormat;
-    }
-
     public boolean isTransparent() {
         return isTransparent;
     }
 
     public void setTransparent(boolean isTransparent) {
         this.isTransparent = isTransparent;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
     }
 
     public int getDataSizeImd() {

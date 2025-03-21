@@ -2,21 +2,25 @@
 package formats.nsbtx2;
 
 import formats.nsbtx2.exceptions.NsbtxTextureSizeException;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+import utils.Utils;
+import utils.image.Clusterer;
+import utils.image.FastColor;
 
-import java.awt.Color;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeSet;
 
-import utils.Utils;
-import utils.image.Clusterer;
-import utils.image.FastColor;
-
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
+@Getter
 public class Nsbtx2 {
 
     public static final int FORMAT_NO_TEXTURE = 0;
@@ -51,7 +55,8 @@ public class Nsbtx2 {
     private static final int minImgSize = 8;
     private static final int maxImgSize = 128;
 
-    private String path = null;
+    @Setter
+    private String path;
 
     private ArrayList<NsbtxTexture> textures;
     private ArrayList<NsbtxPalette> palettes;
@@ -144,13 +149,7 @@ public class Nsbtx2 {
 
         //Draw pixels
         switch (tex.getColorFormat()) {
-            case FORMAT_COLOR_4:
-                drawColorsOpaque(img, colors, colorIndices);
-                break;
-            case FORMAT_COLOR_16:
-                drawColorsOpaque(img, colors, colorIndices);
-                break;
-            case FORMAT_COLOR_256:
+            case FORMAT_COLOR_4, FORMAT_COLOR_16, FORMAT_COLOR_256:
                 drawColorsOpaque(img, colors, colorIndices);
                 break;
             case FORMAT_A3I5:
@@ -170,7 +169,7 @@ public class Nsbtx2 {
                 try {
                     img.setRGB(i, j, colors.get(colorIndices[c] & 0xFF).getRGB());
                 } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
             }
         }
@@ -197,7 +196,7 @@ public class Nsbtx2 {
                             transparency);
                     img.setRGB(i, j, transpColor.getRGB());
                 } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
             }
         }
@@ -265,11 +264,10 @@ public class Nsbtx2 {
 
         //Get colors from texture
         TreeSet<FastColor> colorSet = new TreeSet<>();
-        colorSet = addColorsFromTexture(colorSet, newImg);
+        addColorsFromTexture(colorSet, newImg);
 
         //Cluster colors if the image has too many colors or add colors
-        ArrayList<Color> colors = new ArrayList<>();
-        colors.addAll(colorSet);
+        ArrayList<Color> colors = new ArrayList<>(colorSet);
         if (colorSet.size() > numColors) {
             colors = Clusterer.clusterColors(colors, numColors, 100, 0.00001f);
         } else {
@@ -314,16 +312,14 @@ public class Nsbtx2 {
 
         //Get colors from texture
         TreeSet<FastColor> colorSet = new TreeSet<>();
-        colorSet = addColorsFromTexture(colorSet, newImg);
+        addColorsFromTexture(colorSet, newImg);
 
         //Cluster colors if the image has too many colors or add colors
-        int numColors = numColorsOldImg;
-        ArrayList<Color> colors = new ArrayList<>();
-        colors.addAll(colorSet);
-        if (colorSet.size() > numColors) {
-            colors = Clusterer.clusterColors(colors, numColors, 100, 0.00001f);
+        ArrayList<Color> colors = new ArrayList<>(colorSet);
+        if (colorSet.size() > numColorsOldImg) {
+            colors = Clusterer.clusterColors(colors, numColorsOldImg, 100, 0.00001f);
         } else {
-            int nColorsToAdd = numColors - colorSet.size();
+            int nColorsToAdd = numColorsOldImg - colorSet.size();
             for (int j = 0; j < nColorsToAdd; j++) {
                 colors.add(new Color(0, 0, 0, 255));
             }
@@ -336,7 +332,7 @@ public class Nsbtx2 {
         }
 
         //Fix color order to match the original texture pixels
-        ArrayList<Color> refPal = oldPalette.getColors(numColors);
+        ArrayList<Color> refPal = oldPalette.getColors(numColorsOldImg);
         colors = fixColorOrder(oldImg, newImg, refPal, colors, colorIndices, indexMask);
 
         //Generate NSBTX palette data
@@ -393,13 +389,13 @@ public class Nsbtx2 {
 
 
         ArrayList<Color> newPalette = new ArrayList<>(fixPal.size());
-        for (int i = 0; i < colorCount.length; i++) {
+        for (int[] ints : colorCount) {
             int maxIndex = 0;
             int maxValue = -1;
-            for (int j = 0; j < colorCount[i].length; j++) {
-                if (colorCount[i][j] > maxValue) {
+            for (int j = 0; j < ints.length; j++) {
+                if (ints[j] > maxValue) {
                     maxIndex = j;
-                    maxValue = colorCount[i][j];
+                    maxValue = ints[j];
                 }
             }
             newPalette.add(fixPal.get(maxIndex));
@@ -407,41 +403,13 @@ public class Nsbtx2 {
         return newPalette;
     }
 
-    /*
-    private ArrayList<Color> fixColorOrder(BufferedImage refImg,
-            BufferedImage fixImg, ArrayList<Color> refPal, ArrayList<Color> fixPal) {
-        int numColors = Math.max(refPal.size(), fixPal.size());
-        ArrayList<Integer> colorLookup = new ArrayList<>(numColors);
-        for (int i = 0; i < numColors; i++) {
-            colorLookup.add(i);
-        }
-
-        if (refImg.getWidth() == fixImg.getWidth() && refImg.getHeight() == fixImg.getHeight()) {
-            for (int j = 0; j < refImg.getHeight(); j++) {
-                for (int i = 0; i < refImg.getWidth(); i++) {
-                    int refColorIndex = getCloserColorIndex(getDsColor(new Color(refImg.getRGB(i, j), true)), refPal);
-                    int fixColorIndex = getCloserColorIndex(getDsColor(new Color(fixImg.getRGB(i, j), true)), fixPal);
-                    colorLookup.set(refColorIndex, fixColorIndex);
-                }
-            }
-        }
-
-        ArrayList<Color> newPalette = new ArrayList<>(fixPal.size());
-        for (int i = 0; i < fixPal.size(); i++) {
-            newPalette.add(fixPal.get(colorLookup.get(i)));
-        }
-        return newPalette;
-    }
-    */
-
-    private TreeSet<FastColor> addColorsFromTexture(TreeSet<FastColor> colors, BufferedImage img) {
+    private void addColorsFromTexture(TreeSet<FastColor> colors, BufferedImage img) {
         for (int j = 0; j < img.getHeight(); j++) {
             for (int i = 0; i < img.getWidth(); i++) {
                 FastColor color = getDsFastColor(new Color(img.getRGB(i, j), true));
                 colors.add(color);
             }
         }
-        return colors;
     }
 
     private int getLessAlphaColorIndex(ArrayList<Color> colors) {
@@ -473,13 +441,7 @@ public class Nsbtx2 {
         }
 
         switch (newTex.getColorFormat()) {
-            case FORMAT_COLOR_4:
-                newTex.setData(colorIndicesToTexData(colorIndices, newTex.getBitDepth()));
-                break;
-            case FORMAT_COLOR_16:
-                newTex.setData(colorIndicesToTexData(colorIndices, newTex.getBitDepth()));
-                break;
-            case FORMAT_COLOR_256:
+            case FORMAT_COLOR_4, FORMAT_COLOR_16, FORMAT_COLOR_256:
                 newTex.setData(colorIndicesToTexData(colorIndices, newTex.getBitDepth()));
                 break;
             case FORMAT_A3I5:
@@ -501,7 +463,7 @@ public class Nsbtx2 {
         for (int i = 0; i < dataSize; i++) {
             byte data = 0x00;
             for (int j = 0; j < pixelsPerByte; j++) {
-                data |= ((colorIndices[pixelIndex] & 0xFF) & mask) << bitDepth * j;
+                data |= (byte) (((colorIndices[pixelIndex] & 0xFF) & mask) << bitDepth * j);
                 pixelIndex++;
             }
             //texData[i + 1 - (i % 2) * 2] = data;
@@ -515,7 +477,7 @@ public class Nsbtx2 {
         final byte[] texData = new byte[colorIndices.length];
         for (int i = 0; i < texData.length; i++) {
             byte data = 0x00;
-            data |= (colorIndices[i] & 0xFF) | (((colors.get(colorIndices[i] & 0xFF).getAlpha() & 0xFF) >> nBitsColor) << nBitsColor);
+            data |= (byte) ((colorIndices[i] & 0xFF) | (((colors.get(colorIndices[i] & 0xFF).getAlpha() & 0xFF) >> nBitsColor) << nBitsColor));
             //texData[i + 1 - (i % 2) * 2] = data;
             texData[i] = data;
         }
@@ -533,7 +495,7 @@ public class Nsbtx2 {
         final byte[] texData = new byte[colorIndices.length];
         for (int i = 0; i < texData.length; i++) {
             byte data = 0x00;
-            data |= (colorIndices[i] & 0xFF) | (((alphas[i] & 0xFF) >> nBitsColor) << nBitsColor);
+            data |= (byte) ((colorIndices[i] & 0xFF) | (((alphas[i] & 0xFF) >> nBitsColor) << nBitsColor));
             //texData[i + 1 - (i % 2) * 2] = data;
             texData[i] = data;
         }
@@ -730,14 +692,6 @@ public class Nsbtx2 {
         return palettes.get(index);
     }
 
-    public ArrayList<NsbtxTexture> getTextures() {
-        return textures;
-    }
-
-    public ArrayList<NsbtxPalette> getPalettes() {
-        return palettes;
-    }
-
     public void removeAllTextures() {
         this.textures = new ArrayList<>();
     }
@@ -747,19 +701,11 @@ public class Nsbtx2 {
     }
 
     public boolean hasTextures() {
-        return textures.size() > 0;
+        return !textures.isEmpty();
     }
 
     public boolean hasPalettes() {
-        return palettes.size() > 0;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+        return !palettes.isEmpty();
     }
 
     public ArrayList<String> getTextureNames() {

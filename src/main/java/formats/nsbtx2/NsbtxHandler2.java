@@ -2,6 +2,7 @@
 package formats.nsbtx2;
 
 import editor.handler.MapEditorHandler;
+import lombok.Getter;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,12 +10,15 @@ import java.io.IOException;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 public class NsbtxHandler2 {
 
-    private MapEditorHandler handler;
-    private NsbtxEditorDialog2 dialog;
+    @Getter
+    private final MapEditorHandler   handler;
+    private final NsbtxEditorDialog2 dialog;
 
-    private Nsbtx2 nsbtx = null;
+    @Getter
+    private Nsbtx2 nsbtx;
 
 
     public NsbtxHandler2(MapEditorHandler handler, NsbtxEditorDialog2 dialog) {
@@ -68,9 +72,4 @@ public class NsbtxHandler2 {
     public void loadNsbtx(String path) throws IOException {
         this.nsbtx = NsbtxLoader2.loadNsbtx(path);
     }
-
-    public Nsbtx2 getNsbtx() {
-        return nsbtx;
-    }
-
 }

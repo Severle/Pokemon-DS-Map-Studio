@@ -1,5 +1,67 @@
 package editor;
 
+import com.jogamp.opengl.GLContext;
+import editor.about.AboutDialog;
+import editor.buildingeditor2.BuildingEditorChooser;
+import editor.converter.*;
+import editor.game.Game;
+import editor.gameselector.GameChangerDialog;
+import editor.gameselector.GameSelectorDialog;
+import editor.gameselector.GameTsetSelectorDialog2;
+import editor.handler.MapData;
+import editor.handler.MapEditorHandler;
+import editor.heightselector.HeightSelector;
+import editor.keyboard.KeyboardInfoDialog2;
+import editor.layerselector.ThumbnailLayerSelector;
+import editor.mapdisplay.MapDisplay;
+import editor.mapdisplay.ViewMode;
+import editor.mapmatrix.MapMatrix;
+import editor.mapmatrix.MapMatrixDisplay;
+import editor.mapmatrix.MapMatrixImportDialog;
+import editor.mapmatrix.MoveMapPanel;
+import editor.settings.SettingsDialog;
+import editor.smartdrawing.SmartGrid;
+import editor.smartdrawing.SmartGridDisplay;
+import editor.state.MapLayerState;
+import editor.state.StateHandler;
+import editor.tileselector.TileSelector;
+import editor.tileseteditor.AddTileDialog;
+import editor.tileseteditor.ExportTileDialog;
+import editor.tileseteditor.TileDisplay;
+import editor.tileseteditor.TilesetEditorDialog;
+import formats.animationeditor.AnimationEditorDialog;
+import formats.backsound.BacksoundEditorDialog;
+import formats.bdhc.BdhcEditorDialog;
+import formats.bdhcam.BdhcamEditorDialog;
+import formats.collisions.CollisionsEditorDialog;
+import formats.collisions.bw.CollisionsEditorDialogBW;
+import formats.imd.ExportImdDialog;
+import formats.imd.ImdModel;
+import formats.imd.ImdOutputInfoDialog;
+import formats.mapbin.ExportMapBinDialog;
+import formats.mapbin.ExportMapBinInfoDialog;
+import formats.nsbtx.NsbtxEditorDialog;
+import formats.nsbtx2.Nsbtx2;
+import formats.nsbtx2.NsbtxEditorDialog2;
+import formats.nsbtx2.NsbtxLoader2;
+import formats.obj.ExportMapObjDialog;
+import formats.obj.ObjWriter;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import net.miginfocom.swing.MigLayout;
+import tileset.*;
+import utils.ThemeUtil;
+import utils.Utils;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -12,91 +74,32 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.prefs.Preferences;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import com.jogamp.opengl.GLContext;
-import editor.about.AboutDialog;
-import editor.game.patches.GamePatch;
-import formats.animationeditor.AnimationEditorDialog;
-import formats.backsound.BacksoundEditorDialog;
-import formats.bdhc.BdhcEditorDialog;
-import formats.bdhcam.BdhcamEditorDialog;
-import editor.buildingeditor2.BuildingEditorChooser;
-import formats.collisions.CollisionsEditorDialog;
-import formats.collisions.bw.CollisionsEditorDialogBW;
-import editor.converter.*;
-import editor.game.Game;
-import editor.gameselector.GameChangerDialog;
-import editor.gameselector.GameSelectorDialog;
-import editor.gameselector.GameTsetSelectorDialog2;
-import editor.handler.MapData;
-import editor.handler.MapEditorHandler;
-import editor.heightselector.*;
-import formats.imd.ExportImdDialog;
-import formats.imd.ImdModel;
-import formats.imd.ImdOutputInfoDialog;
-import editor.keyboard.KeyboardInfoDialog2;
-import editor.layerselector.*;
-import editor.mapdisplay.*;
-import editor.mapmatrix.*;
-import formats.mapbin.ExportMapBinDialog;
-import formats.mapbin.ExportMapBinInfoDialog;
-import formats.nsbtx.NsbtxEditorDialog;
-import formats.nsbtx2.Nsbtx2;
-import formats.nsbtx2.NsbtxEditorDialog2;
-import formats.nsbtx2.NsbtxLoader2;
-import formats.obj.ExportMapObjDialog;
-import formats.obj.ObjWriter;
-import editor.settings.SettingsDialog;
-import editor.smartdrawing.*;
-import editor.state.MapLayerState;
-import editor.state.StateHandler;
-import editor.tileselector.*;
-import editor.tileseteditor.*;
-import net.miginfocom.swing.MigLayout;
-import org.xml.sax.SAXException;
-import tileset.*;
-import utils.Utils;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
+@Log4j2
 public class MainFrame extends JFrame {
     MapEditorHandler handler;
-    public static Preferences prefs = Preferences.userNodeForPackage(MainFrame.class);
-    private static final List<String> recentMaps = new ArrayList<>();
+    public static Preferences         preferences = Preferences.userNodeForPackage(MainFrame.class);
+    private static final List<String> recentMaps  = new ArrayList<>();
     private boolean opened_map = false;
 
     public static void main(String[] args) {
         try {
-            String theme = prefs.get("Theme", "Native");
-            switch (theme) {
-                case "Native":
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    break;
-                case "FlatLaf":
-                    UIManager.setLookAndFeel(new FlatLightLaf());
-                    break;
-                case "FlatLaf Dark":
-                    UIManager.setLookAndFeel(new FlatDarculaLaf());
-                    break;
-            }
+            // install theme
+            String theme = preferences.get(ThemeUtil.KEY, ThemeUtil.defaultTheme().name());
+            ThemeUtil.getOrDefault(theme).install();
+
+            // load recent map
             loadRecentMaps();
         } catch (Exception ex) {
-            System.err.println("Failed to initialize LaF");
+            log.error("Failed to initialize LaF", ex);
         }
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             MainFrame mainFrame = new MainFrame();
             mainFrame.setVisible(true);
 
@@ -108,7 +111,7 @@ public class MainFrame extends JFrame {
                         mainFrame.openTileset(args[0]);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e);
                 }
             }
         });
@@ -135,7 +138,7 @@ public class MainFrame extends JFrame {
         try {
             tr.renderTiles();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e);
         }
 
         //Border maps tileset
@@ -493,7 +496,7 @@ public class MainFrame extends JFrame {
             jPanelAreaColor.setBackground(handler.getMapMatrix().getAreaColors().get(handler.getMapData().getAreaIndex()));
             jPanelAreaColor.repaint();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
         }
     }
 
@@ -642,7 +645,7 @@ public class MainFrame extends JFrame {
 
             opened_map = true;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex);
             JOptionPane.showMessageDialog(this, "Can't open file", "Error opening map", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -925,18 +928,10 @@ public class MainFrame extends JFrame {
                 handler.setMapMatrix(new MapMatrix(handler));
                 handler.setMapSelected(new Point(0, 0));
 
-                /*
-                handler.setCollisions(new Collisions(handler.getGameIndex()));
-                handler.setBdhc(new Bdhc());
-                handler.setBacksound(new Backsound());
-                handler.setBuildings(new BuildFile());
-                handler.setGrid(new MapGrid(handler));*/
                 handler.resetMapStateHandler();
                 jbUndo.setEnabled(false);
                 jbRedo.setEnabled(false);
 
-                //handler.setTileset(new Tileset());
-                //handler.getSmartGridArray().add(new SmartGrid());
                 tileSelector.updateLayout();
                 tileSelector.repaint();
 
@@ -975,12 +970,6 @@ public class MainFrame extends JFrame {
             handler.getMapMatrix().saveBdhcams();
             handler.getMapMatrix().saveBuildings();
 
-            //handler.getMapMatrix().saveBinaryMaps();
-            //saveBdhc();
-            //saveBacksound();
-            //saveCollisions();
-            //saveBuildings();
-
             saveMapThumbnail();
         } catch (ParserConfigurationException | TransformerException | IOException ex) {
             JOptionPane.showMessageDialog(this, "There was a problem saving all the map files",
@@ -1012,12 +1001,6 @@ public class MainFrame extends JFrame {
                 handler.getMapMatrix().saveBDHCs();
                 handler.getMapMatrix().saveBdhcams();
                 handler.getMapMatrix().saveBuildings();
-
-                //handler.getMapMatrix().saveBinaryMaps();
-                //saveCollisions();
-                //saveBacksound();
-                //saveBdhc();
-                //saveBuildings();
 
                 saveMapThumbnail();
 
@@ -1098,6 +1081,7 @@ public class MainFrame extends JFrame {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void saveMapAsObjWithDialog(boolean saveTextures) {
         final ExportMapObjDialog exportMapDialog = new ExportMapObjDialog(this, "Export OBJ Map Settings");
         exportMapDialog.setLocationRelativeTo(this);
@@ -1109,14 +1093,7 @@ public class MainFrame extends JFrame {
             boolean exportAllMapsJoined = exportMapDialog.exportAllMapsJoined();
             float tileUpscale = exportMapDialog.getTileUpscaling();
 
-            final JFileChooser fc = new JFileChooser();
-            fc.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath)));
-            if (handler.getLastMapDirectoryUsed() != null) {
-                fc.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
-            }
-            fc.setFileFilter(new FileNameExtensionFilter("OBJ (*.obj)", "obj"));
-            fc.setApproveButtonText("Save");
-            fc.setDialogTitle("Select a name for saving the maps as OBJ");
+            final JFileChooser fc = getSaveMapAsObjDialogFileChooser();
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 handler.setLastMapDirectoryUsed(fc.getSelectedFile().getParent());
@@ -1139,6 +1116,18 @@ public class MainFrame extends JFrame {
                 }
             }
         }
+    }
+
+    private JFileChooser getSaveMapAsObjDialogFileChooser() {
+        final JFileChooser fc = new JFileChooser();
+        fc.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath)));
+        if (handler.getLastMapDirectoryUsed() != null) {
+            fc.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
+        }
+        fc.setFileFilter(new FileNameExtensionFilter("OBJ (*.obj)", "obj"));
+        fc.setApproveButtonText("Save");
+        fc.setDialogTitle("Select a name for saving the maps as OBJ");
+        return fc;
     }
 
     private void saveMapAsBinWithDialog(){
@@ -1167,7 +1156,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void saveTileset() throws FileNotFoundException, ParserConfigurationException, TransformerException, IOException {
+    public void saveTileset() throws ParserConfigurationException, TransformerException, IOException {
         File file = new File(handler.getMapMatrix().filePath);
         String path = file.getParent();
 
@@ -1195,52 +1184,13 @@ public class MainFrame extends JFrame {
         ImageIO.write(mapDisplay.getScreenshot(), "png", file);
     }
 
-    /*
-    public void saveBdhc() throws IOException {
-        File file = new File(handler.getMapMatrix().filePath);
-        String path = file.getParent();
-        String filename = Utils.removeExtensionFromPath(file.getName()) + "." + Bdhc.fileExtension;
-
-        int game = handler.getGameIndex();
-        if (game == Game.DIAMOND || game == Game.PEARL) {
-            BdhcWriterDP.writeBdhc(handler.getBdhc(), path + File.separator + filename);
-        } else {
-            BdhcWriterHGSS.writeBdhc(handler.getBdhc(), path + File.separator + filename);
-        }
-
-    }
-
-    public void saveBacksound() throws IOException {
-        int game = handler.getGameIndex();
-        if (game == Game.HEART_GOLD || game == Game.SOUL_SILVER) {
-            File file = new File(handler.getMapMatrix().filePath);
-            String path = file.getParent();
-            String filename = Utils.removeExtensionFromPath(file.getName()) + "." + Backsound.fileExtension;
-
-            System.out.println("Backsound OUT: " + filename);
-
-            handler.getBacksound().writeToFile(path + File.separator + filename);
-        }
-    }
-
-    public void saveCollisions() throws IOException {
-        File file = new File(handler.getMapMatrix().filePath);
-        String path = file.getParent();
-        String filename = Utils.removeExtensionFromPath(file.getName()) + "." + Collisions.fileExtension;
-        handler.getCollisions().saveToFile(path + File.separator + filename);
-    }
-
-    public void saveBuildings() throws IOException {
-        File file = new File(handler.getMapMatrix().filePath);
-        String path = file.getParent();
-        String filename = Utils.removeExtensionFromPath(file.getName()) + "." + BuildFile.fileExtension;
-        handler.getBuildings().saveToFile(path + File.separator + filename);
-    }*/
     public void saveMapsAsImdWithDialog() {
         if (handler.getTileset().size() == 0) {
             JOptionPane.showMessageDialog(this,
-                    "There is no tileset loaded.\n"
-                            + "The IMD can be exported but the materials will be set to default.\n",
+                    """
+                            There is no tileset loaded.
+                            The IMD can be exported but the materials will be set to default.
+                            """,
                     "No tileset loaded",
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -1266,20 +1216,15 @@ public class MainFrame extends JFrame {
     public void saveMapAsImdWithDialog() {
         if (handler.getTileset().size() == 0) {
             JOptionPane.showMessageDialog(this,
-                    "There is no tileset loaded.\n"
-                            + "The IMD can be exported but the materials will be set to default.\n",
+                    """
+                            There is no tileset loaded.
+                            The IMD can be exported but the materials will be set to default.
+                            """,
                     "No tileset loaded",
                     JOptionPane.WARNING_MESSAGE);
         }
 
-        final JFileChooser fcOpen = new JFileChooser();
-        fcOpen.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath) + ".obj"));
-        if (handler.getLastMapDirectoryUsed() != null) {
-            fcOpen.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
-        }
-        fcOpen.setFileFilter(new FileNameExtensionFilter("OBJ (*.obj)", "obj"));
-        fcOpen.setApproveButtonText("Open");
-        fcOpen.setDialogTitle("Open OBJ Map for converting into IMD");
+        final JFileChooser fcOpen = getSaveMapAsImdDialogFileChooser();
         int returnValOpen = fcOpen.showOpenDialog(this);
         if (returnValOpen == JFileChooser.APPROVE_OPTION) {
             if (fcOpen.getSelectedFile().exists()) {
@@ -1302,23 +1247,23 @@ public class MainFrame extends JFrame {
                         final int numTris = model.getNumTris();
                         final int numQuads = model.getNumQuads();
                         JOptionPane.showMessageDialog(this, "IMD map succesfully exported.\n\n"
-                                        + "Number of Materials: " + String.valueOf(model.getNumMaterials()) + "\n"
-                                        + "Number of Vertices: " + String.valueOf(numVertices) + "\n"
-                                        + "Number of Polygons: " + String.valueOf(numPolygons) + "\n"
-                                        + "Number of Triangles: " + String.valueOf(numTris) + "\n"
-                                        + "Number of Quads: " + String.valueOf(numQuads),
+                                        + "Number of Materials: " + model.getNumMaterials() + "\n"
+                                        + "Number of Vertices: " + numVertices + "\n"
+                                        + "Number of Polygons: " + numPolygons + "\n"
+                                        + "Number of Triangles: " + numTris + "\n"
+                                        + "Number of Quads: " + numQuads,
                                 "Map saved", JOptionPane.INFORMATION_MESSAGE);
                         final int maxNumPolygons = 1800;
                         final int maxNumTris = 1200;
                         if (numTris > maxNumTris) {
                             JOptionPane.showMessageDialog(this, "The map might not work properly in game.\n\n"
-                                            + "The map contains " + String.valueOf(numTris) + " triangles" + "\n"
+                                            + "The map contains " + numTris + " triangles" + "\n"
                                             + "Try to use less than " + maxNumTris + " triangles" + "\n"
                                             + "Or try to use quads instead of triangles" + "\n",
                                     "Too many triangles", JOptionPane.INFORMATION_MESSAGE);
                         } else if (numPolygons > maxNumPolygons) {
                             JOptionPane.showMessageDialog(this, "The map may not work properly in game.\n\n"
-                                            + "The map contains " + String.valueOf(numPolygons) + " polygons" + "\n"
+                                            + "The map contains " + numPolygons + " polygons" + "\n"
                                             + "Try to use less than " + maxNumPolygons + " polygons",
                                     "Too many polygons", JOptionPane.WARNING_MESSAGE);
                         }
@@ -1348,6 +1293,18 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private JFileChooser getSaveMapAsImdDialogFileChooser() {
+        final JFileChooser fcOpen = new JFileChooser();
+        fcOpen.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath) + ".obj"));
+        if (handler.getLastMapDirectoryUsed() != null) {
+            fcOpen.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
+        }
+        fcOpen.setFileFilter(new FileNameExtensionFilter("OBJ (*.obj)", "obj"));
+        fcOpen.setApproveButtonText("Open");
+        fcOpen.setDialogTitle("Open OBJ Map for converting into IMD");
+        return fcOpen;
+    }
+
     public void saveMapsAsNsbWithDialog() {
         final ExportNsbmdDialog configDialog = new ExportNsbmdDialog(this, true);
         configDialog.init(handler);
@@ -1373,14 +1330,7 @@ public class MainFrame extends JFrame {
         if (convDialog.getReturnValue() == ConverterDialog.APPROVE_OPTION) {
             boolean includeNsbtx = convDialog.includeNsbtxInNsbmd();
             try {
-                final JFileChooser fcOpen = new JFileChooser();
-                fcOpen.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath) + ".imd"));
-                if (handler.getLastMapDirectoryUsed() != null) {
-                    fcOpen.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
-                }
-                fcOpen.setFileFilter(new FileNameExtensionFilter("IMD (*.imd)", "imd"));
-                fcOpen.setApproveButtonText("Open");
-                fcOpen.setDialogTitle("Open IMD Map for converting into NSBMD");
+                final JFileChooser fcOpen = getSaveMapAsNsbDialog();
                 int returnVal = fcOpen.showOpenDialog(this);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     String imdPath;
@@ -1429,10 +1379,10 @@ public class MainFrame extends JFrame {
 
                             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-                            String outputString = "";
-                            String line = null;
+                            StringBuilder outputString = new StringBuilder();
+                            String        line;
                             while ((line = stdError.readLine()) != null) {
-                                outputString += line + "\n";
+                                outputString.append(line).append("\n");
                             }
 
                             p.waitFor();
@@ -1475,7 +1425,7 @@ public class MainFrame extends JFrame {
                                 ConverterErrorDialog dialog = new ConverterErrorDialog(this);
                                 dialog.init("There was a problem creating the NSBMD file. \n"
                                                 + "The output from the converter is:",
-                                        outputString);
+                                        outputString.toString());
                                 dialog.setTitle("Problem generating file");
                                 dialog.setLocationRelativeTo(this);
                                 dialog.setVisible(true);
@@ -1503,7 +1453,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void saveMapBtxWithDialog() {
+    private JFileChooser getSaveMapAsNsbDialog() {
         final JFileChooser fcOpen = new JFileChooser();
         fcOpen.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath) + ".imd"));
         if (handler.getLastMapDirectoryUsed() != null) {
@@ -1511,7 +1461,13 @@ public class MainFrame extends JFrame {
         }
         fcOpen.setFileFilter(new FileNameExtensionFilter("IMD (*.imd)", "imd"));
         fcOpen.setApproveButtonText("Open");
-        fcOpen.setDialogTitle("Open IMD Map for converting into NSBTX");
+        fcOpen.setDialogTitle("Open IMD Map for converting into NSBMD");
+        return fcOpen;
+    }
+
+    @SuppressWarnings("UnusedAssignment")
+    public void saveMapBtxWithDialog() {
+        final JFileChooser fcOpen = getSaveMapBtxDialogFileChooser();
         int returnVal = fcOpen.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String imdPath = fcOpen.getSelectedFile().getPath();
@@ -1604,6 +1560,18 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private JFileChooser getSaveMapBtxDialogFileChooser() {
+        final JFileChooser fcOpen = new JFileChooser();
+        fcOpen.setSelectedFile(new File(Utils.removeExtensionFromPath(handler.getMapMatrix().filePath) + ".imd"));
+        if (handler.getLastMapDirectoryUsed() != null) {
+            fcOpen.setCurrentDirectory(new File(handler.getLastMapDirectoryUsed()));
+        }
+        fcOpen.setFileFilter(new FileNameExtensionFilter("IMD (*.imd)", "imd"));
+        fcOpen.setApproveButtonText("Open");
+        fcOpen.setDialogTitle("Open IMD Map for converting into NSBTX");
+        return fcOpen;
+    }
+
     public void saveAreasAsBtxWithDialog() {
         final ExportNsbtxDialog configDialog = new ExportNsbtxDialog(this, true);
         configDialog.init(handler);
@@ -1677,10 +1645,6 @@ public class MainFrame extends JFrame {
 
     public void repaintMapDisplay() {
         mapDisplay.repaint();
-    }
-
-    public ThumbnailLayerSelector getThumbnailLayerSelector() {
-        return thumbnailLayerSelector;
     }
 
     private void updateViewGame() {
@@ -1800,8 +1764,8 @@ public class MainFrame extends JFrame {
     }
 
     public void updateViewMapInfo() {
-        getjPanelAreaColor().setBackground(handler.getMapMatrix().getAreaColors().get(handler.getCurrentMap().getAreaIndex()));
-        getjPanelAreaColor().repaint();
+        getJPanelAreaColor().setBackground(handler.getMapMatrix().getAreaColors().get(handler.getCurrentMap().getAreaIndex()));
+        getJPanelAreaColor().repaint();
 
         getJsSelectedArea().setValue(handler.getCurrentMap().getAreaIndex());
 
@@ -1829,18 +1793,6 @@ public class MainFrame extends JFrame {
         return jbRedo;
     }
 
-    public MapDisplay getMapDisplay() {
-        return mapDisplay;
-    }
-
-    public TileDisplay getTileDisplay() {
-        return tileDisplay;
-    }
-
-    public MapMatrixDisplay getMapMatrixDisplay() {
-        return mapMatrixDisplay;
-    }
-
     public void updateMapMatrixDisplay() {
         Dimension size = jScrollPaneMapMatrix.getSize();
         mapMatrixDisplay.updateSize();
@@ -1857,58 +1809,10 @@ public class MainFrame extends JFrame {
         try {
             tr.renderTiles();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         tr.destroy();
         mapDisplay.setContext(context, false);
-    }
-
-    public JToggleButton getJtbModeEdit() {
-        return jtbModeEdit;
-    }
-
-    public JToggleButton getJtbModeClear() {
-        return jtbModeClear;
-    }
-
-    public JToggleButton getJtbModeSmartPaint() {
-        return jtbModeSmartPaint;
-    }
-
-    public JToggleButton getJtbModeInvSmartPaint() {
-        return jtbModeInvSmartPaint;
-    }
-
-    public JToggleButton getJtbView3D() {
-        return jtbView3D;
-    }
-
-    public JToggleButton getJtbViewOrtho() {
-        return jtbViewOrtho;
-    }
-
-    public JToggleButton getJtbViewHeight() {
-        return jtbViewHeight;
-    }
-
-    public JToggleButton getJtbViewGrid() {
-        return jtbViewGrid;
-    }
-
-    public JPanel getjPanelAreaColor() {
-        return jPanelAreaColor;
-    }
-
-    public JSpinner getJsSelectedArea() {
-        return jsSelectedArea;
-    }
-
-    public JToggleButton getJtbViewWireframe() {
-        return jtbViewWireframe;
-    }
-
-    public JCheckBox getJcbViewAreas() {
-        return jcbViewAreas;
     }
 
     private static void addRecentMap(String path) {
@@ -1916,16 +1820,16 @@ public class MainFrame extends JFrame {
             if (recentMaps.size() < 9)
                 recentMaps.add(path);
             else
-                recentMaps.add(0, path);
+                recentMaps.addFirst(path);
         }
     }
 
     private static void updateRecentMaps() {
         for (int i = 0; i < 9; i++) {
             if (i < recentMaps.size()) {
-                prefs.put("recentMaps" + i, recentMaps.get(i));
+                preferences.put("recentMaps" + i, recentMaps.get(i));
             } else {
-                prefs.remove("recentMaps" + i);
+                preferences.remove("recentMaps" + i);
             }
         }
     }
@@ -1935,7 +1839,7 @@ public class MainFrame extends JFrame {
         for (String item : recentMaps) {
             JMenuItem m = new JMenuItem();
             m.setText(recentMaps.get(recentMaps.indexOf(item)));
-            m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1 + recentMaps.indexOf(item), InputEvent.CTRL_MASK));
+            m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1 + recentMaps.indexOf(item), InputEvent.CTRL_DOWN_MASK));
 
             m.addActionListener(e -> {
                 if (opened_map) {
@@ -1955,7 +1859,7 @@ public class MainFrame extends JFrame {
         jmiOpenRecentMap.removeAll();
         recentMaps.clear();
         for (int i = 0; i < 9; i++)
-            prefs.put("recentMaps" + i, "");
+            preferences.put("recentMaps" + i, "");
         updateRecentMapsMenu();
     }
 
@@ -1972,8 +1876,8 @@ public class MainFrame extends JFrame {
 
     private static void loadRecentMaps() {
         for (int i = 0; i < 9; i++) {
-            String value = prefs.get("recentMaps" + i, "");
-            if (!value.equals("")) {
+            String value = preferences.get("recentMaps" + i, "");
+            if (!value.isEmpty()) {
                 recentMaps.add(value);
             } else {
                 break;
@@ -2016,6 +1920,7 @@ public class MainFrame extends JFrame {
 
 
 
+    @SuppressWarnings({"DataFlowIssue", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jmMainMenu = new JMenuBar();
@@ -3638,11 +3543,13 @@ public class MainFrame extends JFrame {
     private JLabel jlGameName;
     private JSplitPane jspMainWindow;
     private JPanel jpMainWindow;
-    private JPanel jpLayer;
+    private JPanel                 jpLayer;
+    @Getter
     private ThumbnailLayerSelector thumbnailLayerSelector;
-    private JPanel mapDisplayContainer;
+    private JPanel     mapDisplayContainer;
+    @Getter
     private MapDisplay mapDisplay;
-    private JPanel jpZ;
+    private JPanel     jpZ;
     private HeightSelector heightSelector;
     private JPanel jpTileList;
     private JScrollPane jscTileList;
@@ -3652,17 +3559,26 @@ public class MainFrame extends JFrame {
     private SmartGridDisplay smartGridDisplay;
     private JPanel jpButtons;
     private JPanel jpView;
-    private JToolBar jtView;
+    private JToolBar      jtView;
+    @Getter
     private JToggleButton jtbView3D;
+    @Getter
     private JToggleButton jtbViewOrtho;
+    @Getter
     private JToggleButton jtbViewHeight;
+    @Getter
     private JToggleButton jtbViewGrid;
+    @Getter
     private JToggleButton jtbViewWireframe;
-    private JPanel jpTools;
-    private JToolBar jtTools;
+    private JPanel        jpTools;
+    private JToolBar      jtTools;
+    @Getter
     private JToggleButton jtbModeEdit;
+    @Getter
     private JToggleButton jtbModeClear;
+    @Getter
     private JToggleButton jtbModeSmartPaint;
+    @Getter
     private JToggleButton jtbModeInvSmartPaint;
     private JToggleButton jtbModeMove;
     private JToggleButton jtbModeZoom;
@@ -3672,17 +3588,21 @@ public class MainFrame extends JFrame {
     private JPanel jPanelMatrixInfo;
     private JSplitPane jspMatrix;
     private JPanel jpAreaTools;
-    private JScrollPane jScrollPaneMapMatrix;
+    private JScrollPane      jScrollPaneMapMatrix;
+    @Getter
     private MapMatrixDisplay mapMatrixDisplay;
-    private JPanel jpArea;
-    private JLabel jlArea;
+    private JPanel           jpArea;
+    private JLabel   jlArea;
+    @Getter
     private JSpinner jsSelectedArea;
-    private JPanel jPanelAreaColor;
-    private JPanel jpMoveMap;
+    @Getter
+    private JPanel   jPanelAreaColor;
+    private JPanel   jpMoveMap;
     private MoveMapPanel moveMapPanel;
-    private JPanel jpTileSelected;
+    private JPanel      jpTileSelected;
+    @Getter
     private TileDisplay tileDisplay;
-    private JPanel jPanelMapTools;
+    private JPanel      jPanelMapTools;
     private JPanel jpHeightMapAlpha;
     private JSlider jsHeightMapAlpha;
     private JPanel jpBackImageAlpha;
@@ -3697,6 +3617,7 @@ public class MainFrame extends JFrame {
     private JButton jbMoveMapUpZ;
     private JButton jbMoveMapDownZ;
     private JCheckBox jcbRealTimePolyGrouping;
+    @Getter
     private JCheckBox jcbViewAreas;
     private JCheckBox jcbViewGridsBorders;
     private JPanel jpStatusBar;

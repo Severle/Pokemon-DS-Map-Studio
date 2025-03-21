@@ -8,6 +8,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class Nsbtx {
 
     public static final String fileExtension = "nsbtx";
@@ -32,9 +33,9 @@ public class Nsbtx {
         ArrayList<Color> colors = getPaletteColorsExtended(paletteIndex);
         if (textureInfos.get(textureIndex).transparent) {
             colors.set(0, new Color(
-                    colors.get(0).getRed(),
-                    colors.get(0).getGreen(),
-                    colors.get(0).getBlue(),
+                    colors.getFirst().getRed(),
+                    colors.getFirst().getGreen(),
+                    colors.getFirst().getBlue(),
                     0));
         }
 
@@ -49,34 +50,29 @@ public class Nsbtx {
         short[] colorIndices;
         TextureInfo texInfo = textureInfos.get(textureIndex);
         int format = texInfo.format;
-        switch (format) {
-            case 1:
-                //colorIndices = getColorIndices(img, colors, textureIndex, paletteIndex); //TODO: Change this
-                break;
-            default:
-                if (texInfo.transparent) {
-                    colorIndices = getColorIndicesWithTransparency(img, colors);
-                } else {
-                    colorIndices = getColorIndices(img, colors, textureIndex, paletteIndex);
-                }
-                setColorIndices(colorIndices, textureIndex);
-                break;
+        //noinspection StatementWithEmptyBody
+        if (format == 1) {//colorIndices = getColorIndices(img, colors, textureIndex, paletteIndex);
+        } else {
+            if (texInfo.transparent) {
+                colorIndices = getColorIndicesWithTransparency(img, colors);
+            } else {
+                colorIndices = getColorIndices(img, colors, textureIndex, paletteIndex);
+            }
+            setColorIndices(colorIndices, textureIndex);
         }
     }
 
     public void importTextureAndPalette(BufferedImage img, int textureIndex, int paletteIndex) {
         TextureInfo texInfo = textureInfos.get(textureIndex);
         int format = texInfo.format;
-        switch (format) {
-            case 1:
-                break;
-            default:
-                if (texInfo.transparent) {
-                    setTextureAndPaletteWithTransparency(img, textureIndex, paletteIndex);
-                } else {
-                    setTextureAndPalette(img, textureIndex, paletteIndex);
-                }
-                break;
+        //noinspection StatementWithEmptyBody
+        if (format == 1) {
+        } else {
+            if (texInfo.transparent) {
+                setTextureAndPaletteWithTransparency(img, textureIndex, paletteIndex);
+            } else {
+                setTextureAndPalette(img, textureIndex, paletteIndex);
+            }
         }
 
     }
@@ -191,7 +187,7 @@ public class Nsbtx {
         for (int i = 0; i < textureData.get(textureIndex).length; i++) {
             byte data = 0x00;
             for (int j = 0; j < pixelsPerByte; j++) {
-                data |= (colorIndices[pixelIndex] & mask) << bitDepth * j;
+                data |= (byte) ((colorIndices[pixelIndex] & mask) << bitDepth * j);
                 pixelIndex++;
             }
             textureData.get(textureIndex)[i] = data;

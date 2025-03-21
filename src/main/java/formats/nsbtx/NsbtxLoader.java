@@ -1,6 +1,8 @@
 
 package formats.nsbtx;
 
+import formats.bdhc.BdhcLoaderDP;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 /**
  * @author Trifindo
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class NsbtxLoader {
 
     private static final int headerOffset = 0x04;
@@ -111,20 +114,9 @@ public class NsbtxLoader {
     }
 
     private static int readUnsignedInt(byte[] data, int offset) {
-        byte[] bytes = new byte[]{
-                data[offset],
-                data[offset + 1],
-                data[offset + 2],
-                data[offset + 3]
-        };
-        return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
+        return BdhcLoaderDP.dataToSignedInt(data, offset);
     }
 
-    /*
-    public static short readUnsignedShort(byte[] data, int offset) {
-        return (short) (((data[offset + 1]) << 8) | (data[offset] ));
-    }
-     */
     private static int readUnsignedShort(byte[] data, int offset) {
         byte[] bytes = new byte[]{
                 data[offset],

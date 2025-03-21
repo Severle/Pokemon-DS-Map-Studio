@@ -1,21 +1,24 @@
 package editor.settings;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Objects;
-import javax.swing.*;
-
 import editor.MainFrame;
-import net.miginfocom.swing.*;
+import net.miginfocom.swing.MigLayout;
+import utils.ThemeUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "FieldCanBeLocal", "unused"})
 public class SettingsDialog extends JDialog {
     public SettingsDialog(Window owner) {
         super(owner);
         initComponents();
-        jcmbTheme.setSelectedItem(MainFrame.prefs.get("Theme", "Native"));
+        String currentThemeName = MainFrame.preferences.get(ThemeUtil.KEY, ThemeUtil.defaultTheme().name());
+        jcmbTheme.setSelectedItem(ThemeUtil.getOrDefault(currentThemeName));
+        rootPane.setDefaultButton(okButton);
     }
 
     private void cancelButtonActionPerformed(ActionEvent e) {
@@ -23,11 +26,20 @@ public class SettingsDialog extends JDialog {
     }
 
     private void okButtonActionPerformed(ActionEvent e) {
-        MainFrame.prefs.put("Theme", Objects.requireNonNull(jcmbTheme.getSelectedItem()).toString());
-        JOptionPane.showMessageDialog(this, "Please restart PDSMS!");
+        int index = jcmbTheme.getSelectedIndex();
+        if (index == -1) return;
+
+        // get selected theme
+        var themeEntry = jcmbTheme.getItemAt(index);
+        MainFrame.preferences.put(ThemeUtil.KEY, themeEntry.name());
+        // JOptionPane.showMessageDialog(this, "Please restart PDSMS!");
+        // update theme
+        themeEntry.install();
+
         dispose();
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         dialogPane = new JPanel();
@@ -69,11 +81,7 @@ public class SettingsDialog extends JDialog {
                 contentPanel.add(label1, "cell 0 0");
 
                 //---- jcmbTheme ----
-                jcmbTheme.setModel(new DefaultComboBoxModel<>(new String[] {
-                    "Native",
-                    "FlatLaf",
-                    "FlatLaf Dark"
-                }));
+                jcmbTheme.setModel(new DefaultComboBoxModel<>(ThemeUtil.themeVector()));
                 contentPanel.add(jcmbTheme, "cell 1 0");
             }
             dialogPane.add(contentPanel, "cell 0 0");
@@ -109,9 +117,9 @@ public class SettingsDialog extends JDialog {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JLabel label1;
-    private JComboBox<String> jcmbTheme;
-    private JPanel buttonBar;
+    private JLabel                          label1;
+    private JComboBox<ThemeUtil.ThemeEntry> jcmbTheme;
+    private JPanel                          buttonBar;
     private JButton okButton;
     private JButton cancelButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

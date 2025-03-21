@@ -1,20 +1,16 @@
 package formats.nsbtx;
 
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class PaletteDisplay extends JPanel {
 
     private static final int tileSize = 16;
@@ -23,9 +19,9 @@ public class PaletteDisplay extends JPanel {
 
     private static final Color borderColor = Color.black;
     private static final Color selectionFillColor = new Color(255, 0, 0, 120);
-    private static final Color selectionBorderColor = Color.red;
-    private BufferedImage noPaletteImg;
-    public ArrayList<Color> palette;
+    private static final Color            selectionBorderColor = Color.red;
+    private final        BufferedImage    noPaletteImg;
+    public               ArrayList<Color> palette;
 
     public PaletteDisplay() {
         initComponents();
@@ -73,14 +69,6 @@ public class PaletteDisplay extends JPanel {
             int index = nsbtxHandler.getColorIndexSelected();
             g.setColor(selectionBorderColor);
             g.drawRect(index * tileSize + 1, 1, tileSize - 2, tileSize - 2);
-            //g.setColor(selectionFillColor);
-            //g.fillRect(index * tileSize + 1, 1, tileSize - 2, tileSize - 2);
-            /*
-            g.setColor(Color.white);
-            g.drawRect(index * tileSize + 1, 1, tileSize - 2, tileSize - 3);
-            g.setColor(selectionBorderColor);
-            g.drawRect(index * tileSize, 0, tileSize, tileSize - 1);*/
-
         }
 
     }

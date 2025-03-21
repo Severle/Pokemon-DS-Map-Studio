@@ -1,7 +1,9 @@
 
 package formats.nsbtx2;
 
+import formats.bdhc.BdhcLoaderDP;
 import formats.nsbtx2.exceptions.NsbtxTextureFormatException;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,8 @@ import java.util.Collections;
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode"})
 public class NsbtxLoader2 {
 
     private static final int headerOffset = 0x04;
@@ -46,10 +50,8 @@ public class NsbtxLoader2 {
             int texNameOffset = textureNamesOffset + i * textureNameSize;
             try {
                 textures.add(new NsbtxTexture(data, texInfoOffset, textureDataOffset, texNameOffset));
-            } catch (IndexOutOfBoundsException ex) {
-                System.out.println("ERROR LOADING TEXTURE " + i);
-            } catch (NsbtxTextureFormatException ex) {
-                System.out.println("ERROR LOADING TEXTURE " + i);
+            } catch (IndexOutOfBoundsException | NsbtxTextureFormatException ex) {
+                log.warn("ERROR LOADING TEXTURE {}", i);
             }
         }
 
@@ -81,10 +83,9 @@ public class NsbtxLoader2 {
         }
 
         //Generate NSBTX
-        Nsbtx2 nsbtx = new Nsbtx2(textures, palettes);
         //nsbtx.setPath(path);
 
-        return nsbtx;
+        return new Nsbtx2(textures, palettes);
     }
 
     public static Nsbtx2 loadNsbtx(String path) throws IOException {
@@ -98,13 +99,7 @@ public class NsbtxLoader2 {
     }
 
     private static int readUnsignedInt(byte[] data, int offset) {
-        byte[] bytes = new byte[]{
-                data[offset],
-                data[offset + 1],
-                data[offset + 2],
-                data[offset + 3]
-        };
-        return ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
+        return BdhcLoaderDP.dataToSignedInt(data, offset);
     }
 
     private static int readUnsignedShort(byte[] data, int offset) {

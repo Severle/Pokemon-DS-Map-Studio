@@ -1,21 +1,24 @@
 package formats.nsbtx2;
 
-import java.awt.*;
-import java.awt.event.*;
+import lombok.Getter;
+
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "FieldCanBeLocal"})
 public class NsbtxColorFormatAddSelector extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
+    @Getter
     private int returnValue = CANCEL_OPTION;
 
-    private int format;
+    @Getter
+    private int     format;
     private boolean isTransparent;
 
     public NsbtxColorFormatAddSelector(Window owner) {
@@ -36,18 +39,11 @@ public class NsbtxColorFormatAddSelector extends JDialog {
         dispose();
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
-    public int getFormat() {
-        return format;
-    }
-
     public boolean getIsTransparent() {
         return isTransparent;
     }
 
+    @SuppressWarnings({"Convert2MethodRef", "DuplicatedCode"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

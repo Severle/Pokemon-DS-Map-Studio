@@ -1,20 +1,20 @@
 package formats.nsbtx2;
 
-import java.awt.*;
-import java.awt.event.*;
+import lombok.Getter;
+
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle;
-import javax.swing.border.*;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Trifindo, JackHack96
  */
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode", "FieldCanBeLocal"})
 public class NsbtxImportDialog extends JDialog {
 
     public static final int APPROVE_OPTION = 1, CANCEL_OPTION = 0;
+    @Getter
     private int returnValue = CANCEL_OPTION;
 
     private Nsbtx2 nsbtx;
@@ -107,8 +107,8 @@ public class NsbtxImportDialog extends JDialog {
         updateViewPaletteNames(nsbtx, jlPalettesInNsbtx, indexSelected);
     }
 
-    private void updateViewTextureNames(Nsbtx2 nsbtx, JList list, int indexSelected) {
-        DefaultListModel demoList = new DefaultListModel();
+    private void updateViewTextureNames(Nsbtx2 nsbtx, JList<String> list, int indexSelected) {
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < nsbtx.getTextures().size(); i++) {
             String name = nsbtx.getTexture(i).getName();
             demoList.addElement(name);
@@ -122,8 +122,8 @@ public class NsbtxImportDialog extends JDialog {
         list.setSelectedIndex(indexSelected);
     }
 
-    private void updateViewPaletteNames(Nsbtx2 nsbtx, JList list, int indexSelected) {
-        DefaultListModel demoList = new DefaultListModel();
+    private void updateViewPaletteNames(Nsbtx2 nsbtx, JList<String> list, int indexSelected) {
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < nsbtx.getPalettes().size(); i++) {
             String name = nsbtx.getPalette(i).getName();
             demoList.addElement(name);
@@ -141,10 +141,7 @@ public class NsbtxImportDialog extends JDialog {
         return nxbtxToImport;
     }
 
-    public int getReturnValue() {
-        return returnValue;
-    }
-
+    @SuppressWarnings({"Convert2Diamond", "FieldMayBeFinal", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();

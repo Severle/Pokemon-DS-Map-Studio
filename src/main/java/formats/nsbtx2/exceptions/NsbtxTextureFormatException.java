@@ -6,6 +6,7 @@ import formats.nsbtx2.Nsbtx2;
 /**
  * @author Trifindo
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class NsbtxTextureFormatException extends Exception {
     public NsbtxTextureFormatException(int format) {
         super("The NSBTX texture format " + Nsbtx2.formatNames[format] + " is not supported");

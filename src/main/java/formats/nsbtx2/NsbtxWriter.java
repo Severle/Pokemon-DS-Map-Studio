@@ -1,34 +1,35 @@
 
 package formats.nsbtx2;
 
+import lombok.extern.log4j.Log4j2;
+import utils.Utils;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import utils.Utils;
 
 /**
  * @author Trifindo
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "DuplicatedCode"})
 public class NsbtxWriter {
 
     //TODO: improve all of this by not using the converter
 
     public static byte[] writeNsbtx(Nsbtx2 nsbtx, String fileName) throws IOException {
 
-        System.out.println("EXPORTING NSBTX IMD!");
+        log.debug("EXPORTING NSBTX IMD!");
 
         String path = System.getProperty("user.dir") + File.separator + fileName;
-        System.out.println(path);
-        //path = Utils.removeExtensionFromPath(path);
-        //System.out.println(path);
+        log.debug(path);
         path = Utils.addExtensionToPath(path, "imd");
-        System.out.println(path);
+        log.debug(path);
 
         NsbtxImd imd = new NsbtxImd(nsbtx);
 
@@ -43,10 +44,10 @@ public class NsbtxWriter {
 
     private static byte[] imdToNsbmd(String imdPath) throws IOException {
         File file = new File(imdPath);
-        System.out.println("EXPORTING NSBMD");
+        log.debug("EXPORTING NSBMD");
         byte[] data = null;
         if (file.exists()) {
-            System.out.println("File exists!");
+            log.debug("File exists!");
             String filename = new File(imdPath).getName();
             filename = Utils.removeExtensionFromPath(filename);
             String converterPath = "converter/g3dcvtr.exe";
@@ -59,7 +60,7 @@ public class NsbtxWriter {
             }
 
             if (!Files.exists(Paths.get(converterPath))) {
-                System.out.println("Converter not found!");
+                log.debug("Converter not found!");
                 throw new IOException();
             }
 
@@ -67,11 +68,12 @@ public class NsbtxWriter {
 
             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-            String outputString = "";
-            String line = null;
+            StringBuilder outputString = new StringBuilder();
+            String        line;
             while ((line = stdError.readLine()) != null) {
-                outputString += line + "\n";
+                outputString.append(line).append("\n");
             }
+            log.debug(outputString.toString());
 
             try {
                 p.waitFor();
@@ -82,7 +84,7 @@ public class NsbtxWriter {
             p.destroy();
 
             String nsbPath = Utils.removeExtensionFromPath(imdPath);
-            nsbPath = Utils.addExtensionToPath(nsbPath, "nsbtx");
+            Utils.addExtensionToPath(nsbPath, "nsbtx");
 
             filename = Utils.removeExtensionFromPath(filename);
             filename = Utils.addExtensionToPath(filename, "nsbtx");

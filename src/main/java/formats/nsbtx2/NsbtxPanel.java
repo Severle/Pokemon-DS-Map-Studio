@@ -1,30 +1,34 @@
 package formats.nsbtx2;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.GroupLayout;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
-import editor.buildingeditor2.tileset.*;
-
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import javax.swing.DefaultListModel;
-
+import editor.buildingeditor2.tileset.PaletteDisplay;
+import editor.buildingeditor2.tileset.TextureDisplay;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import utils.Utils;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Trifindo, JackHack96
  */
+@Log4j2
+@SuppressWarnings({"SpellCheckingInspection", "unused", "DuplicatedCode", "FieldCanBeLocal"})
 public class NsbtxPanel extends JPanel {
 
+    @Getter
+    @Setter
     private Nsbtx2 nsbtx;
 
     private boolean textureListEnabled = true;
-    private boolean paletteListEnabled = true;
-    private Utils.MutableBoolean jtfTextureActive = new Utils.MutableBoolean(true);
-    private Utils.MutableBoolean jtfPaletteActive = new Utils.MutableBoolean(true);
+    private       boolean              paletteListEnabled = true;
+    private final Utils.MutableBoolean jtfTextureActive = new Utils.MutableBoolean(true);
+    private final Utils.MutableBoolean jtfPaletteActive = new Utils.MutableBoolean(true);
 
     private static final Color editingColor = new Color(255, 200, 200);
     private static final Color rightColor = new Color(200, 255, 200);
@@ -59,7 +63,7 @@ public class NsbtxPanel extends JPanel {
                 paletteDisplay.updatePalette(nsbtx.getTexture(texIndex), nsbtx.getPalette(palIndex));
                 paletteDisplay.repaint();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error(ex);
             }
 
         }
@@ -68,7 +72,7 @@ public class NsbtxPanel extends JPanel {
 
     public void updateViewTextureNameList(int indexSelected) {
         textureListEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < nsbtx.getTextures().size(); i++) {
             String name = nsbtx.getTexture(i).getName();
             demoList.addElement(name);
@@ -86,7 +90,7 @@ public class NsbtxPanel extends JPanel {
 
     public void updateViewPaletteNameList(int indexSelected) {
         paletteListEnabled = false;
-        DefaultListModel demoList = new DefaultListModel();
+        DefaultListModel<String> demoList = new DefaultListModel<>();
         for (int i = 0; i < nsbtx.getPalettes().size(); i++) {
             String name = nsbtx.getPalette(i).getName();
             demoList.addElement(name);
@@ -113,14 +117,7 @@ public class NsbtxPanel extends JPanel {
         }
     }
 
-    public void setNsbtx(Nsbtx2 nsbtx) {
-        this.nsbtx = nsbtx;
-    }
-
-    public Nsbtx2 getNsbtx() {
-        return nsbtx;
-    }
-
+    @SuppressWarnings({"Convert2Diamond", "FieldMayBeFinal", "Convert2MethodRef"})
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         jPanel1 = new JPanel();
